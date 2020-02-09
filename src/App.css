@@ -37,48 +37,72 @@
   }
 }
 
+/* Main */
+
+
 /* Whack-a-Mole */
-.board {
-  /*border: 1px solid blue;*/
-  width: 90%;
-  height: 65%;
+.mole_background {
+  background-color: white;
+  border: 1px solid grey;
+  border-radius: 25px;
+  padding: 1%;
+}
+
+.mole_buttons {
+  margin-top: 1%; 
   text-align: center;
-  display: -webkit-flex;
+  justify-content: center;
+}
+
+.mole_title {
+  color: chocolate;
+  font-size: 5em;
+  text-align: center;
+}
+
+.mole_board {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  display: flex;
   align-items: center;
   flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
 }
 
-.game_hole {
+.mole_hole {
   margin: 0px;
   overflow: hidden;
-  width: 20vw;
+  width: 15vw;
   height: 15vw;
 }
 
-.game_mound {
+.mole_mound {
   background: url(./assets/images/hole.png);
-  background-position: right 55px bottom 0px;
-  background-size: 70%;
+  background-position: right 5px bottom 0px;
+  background-size: 95%;
   background-repeat: no-repeat;
   height: 100%;
   width: 100%;
   position: relative;
-  bottom: 65%;
+  bottom: 99%;
   pointer-events: none;
   backface-visibility: hidden;
 }
 
 .game_mole {
   background-image: url(./assets/images/mole.png);
-  background-size: 40%;
+  background-size: 50%;
   background-repeat: no-repeat;
   background-position: top;
-  height: 50%;
-  width: 100%;
+  height: 100%;
   transform: translate(0, 50%);
   transition: all 0.4s;
   cursor: pointer;
-  
+}
+
+.mole_whacked {
+  width: 100%;
+  height: 100%;
 }
