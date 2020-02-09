@@ -1,16 +1,33 @@
-import React from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import Navbar from "./components/navbar.component"
-import UserList from "./components/user-list.component"
+import React, { Component } from 'react';
+import { HashRouter, Route, Switch } from 'react-router-dom';
+import './App.scss';
 
-function App() {
-  return (
-    <Router>
-      <Navbar></Navbar>
-      <br/>
-      <Route path="/" component={UserList}/>
-    </Router>
-  );
+const loading = () => <div className="animated fadeIn pt-3 text-center">Loading...</div>;
+
+// Containers
+const DefaultLayout = React.lazy(() => import('./containers/DefaultLayout/DefaultLayout'));
+
+// Pages
+const Login = React.lazy(() => import('./components/views/Login'));
+const Register = React.lazy(() => import('./components/views/Register'));
+const Page404 = React.lazy(() => import('./components/views/404'));
+
+class App extends Component {
+
+  render() {
+    return (
+      <HashRouter>
+          <React.Suspense fallback={loading()}>
+            <Switch>
+              <Route exact path="/login" name="Login Page" render={props => <Login {...props}/>} />
+              <Route exact path="/register" name="Register Page" render={props => <Register {...props}/>} />
+              <Route exact path="/404" name="Page 404" render={props => <Page404 {...props}/>} />
+              <Route path="/" name="Home" render={props => <DefaultLayout {...props}/>} />
+            </Switch>
+          </React.Suspense>
+      </HashRouter>
+    );
+  }
 }
 
 export default App;
