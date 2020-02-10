@@ -3,22 +3,22 @@ import '../../App.css';
 
 class MatchCard extends Component {
 
-  constructor(props){
-    super(props);
-    this.state = {
-      flipped: false,
+  validateClick(){
+    if(!this.props.isCorrect && !this.props.isSelected) { //only clickable under these conditions
+      this.props.onSelect();
     }
   }
-
+  
   render() {
     return (
-      <div className={"card" + (this.state.flipped ? " flipped" : "")} onClick={() => this.setState({flipped: true})}>
+      <div className={"card" + ((this.props.isCorrect || this.props.isSelected) ? " flipped" : "")} onClick={() => this.validateClick()}>
         <div className="card-back"></div>
-        <div className="card-front"></div>
+        <div className="card-front">
+          <img className="card-img" src={require("../../assets/images/"+ this.props.image +".png")} alt="card"></img>
+        </div>
       </div>
     );
   }
-
 
 }
 
