@@ -26,12 +26,20 @@ export default {
         name: 'View Profile',
         url: '/profile',
         icon: 'icon-user',
+        children: [
+          {
+            name: 'Edit Profile',
+            url: '/profile/edit',
+            icon: 'icon-pencil',
+          },
+          {
+            name: 'Personal Report',
+            url: '/profile/report',
+            icon: 'icon-chart',
+          },
+        ]
       },
-      {
-        name: 'Edit Profile',
-        url: '/profile/edit',
-        icon: 'icon-pencil',
-      },
+     
       {
         title: true,
         name: 'Games',
