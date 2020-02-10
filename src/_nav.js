@@ -42,7 +42,7 @@ export default {
       },
       {
         name: 'Card Match',
-        url: '/game/cardgame',
+        url: '/game/matchgame',
         icon: 'icon-puzzle'
       },
       {
