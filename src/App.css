@@ -152,7 +152,23 @@
   cursor: pointer;
 }
 
-.mole_whacked {
+.no_bg {
+  background: none;
+}
+
+.game_whacked {
+  background-image: url(./assets/images/x_icon.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100px;
   width: 100%;
   height: 100%;
 }
+
+.mole_whacked {
+  
+  width: 100%;
+  height: 100%;
+}
+
+
