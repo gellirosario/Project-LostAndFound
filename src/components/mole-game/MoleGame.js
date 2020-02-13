@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 /*Components*/
-import StartMoleGameButton from "./StartMoleGameButton";
 import MoleHole from "./MoleHole";
 
 class MoleGame extends Component {
@@ -28,17 +27,18 @@ class MoleGame extends Component {
       score: 0,
       lastMole: '',
       buttonMessage: 'Start Game',
-      display: 'none',
       gameOver: 'none'
     }
   }
 
   timeOut(num) {
     if (this.state.started) { return };
+    
     this.setState({
       display: 'block',
       gameOver: 'none',
     });
+    
     window.setTimeout(() => {
       this.startGame();
     }, num);
@@ -79,7 +79,7 @@ class MoleGame extends Component {
     for (let value in this.state) {
       if (!isNaN(value)) {
         this.setState({
-          [value]: 'translate(0, 150%)'
+          [value]: 'translate(0, 150%)' // Mole gone
         });
       }
     }
@@ -92,29 +92,29 @@ class MoleGame extends Component {
       this.displayMoles();
       return;
     }
-    
+
     this.clearMoles();
 
     this.setState({
       lastMole: [activeMole],
-      [activeMole]: 'translate(0, 50%)'
+      [activeMole]: 'translate(0, 50%)' // Mole pop up
     });
   }
 
-  resetMole(){
+  resetMole() {
     window.setTimeout(() => {
-      this.setState({ moleWhacked: false })
+      this.setState({ moleWhacked: false }) // Reset mole state
     }, 550)
   }
 
   onMoleClick(event) {
     // Mole whacked == true; no need to do anything
-    if (this.state.moleWhacked){ return; }
+    if (this.state.moleWhacked) { return; }
 
     let target = event.target;
     target.parentNode.classList.add('game_whacked');
     target.classList.add('no_bg');
-    
+
     this.resetMole();
 
     this.setState({
@@ -122,7 +122,7 @@ class MoleGame extends Component {
       score: this.state.score + 1
     });
 
-    window.setTimeout(function(){
+    window.setTimeout(function () {
       target.classList.remove('no_bg');
       target.parentNode.classList.remove('game_whacked');
     }, 450)
@@ -130,9 +130,9 @@ class MoleGame extends Component {
 
   createMoleHoles() {
     var mole_holes = [];
-    
+
     for (let i = 1; i <= 10; i++) {
-      mole_holes.push(<MoleHole key={i} context={ this.state } onClick={ this.onMoleClick.bind(this) } holeNumber={i}/>);
+      mole_holes.push(<MoleHole key={i} context={this.state} onClick={this.onMoleClick.bind(this)} holeNumber={i} />);
     }
 
     return (
@@ -149,7 +149,9 @@ class MoleGame extends Component {
           <h1 class="display-1" className="mole_title" >WHACK-A-MOLE</h1>
           <div className="mole_buttons"><p class="lead"> Difficulty: {this.state.difficulty} | Score: {this.state.score}</p>
             <button type="button" class="btn btn-info" style={{ marginRight: "15px", color: "white" }}>Instructions</button>
-            <StartMoleGameButton context={this.state} onClick={this.timeOut.bind(this)} />
+            <button type="button" class="btn btn-dark" onClick={this.timeOut.bind(this)}>
+              {this.state.buttonMessage}
+            </button>
           </div>
           {this.createMoleHoles()}
         </div>
