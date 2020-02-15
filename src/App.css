@@ -1,8 +1,7 @@
 
 
 .App {
-
-    text-align: center;
+ text-align: center;
 }
 
 .App-logo {
@@ -95,10 +94,11 @@
 
 /* Whack-a-Mole */
 .mole_background {
-  background-color: white;
-  border: 1px solid grey;
-  border-radius: 25px;
-  padding: 1%;
+    background-color: white;
+    border: 1px solid grey;
+    border-radius: 25px;
+    padding: 1%;
+    text-align: center;
 }
 
 .mole_buttons {
@@ -177,344 +177,63 @@
 
 /*Simon_Says*/
 
-p.pojs {
-    font-size: 0.95rem;
-    margin: 0 auto 1.5rem;
-}
-
-.outer {
-    margin: 0 auto;
-    position: relative;
-    text-align: center;
-    width: 40%;
-}
-
-    .outer.buzz::after {
-        background-color: transparent;
-        border: 0px solid transparent;
-        content: '';
-        margin: 0 auto;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 100; /* Should go above cells, but below scoreboard. */
-        width: 100%;
-        height: 100%;
-    }
-
-.sq-setter-w {
-    width: 100%;
-    height: auto;
-    visibility: hidden;
-}
-
-.inside {
-    /*outline: 1px solid blue;*/
-    margin: 0 auto;
-    position: absolute;
-    bottom: 0;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
-    min-width: 200px;
-    max-width: 800px;
-    max-height: 800px;
-}
-
-.inside2 {
-    /*outline: 1px solid orange;*/
-    font-size: 3vw;
-    margin: 1em auto 0;
+.container {
     display: inline-block;
-    position: relative;
-    height: 90%;
-    width: 90%;
-}
-.scoreboard {
-    backface-visibility: hidden;
-    transform: perspective(600px) rotateY(0deg);
-    transition: transform .5s linear 0s;
+    text-align:center;
 }
 
-/* Scoreboard Panel */
-.scoreboard {
-    /*outline: 3px solid green;*/
-    background-color: gold;
-    border: 5px solid #ffffff;
-    border-radius: 100%;
-    box-shadow: inset 1px 1px 5px darkgray;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    overflow: hidden;
-    position: absolute;
-    bottom: 24%;
-    top: 24%;
-    left: 23%;
-    right: 23%;
-    height: 50%;
-    width: 50%;
-    z-index: 5;
-}
-
-    .scoreboard > div {
-        display: inline;
-    }
-
-.scoreboard-top > div,
-.scoreboard-middle > div,
-.scoreboard-bottom > div {
-    outline: 0px solid blue;
+.btn {
+    margin: 25px;
     display: inline-block;
-    margin: 0.25em 0 0;
-    padding: 0;
+    height: 200px;
+    width: 200px;
+    border: 10px solid black;
+    border-radius: 20%;
 }
 
-.scoreboard-top input {
-    vertical-align: middle;
-}
 
-/* START BUTTON */
-.scoreboard-top .div-start {
-    font-weight: bold;
-    margin: 0 0 0.35em;
-    padding: 0;
-}
-
-#start {
+.game-over {
     background-color: red;
-    border: 2px solid green;
-    border-radius: 50%;
-    box-shadow: 0.1em 0.1em darkgray;
-    cursor: pointer;
-    display: inline-block;
-    vertical-align: bottom;
-    width: 3vw;
-    height: 3vw;
-    max-width: 22px;
-    min-width: 10px;
-    max-height: 22px;
-    min-height: 10px;
+    opacity: 0.8;
 }
 
-    #start:hover,
-    #start:active,
-    #start:focus {
-        border: 2px solid darkblue;
-        outline: 0;
-    }
-
-    #start:hover {
-        background-color: orangered;
-    }
-
-#simon-speed {
-    height: 14px;
-    text-align: center;
-    vertical-align: baseline;
-    width: 40px;
-}
-
-input[type="number"] {
-    font-size: 0.7em;
-    padding: 0.5em 0;
-}
-
-.scoreboard-middle {
-    font-size: 1.1em;
-    font-weight: bold;
-}
-
-    .scoreboard-middle > div {
-        height: 2em;
-        margin: 0.75em auto 0.25em;
-        min-width: 10em;
-        position: relative;
-        text-align: center;
-        vertical-align: bottom;
-    }
-
-.game-is {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    transform: translate(0, -50%);
-}
-
-div.clearb {
-    clear: both;
-    display: block;
-    height: 0.1em;
-    margin: 0 auto;
-    outline: 0px solid black;
-    width: 1px;
-}
-
-.cells {
-    display: flex;
-    flex-wrap: wrap;
-    position: relative;
-    height: 100%;
-    width: 100%;
-}
-
-.cell {
-    border: 2px solid #fff;
-    /* border-radius: 50%; */
-    box-shadow: 0px 0px gray;
-    cursor: pointer;
-    /*display: inline-block;*/
-    opacity: 0.75;
-    position: relative;
-    width: 48%;
-    min-width: 100px;
-    min-height: 100px;
-}
-
-    .cell:hover,
-    .cell:active,
-    .cell:focus {
-        outline: 0;
-        opacity: 0.85;
-    }
-
-    .cell.buzzed {
-        opacity: 1;
-    }
-
-#ul {
+.red {
     background-color: red;
-    border-top-left-radius: 100%;
-    border-top-width: 3px;
-    border-left-width: 3px;
-    border-top-color: gray;
-    border-left-color: gray;
 }
 
-#ur {
-    background-color: blue;
-    border-top-right-radius: 100%;
-    border-top-width: 3px;
-    border-right-width: 3px;
-    border-top-color: gray;
-    border-right-color: gray;
-}
-
-#ll {
+.green {
     background-color: green;
-    border-bottom-left-radius: 100%;
-    border-bottom-width: 3px;
-    border-left-width: 3px;
-    border-bottom-color: gray;
-    border-left-color: gray;
 }
 
-#lr {
-    background-color: orange;
-    border-bottom-right-radius: 100%;
-    border-bottom-width: 3px;
-    border-right-width: 3px;
-    border-bottom-color: gray;
-    border-right-color: gray;
-}
-
-.cell.buzz::after {
-    background-color: #ffffff;
-    border: 0.50em solid yellow;
-    content: ' ';
-    opacity: 1;
-    position: absolute;
-    top: -1em;
-    left: -1em;
-    width: 110%;
-    height: 110%;
-    /*min-width: 100px;*/
-    /*min-height: 100px;*/
-    z-index: 3;
-}
-
-#ul.buzz::after {
-    background-color: red;
-    border-top-left-radius: 95%;
-}
-
-#ur.buzz::after {
+.blue {
     background-color: blue;
-    border-top-right-radius: 95%;
 }
 
-#ll.buzz::after {
-    background-color: green;
-    border-bottom-left-radius: 95%;
+.yellow {
+    background-color: yellow;
 }
 
-#lr.buzz::after {
-    background-color: orange;
-    border-bottom-right-radius: 95%;
-}
-.hide,
-.hidden {
-    display: none;
+.pressed {
+    box-shadow: 0 0 20px white;
+    background-color: grey;
 }
 
-ul {
-    list-style: square;
+#score {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 3rem;
+    margin: 3%;
+    color: #f35045;
 }
-
-    ul.attribution {
-        font-size: 0.9rem;
-        line-height: 1.5;
-        list-style: square;
-        margin: 0 auto;
-        padding: 0 1rem;
-        text-align: left;
-        width: 95%;
-        max-width: 420px;
-    }
-
-    ul.fcc-links {
-        border: 1px dotted gray;
-        border-radius: 2px;
-        font-size: 0.9rem;
-        line-height: 1.5;
-        list-style: none;
-        margin: 1rem auto 0;
-        padding: 1rem;
-        text-align: left;
-        width: 95%;
-        max-width: 420px;
-    }
-
-.outer-h-0-75 {
-    height: 39em;
+.start {
+    margin-top: 25px;
+    
+    text-align:center;
+    background: green;
+    color: white;
+    padding: 2% 10%;
+    font-family: cursive;
+    font-weight: 600;
+    font-size: 1.5em;
+    border: 2px solid white;
+    border-radius: 10px;
 }
-
-.outer-h-0-50 {
-    height: 26em;
-}
-
-@media screen and (min-width: 800px) {
-    /* .container max-width: 800px; */
-    .inside2 {
-        font-size: 20px;
-    }
-
-    .scoreboard-middle {
-        font-size: 30px;
-        font-weight: bold;
-    }
-
-    input[type="number"] {
-        font-size: 20px;
-    }
-    .scoreboard
-     {
-        position: absolute;
-        top: 25%;
-    }
-}
-
-
