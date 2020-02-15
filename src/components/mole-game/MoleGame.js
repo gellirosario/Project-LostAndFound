@@ -148,8 +148,8 @@ class MoleGame extends Component {
         <div className="mole_background">
           <h1 class="display-1" className="mole_title" >WHACK-A-MOLE</h1>
           <div className="mole_buttons"><p class="lead"> Difficulty: {this.state.difficulty} | Score: {this.state.score}</p>
-            <button type="button" class="btn btn-info" style={{ marginRight: "15px", color: "white" }}>Instructions</button>
-            <button type="button" class="btn btn-dark" onClick={this.timeOut.bind(this)}>
+            <button type="button" className="start_button" style={{ marginRight: "15px" }}>Instructions</button>
+            <button type="button" className="start_button" onClick={this.timeOut.bind(this)}>
               {this.state.buttonMessage}
             </button>
           </div>
