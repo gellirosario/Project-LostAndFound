@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-
-/*Components*/
+import axios from 'axios';
 import MoleHole from "./MoleHole";
 
 class MoleGame extends Component {
@@ -20,15 +19,14 @@ class MoleGame extends Component {
       8: 'translate(0, 150%)',
       9: 'translate(0, 150%)',
       10: 'translate(0, 150%)',
+      score: 0,
       started: false,
       moleWhacked: false,
-      difficulty: "Easy",
-      highscore: 0,
-      score: 0,
       lastMole: '',
       buttonMessage: 'Start Game',
       gameOver: 'none'
     }
+
   }
 
   timeOut(num) {
@@ -70,6 +68,7 @@ class MoleGame extends Component {
           });
 
           // Game Over
+          this.saveRecord();
         }, 850)
       }
     }, 1000);
@@ -142,13 +141,27 @@ class MoleGame extends Component {
     );
   }
 
+  saveRecord() {
+
+    const gameRecord = {
+      gameType: 2, //Whack A Mole
+      userId: "test", //testdata
+      score: this.state.score
+    }
+
+    console.log(gameRecord);
+
+    axios.post('http://localhost:5000/record/add', gameRecord)
+      .then(res => console.log(res.data));
+
+  }
+
   render() {
     return (
       <div >
         <div className="mole_background">
           <h1 class="display-1" className="mole_title" >WHACK-A-MOLE</h1>
-          <div className="mole_buttons"><p class="lead"> Difficulty: {this.state.difficulty} | Score: {this.state.score}</p>
-            <button type="button" className="start_button" style={{ marginRight: "15px" }}>Instructions</button>
+          <div className="mole_buttons"><p class="lead"> Score: {this.state.score}</p>
             <button type="button" className="start_button" onClick={this.timeOut.bind(this)}>
               {this.state.buttonMessage}
             </button>

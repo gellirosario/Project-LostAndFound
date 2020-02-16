@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import SimonButtons from "./SimonButtons";
+import React from 'react';
+//import SimonButtons from "./SimonButtons";
 
 class SimonGame extends React.Component {
  
