@@ -4,7 +4,7 @@ import '../../App.css';
 class MatchCard extends Component {
 
   validateClick(){
-    if(!this.props.isCorrect && !this.props.isSelected) { //only clickable under these conditions
+    if(!this.props.isCorrect && !this.props.isSelected && !this.props.disabled) { //only clickable under these conditions
       this.props.onSelect();
     }
   }
