@@ -10,7 +10,7 @@ class SimonGame extends React.Component {
   render() {
     return (
 	 <div className="mole_background">
-		<h1 class="display-1" className="mole_title" >SIMON SAYS</h1>
+		<h1 class="display-1" className="game_title" >SIMON SAYS</h1>
 			<div class="column">
 				<div type="button" id="green" className="btn2 green"></div>
 				<div type="button" id="red" className="btn2 red"></div>

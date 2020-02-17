@@ -39,16 +39,47 @@ to {
 }
 
 /* Main */
+.game_title {
+  color: #e67e22;
+  font-size: 5em;
+  text-align: center;
+  
+}
+
 .start_button {
-  font-size: 1rem;
-  padding: 0.5rem;
-  color: black;
-  border: 2px solid #FCB942;
-  background: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: 'Amaranth', sans-serif;
-  letter-spacing: 0.13rem;
+position:relative;
+ width: auto;
+ color:#ecf0f1;
+ text-decoration:none;
+ border-radius:5px;
+ border:solid 1px #f39c12;
+ background:#e67e22;
+ text-align:center;
+ padding:16px 18px 14px;
+ -webkit-transition: all 0.1s;
+ -moz-transition: all 0.1s;
+ transition: all 0.1s;
+ -webkit-box-shadow: 0px 6px 0px #d35400;
+ -moz-box-shadow: 0px 6px 0px #d35400;
+ box-shadow: 0px 6px 0px #d35400;
+  
+}
+
+.start_button:active{
+  -webkit-box-shadow: 0px 2px 0px #d35400;
+  -moz-box-shadow: 0px 2px 0px #d35400;
+  box-shadow: 0px 2px 0px #d35400;
+  position:relative;
+  top:4px;
+ }
+
+.orange {
+  background-color: #e67e22;
+  box-shadow: 0px 5px 0px 0px #CD6509;
+}
+
+.orange:hover {
+  background-color: #FF983C;
 }
 
 /* Card Match */
@@ -115,12 +146,6 @@ to {
   margin-top: 1%; 
   text-align: center;
   justify-content: center;
-}
-
-.mole_title {
-  color: chocolate;
-  font-size: 5em;
-  text-align: center;
 }
 
 .mole_board {

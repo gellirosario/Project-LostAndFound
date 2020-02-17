@@ -84,7 +84,7 @@ class MatchGame extends Component {
     return (
       <div>
         <div className="mole_background">
-          <h1 class="display-1" className="mole_title" >CARD MATCH</h1>
+          <h1 class="display-1" className="game_title" >CARD MATCH</h1>
           <div className="card-container">
             {cards.map((image, i) => (
               <MatchCard

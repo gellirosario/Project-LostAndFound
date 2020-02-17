@@ -24,19 +24,31 @@ class MoleGame extends Component {
       moleWhacked: false,
       lastMole: '',
       buttonMessage: 'Start Game',
-      gameOver: 'none'
+      gameOver: 'none',
+      display: '',
+      scoreDisplay: 'block',
+      buttonDisplay: 'inline-block',
+      restart: false,
     }
 
   }
 
   timeOut(num) {
-    if (this.state.started) { return };
-    
+    if (this.state.started) {
+      this.setState({
+        restart: true,
+      })
+      return;
+    };
+
     this.setState({
       display: 'block',
+      scoreDisplay: 'block',
       gameOver: 'none',
+      buttonDisplay: 'none',
+      buttonMessage: 'Restart Game'
     });
-    
+
     window.setTimeout(() => {
       this.startGame();
     }, num);
@@ -54,6 +66,24 @@ class MoleGame extends Component {
     const intervalID = setInterval(() => {
       this.displayMoles();
 
+      if(this.state.restart){
+        window.clearInterval(intervalID);
+        this.clearMoles();
+        this.setState({ started: false });
+
+        window.setTimeout(() => {
+          this.setState({
+            restart: false,
+            buttonMessage: 'Restart Game',
+            buttonDisplay: 'inline-block',
+            score: 0,
+          });
+
+          this.startGame();
+        })
+
+      }
+
       //Max Points == 20
       if (++x === 21) {
         window.clearInterval(intervalID);
@@ -63,8 +93,12 @@ class MoleGame extends Component {
         window.setTimeout(() => {
           this.setState({
             display: 'none',
+            scoreDisplay: 'none',
             gameOver: 'block',
-            buttonMessage: 'Play again'
+            buttonMessage: 'Play again',
+            buttonDisplay: 'inline-block',
+            restart: false,
+            started: false,
           });
 
           // Game Over
@@ -160,13 +194,21 @@ class MoleGame extends Component {
     return (
       <div >
         <div className="mole_background">
-          <h1 class="display-1" className="mole_title" >WHACK-A-MOLE</h1>
-          <div className="mole_buttons"><p class="lead"> Score: {this.state.score}</p>
-            <button type="button" className="start_button" onClick={this.timeOut.bind(this)}>
-              {this.state.buttonMessage}
-            </button>
+          <h1 className="game_title" >WHACK-A-MOLE</h1>
+          <div style={{ display: this.state.gameOver }}>
+            <h1>GAME OVER!</h1>
+            <p>You scored {this.state.score}/20</p>
           </div>
-          {this.createMoleHoles()}
+          <div style={{ display: this.state.scoreDisplay }}>
+          <h2  style={{ textAlign: "center" }}> Score: {this.state.score}</h2>
+          </div>
+          <button type="button" className="start_button orange" onClick={this.timeOut.bind(this)}>
+            {this.state.buttonMessage}
+          </button>
+          <div style={{ display: this.state.display }}>
+            {this.createMoleHoles()}
+          </div>
+
         </div>
       </div>
     );
