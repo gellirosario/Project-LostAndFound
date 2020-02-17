@@ -12,7 +12,7 @@ class MatchCard extends Component {
   render() {
     return (
       <div className={"card-box" + ((this.props.isCorrect || this.props.isSelected) ? " flipped" : "")} onClick={() => this.validateClick()}>
-        <div className="card-back"></div>
+        <div className={"card-back" + (!this.props.disabled ? " card-back-enabled" : "")}></div>
         <div className="card-front">
           <img className="card-img" src={require("../../assets/images/"+ this.props.image +".png")} alt="card"></img>
         </div>
