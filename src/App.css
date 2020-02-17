@@ -217,7 +217,7 @@ position:relative;
     text-align:center;
 }
 
-.btn2 {
+.btn_ {
     margin: 25px;
     display: inline-block;
     height: 200px;
@@ -251,24 +251,4 @@ position:relative;
 .pressed {
     box-shadow: 0 0 20px white;
     background-color: grey;
-}
-
-#score {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 3rem;
-    margin: 3%;
-    color: #f35045;
-}
-.start {
-    margin-top: 25px;
-    
-    text-align:center;
-    background: green;
-    color: white;
-    padding: 2% 10%;
-    font-family: cursive;
-    font-weight: 600;
-    font-size: 1.5em;
-    border: 2px solid white;
-    border-radius: 10px;
 }
