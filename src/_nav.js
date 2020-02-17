@@ -3,7 +3,7 @@ export default {
       {
         name: 'Home',
         url: '/',
-        icon: 'icon-speedometer',
+        icon: 'icon-list',
         badge: {
           variant: 'info',
         },
