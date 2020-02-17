@@ -9,8 +9,8 @@ export default {
         },
       },
       {
-        name: 'Statistics',
-        url: '/statistics',
+        name: 'Summary Report',
+        url: '/report/summary',
         icon: 'icon-pie-chart',
       },
       {
@@ -30,16 +30,15 @@ export default {
           {
             name: 'Edit Profile',
             url: '/profile/edit',
-            icon: 'icon-pencil',
-          },
-          {
-            name: 'Personal Report',
-            url: '/profile/report',
-            icon: 'icon-chart',
-          },
+            icon: 'icon-pencil'
+          }
         ]
       },
-     
+      {
+        name: 'Personal Report',
+        url: '/profile/report',
+        icon: 'icon-chart',
+      },
       {
         title: true,
         name: 'Games',

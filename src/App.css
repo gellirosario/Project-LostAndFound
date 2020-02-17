@@ -47,7 +47,8 @@ to {
 }
 
 .start_button {
-position:relative;
+ position:relative;
+ font-weight: 700;
  width: auto;
  color:#ecf0f1;
  text-decoration:none;
