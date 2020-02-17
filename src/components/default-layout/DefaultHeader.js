@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem } from 'reactstrap';
 import PropTypes from 'prop-types';
-
+import logo from '../../assets/images/logo.png'
+import logo1 from '../../assets/images/logo_1.png'
 import { AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 
 const propTypes = {
@@ -18,16 +19,16 @@ class DefaultHeader extends Component {
     const { children, ...attributes } = this.props;
 
     return (
-      <React.Fragment>
-        <AppSidebarToggler className="d-lg-none" display="md" mobile />
-        <AppNavbarBrand>Lost&Found</AppNavbarBrand>
+        <React.Fragment>
+        <AppSidebarToggler style={{backgroundColor: "#f0f3f5"}}  className="d-lg-none" display="md" mobile />
+        <NavLink to="/">
+        <AppNavbarBrand 
+          full={{ src: logo1, width: 140, height: 40, alt: 'Lost&Found Logo' }}
+          minimized={{ src: logo, width: 35, height: 35, alt: 'Lost&Found Logo' }}
+        />
+        </NavLink>
         <AppSidebarToggler className="d-md-down-none" display="lg" />
 
-        <Nav className="d-md-down-none" navbar>
-          <NavItem className="px-3">
-            <NavLink to="/" className="nav-link" >Home</NavLink>
-          </NavItem>
-        </Nav>
         <Nav className="ml-auto" navbar>
           <UncontrolledDropdown nav direction="down">
             <DropdownToggle nav>

@@ -33,7 +33,7 @@ class DefaultLayout extends Component {
   render() {
     return (
       <div className="app">
-        <AppHeader fixed>
+        <AppHeader style={{backgroundColor: "#23282c", color: "#f0f3f5", borderBottom: "0px solid rgb(212, 212, 212)"}} fixed>
           <Suspense  fallback={this.loading()}>
             <DefaultHeader onLogout={e=>this.signOut(e)}/>
           </Suspense>

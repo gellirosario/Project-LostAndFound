@@ -2,21 +2,30 @@ import React, { Component } from 'react';
 import MatchCard from "./MatchCard";
 
 const IMAGES = ["cat", "dog", "mole", "fish", "mouse"];
+var CARDS = [];
 
 class MatchGame extends Component {
 
   constructor(props) {
     super(props);
 
+    CARDS = this.shuffleCards(IMAGES.slice().concat(IMAGES.slice()));
+
     this.state = {
-      cards: this.shuffleCards(IMAGES.slice().concat(IMAGES.slice())),
-      selected: [], //indexes which have been selected
+      cards: CARDS,
+      selected: Array.from(Array(CARDS.length).keys()), //indexes which have been selected (show all initially)
       correct: [], //indexes which have been guessed correctly
       score: 0,
       text: "0/" + IMAGES.length,
       flips: 0,
       isFlipDisabled: false
     };
+
+    setTimeout(() => { //flip over all after a few seconds
+      this.setState({
+        selected: []
+      })
+    }, 5000);
   }
 
   restartGame() {
@@ -30,10 +39,16 @@ class MatchGame extends Component {
     }, function () {
       setTimeout(() => {
         this.setState({ 
+          selected: Array.from(Array(CARDS.length).keys()),
           isFlipDisabled: false,
           cards: this.shuffleCards(IMAGES.slice().concat(IMAGES.slice())),
-        })
-      }, 1000);
+        });
+        setTimeout(() => {
+          this.setState({
+            selected: []
+          });
+        }, 5000);
+      }, 1500);
     });
   }
 
@@ -49,7 +64,10 @@ class MatchGame extends Component {
     }
     else if (selected.length === 1) { //selecting second card
 
-      this.setState({ flips: this.state.flips + 1 });
+      this.setState({ 
+        flips: this.state.flips + 1,
+        isFlipDisabled: true
+      });
 
       if (cards[selected[0]] === cards[clickedIndex]) { //if there is a match
         this.setState({
@@ -57,6 +75,7 @@ class MatchGame extends Component {
           selected: [], //empty out selected array to prepare for next selections
           score: this.state.score + 1,
           text: this.state.score + 1 + "/" + IMAGES.length,
+          isFlipDisabled: false
         }, function () {
           if (this.state.score === IMAGES.length) {
             this.setState({
@@ -65,11 +84,13 @@ class MatchGame extends Component {
           }
         });
       }
-
       else { //not a match
         this.setState({ selected: [selected[0], clickedIndex] });
         setTimeout(() => {
-          this.setState({ selected: [] })
+          this.setState({ 
+            selected: [],
+            isFlipDisabled: false
+          })
         }, 1500);
       }
     }

@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 function MainPage() {
   return (
@@ -15,7 +16,9 @@ function MainPage() {
           <div class="card-body">
             <h5 class="card-title">Card Match</h5>
             <p class="card-text">This is a wider card It's a broader card with text below as a natural lead-in to extra content. This content is a little longer. This card has even longer content than the first to show that equal height action.</p>
-            <button type="button" class="btn btn-primary btn-lg">Play Now</button>
+            <Link to="/game/matchgame">
+              <button type="button" class="start_button orange" href="">Play Now</button>
+            </Link>
           </div>
         </div>
         <div class="card">
@@ -23,7 +26,9 @@ function MainPage() {
           <div class="card-body">
             <h5 class="card-title">Whack A Mole</h5>
             <p class="card-text">This is a wider card It's a broader card with text below as a natural lead-in to extra content. This content is a little longer. This card has even longer content than the first to show that equal height action.</p>
-            <button type="button" class="btn btn-primary btn-lg">Play Now</button>
+            <Link to="/game/molegame">
+            <button type="button" class="start_button orange">Play Now</button>
+            </Link>
           </div>
         </div>
         <div class="card">
@@ -31,7 +36,9 @@ function MainPage() {
           <div class="card-body">
             <h5 class="card-title">Simon Says</h5>
             <p class="card-text">This is a wider card It's a broader card with text below as a natural lead-in to extra content. This content is a little longer. This card has even longer content than the first to show that equal height action.</p>
-            <button type="button" class="btn btn-primary btn-lg">Play Now</button>
+            <Link to="/game/simongame">
+            <button type="button" class="start_button orange">Play Now</button>
+            </Link>
           </div>
         </div>
       </div>
