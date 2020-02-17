@@ -9,8 +9,8 @@ export default {
         },
       },
       {
-        name: 'Statistics',
-        url: '/statistics',
+        name: 'Summary Report',
+        url: '/report/summary',
         icon: 'icon-pie-chart',
       },
       {
