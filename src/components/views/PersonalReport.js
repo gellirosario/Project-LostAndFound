@@ -79,10 +79,17 @@ class PersonalReport extends Component {
                             <CardBody>
                                 <Row>
                                     <Col>
-                                        <CardTitle className="h3">Name's Report</CardTitle>
-                                        <div className="small text-muted">January 2020 - December 2020</div>
-                                        <br></br>
                                         <Row>
+                                            <Col>
+                                                <CardTitle className="h3">Name's Report</CardTitle>
+                                                <div className="small text-muted">January 2020 - December 2020</div>
+                                                <br></br>
+                                            </Col>
+                                            <Col sm="1.2" style={{ marginRight: 20 }}>
+                                                <button type="button" className="start_button orange">Print Report</button>
+                                            </Col>
+                                        </Row>
+                                        <Row>   
                                             <Col>
                                                 <h4>Brain Areas Exercised</h4>
                                                 <hr />

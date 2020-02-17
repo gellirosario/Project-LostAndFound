@@ -79,7 +79,6 @@ class SummaryReport extends Component {
                             <CardBody>
                                 <Row>
                                     <Col>
-
                                         <Row>
                                             <Col>
                                                 <CardTitle className="h3">Summary Report</CardTitle>
