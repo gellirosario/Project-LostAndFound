@@ -15,8 +15,9 @@ class SimonGame extends React.Component {
 				<div type="button" id="yellow" className="btn_ yellow"></div>
 				<div type="button" id="blue" className="btn_ blue"></div>
 			</div>
-			 <button type="button"className='start_button orange' onClick={() => this.handleStart()}>Start/Restart </button>
 			<h2 id="score">Score: 0</h2>
+			 <button type="button"className='start_button orange' onClick={() => this.handleStart()}>Start/Restart </button>
+			
 
 	  </div>
     );
