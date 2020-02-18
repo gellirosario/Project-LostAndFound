@@ -144,8 +144,8 @@ to {
 /* Whack-a-Mole */
 .mole_background {
     background-color: white;
-    border: 1px solid grey;
-    border-radius: 25px;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
     padding: 1%;
     text-align: center;
 }
@@ -347,15 +347,6 @@ to {
     background-color: transparent;
     
 }
-/*text for displaying round*/
-#counter {
-    font-family: Nunito;
-    font-size: 3rem;
-    font-weight: 500;
-    color: black;
-    position: relative;
-    top: 0.5rem;
-}
 
 #buttons-wrapper {
     margin: 0 auto;
@@ -363,7 +354,7 @@ to {
     text-align: center;
 }
 /*start and strict buttons*/
-button {
+.simonsays_button {
     position: relative;
     width: auto;
     color: #ecf0f1;
@@ -382,7 +373,7 @@ button {
     cursor: pointer;
 }
 
-    button:active {
+    .simonsays_button:active {
         filter: brightness(50%);
     }
 /*strict is off*/

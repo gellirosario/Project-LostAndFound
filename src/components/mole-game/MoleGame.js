@@ -1,6 +1,26 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import MoleHole from "./MoleHole";
+import {
+  Badge,
+  Button,
+  ButtonDropdown,
+  ButtonGroup,
+  ButtonToolbar,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Col,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Progress,
+  Row,
+  Table,
+} from 'reactstrap';
 
 class MoleGame extends Component {
 
@@ -66,7 +86,7 @@ class MoleGame extends Component {
     const intervalID = setInterval(() => {
       this.displayMoles();
 
-      if(this.state.restart){
+      if (this.state.restart) {
         window.clearInterval(intervalID);
         this.clearMoles();
         this.setState({ started: false });
@@ -192,24 +212,34 @@ class MoleGame extends Component {
 
   render() {
     return (
-      <div >
-        <div className="mole_background">
-          <h1 className="game_title" >WHACK-A-MOLE</h1>
-          <div style={{ display: this.state.gameOver }}>
-            <h1>GAME OVER!</h1>
-            <p>You scored {this.state.score}/20</p>
-          </div>
-          <div style={{ display: this.state.scoreDisplay }}>
-          <h2  style={{ textAlign: "center" }}> Score: {this.state.score}</h2>
-          </div>
-          <button type="button" className="start_button orange" onClick={this.timeOut.bind(this)}>
-            {this.state.buttonMessage}
-          </button>
-          <div style={{ display: this.state.display }}>
-            {this.createMoleHoles()}
-          </div>
+      <div className="animated fadeIn">
+        <Card>
+          <CardBody>
+            <Row>
+              <Col>
+                <CardTitle className="h1" style={{ paddingTop: 10 }}>Whack A Mole</CardTitle>
+              </Col>
+              <Col sm="1.2" style={{ marginRight: 20 }}>
+                <button type="button" className="start_button orange" onClick={this.timeOut.bind(this)}>
+                  {this.state.buttonMessage}
+                </button>
+              </Col>
+            </Row>
+            <hr />
+            <div style={{ display: this.state.gameOver }}>
+              <h1>GAME OVER!</h1>
+              <p>You scored {this.state.score}/20</p>
+            </div>
 
-        </div>
+            <div style={{ display: this.state.display }}>
+              {this.createMoleHoles()}
+            </div>
+            <br/>
+            <div style={{ display: this.state.scoreDisplay }}>
+              <h2 style={{ textAlign: "center" }}> Score: {this.state.score}</h2>
+            </div>
+          </CardBody>
+        </Card>
       </div>
     );
   }
