@@ -1,5 +1,25 @@
 import React, { Component } from 'react';
 import MatchCard from "./MatchCard";
+import {
+  Badge,
+  Button,
+  ButtonDropdown,
+  ButtonGroup,
+  ButtonToolbar,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Col,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Progress,
+  Row,
+  Table,
+} from 'reactstrap';
 
 const IMAGES = ["cat", "dog", "mole", "fish", "mouse"];
 var CARDS = [];
@@ -38,7 +58,7 @@ class MatchGame extends Component {
       isFlipDisabled: true
     }, function () {
       setTimeout(() => {
-        this.setState({ 
+        this.setState({
           selected: Array.from(Array(CARDS.length).keys()),
           isFlipDisabled: false,
           cards: this.shuffleCards(IMAGES.slice().concat(IMAGES.slice())),
@@ -64,7 +84,7 @@ class MatchGame extends Component {
     }
     else if (selected.length === 1) { //selecting second card
 
-      this.setState({ 
+      this.setState({
         flips: this.state.flips + 1,
         isFlipDisabled: true
       });
@@ -87,7 +107,7 @@ class MatchGame extends Component {
       else { //not a match
         this.setState({ selected: [selected[0], clickedIndex] });
         setTimeout(() => {
-          this.setState({ 
+          this.setState({
             selected: [],
             isFlipDisabled: false
           })
@@ -103,10 +123,22 @@ class MatchGame extends Component {
   render() {
     const { correct, selected, cards } = this.state;
     return (
-      <div>
-        <div className="mole_background">
-          <h1 class="display-1" className="game_title" >CARD MATCH</h1>
-          <div className="card-container">
+
+      <div className="animated fadeIn">
+        <Card>
+          <CardBody>
+            <Row>
+              <Col>
+                <CardTitle className="h1" style={{ paddingTop: 10 }}>Card Match</CardTitle>
+              </Col>
+              <Col sm="1.2" style={{ marginRight: 20 }}>
+                <button type="button" className="start_button" onClick={this.restartGame.bind(this)}>
+                  Restart Game
+          </button>
+              </Col>
+            </Row>
+            <hr/>
+            <div className="card-container">
             {cards.map((image, i) => (
               <MatchCard
                 key={i}
@@ -119,13 +151,12 @@ class MatchGame extends Component {
             ))
             }
           </div>
-          <h2 style={{ textAlign: "center" }}>Current Score: {this.state.text}</h2>
+
+          <h2 style={{ textAlign: "center" }}>Score: {this.state.text}</h2>
           <h2 style={{ textAlign: "center" }}>Flips Made: {this.state.flips}</h2>
-          <button type="button" className="start_button" onClick={this.restartGame.bind(this)}>
-            Restart (board will be reshuffled)
-          </button>
+          </CardBody>
+        </Card>
         </div>
-      </div>
     );
   }
 
