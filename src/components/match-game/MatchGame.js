@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import MatchCard from "./MatchCard";
 import {
   Card,
@@ -88,6 +89,7 @@ class MatchGame extends Component {
             this.setState({
               text: this.state.score + "/" + IMAGES.length + " All pairs found!"
             });
+            this.saveRecord();
           }
         });
       }
@@ -101,6 +103,21 @@ class MatchGame extends Component {
         }, 1500);
       }
     }
+  }
+
+  saveRecord() {
+
+    const gameRecord = {
+      gameType: 1, //Card Match
+      userId: "test", //testdata
+      score: this.state.score
+    }
+
+    console.log(gameRecord);
+
+    axios.post('http://localhost:5000/record/add', gameRecord)
+      .then(res => console.log(res.data));
+
   }
 
   renderCard(i) {
