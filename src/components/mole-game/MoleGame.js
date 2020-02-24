@@ -2,25 +2,14 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import MoleHole from "./MoleHole";
 import {
-  Badge,
-  Button,
-  ButtonDropdown,
-  ButtonGroup,
-  ButtonToolbar,
   Card,
   CardBody,
-  CardFooter,
-  CardHeader,
   CardTitle,
   Col,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Progress,
   Row,
-  Table,
 } from 'reactstrap';
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 class MoleGame extends Component {
 
@@ -245,4 +234,10 @@ class MoleGame extends Component {
   }
 }
 
-export default MoleGame;
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(
+  mapStateToProps
+)(MoleGame);

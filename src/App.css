@@ -79,10 +79,6 @@ to {
   box-shadow: 0px 5px 0px 0px #CD6509;
 }
 
-.orange:hover {
-  background-color: #FF983C;
-}
-
 /* Card Match */
 .card-box {
   width: 7.5vw;

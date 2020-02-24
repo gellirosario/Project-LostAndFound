@@ -2,7 +2,7 @@ export default {
     items: [
       {
         name: 'Home',
-        url: '/',
+        url: '/home',
         icon: 'icon-list',
         badge: {
           variant: 'info',
@@ -70,20 +70,10 @@ export default {
         name: 'Account',
       },
       {
-        name: 'Login',
-        url: '/login',
+        name: 'Logout',
+        url: '/logout',
         icon: 'icon-star',
-      },
-      {
-        name: 'Register',
-        url: '/register',
-        icon: 'icon-star',
-      },
-      {
-        name: '404 (extra)',
-        url: '/404',
-        icon: 'icon-star',
-      },
+      }
     ],
   };
   

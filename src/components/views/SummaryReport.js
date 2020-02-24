@@ -1,27 +1,16 @@
 import React, { Component } from 'react';
 import {
-    Badge,
-    Button,
-    ButtonDropdown,
-    ButtonGroup,
-    ButtonToolbar,
     Card,
     CardBody,
-    CardFooter,
-    CardHeader,
     CardTitle,
     Col,
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Progress,
     Row,
-    Table,
 } from 'reactstrap';
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 const DynamicDoughnut = React.lazy(() => import('../graphs/DynamicDoughnut'));
-const BarGraph = React.lazy(() => import('../graphs/BarGraph'));
+//const BarGraph = React.lazy(() => import('../graphs/BarGraph'));
 
 class SummaryReport extends Component {
     constructor() {
@@ -198,4 +187,10 @@ class SummaryReport extends Component {
     }
 }
 
-export default SummaryReport;
+const mapStateToProps = state => ({
+    auth: state.auth
+  });
+  
+  export default connect(
+    mapStateToProps
+  )(SummaryReport);

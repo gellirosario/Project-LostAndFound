@@ -1,27 +1,57 @@
 const express = require('express');
-const cors = require('cors'); // CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
+const cors = require('cors'); 
 const mongoose = require('mongoose');
+const passport = require("passport");
+const bodyParser = require("body-parser");
+require('dotenv').config(); 
 
-require('dotenv').config(); // environment var. in dotenv file
+// Routes
+const users = require("./routes/users");
+const gameRecordRouter = require('./routes/gamerecord');
 
 const app = express();
 const port = process.env.PORT || 5000; // port number
 
-app.use(cors()); 
-app.use(express.json()); // parse json as db server uses json
+app.use(cors());
 
-const uri = process.env.ATLAS_URI; // database url stored in .env file
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true }
+// Bodyparser middleware
+app.use(
+  bodyParser.urlencoded({
+    extended: false
+  })
 );
+app.use(bodyParser.json());
+
+app.use(express.json());
+
+// DB Config
+const db = require("./config/keys").mongoURI;
+
+// Connect to MongoDB
+mongoose
+  .connect(
+    db,
+    { useNewUrlParser: true }
+  )
+  .then(() => console.log("MongoDB successfully connected"))
+  .catch(err => console.log(err));
+
 const connection = mongoose.connection;
 connection.once('open', () => {
   console.log("MongoDB database connection established successfully");
 })
 
-const gameRecordRouter = require('./routes/gamerecord'); 
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
 
+// Passport config
+require("./config/passport")(passport);
+
+// Routes
+app.use("/users", users);
 app.use('/record', gameRecordRouter);
 
 app.listen(port, () => {
-    console.log(`Server is running on port: ${port}`); // start server
+  console.log(`Server is running on port: ${port}`); // start server
 });

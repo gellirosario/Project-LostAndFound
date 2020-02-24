@@ -1,27 +1,14 @@
 import React, { Component } from 'react';
 import {
-    Badge,
-    Button,
-    ButtonDropdown,
-    ButtonGroup,
-    ButtonToolbar,
     Card,
     CardBody,
-    CardFooter,
-    CardHeader,
     CardTitle,
     Col,
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Progress,
     Row,
-    Table,
 } from 'reactstrap';
 
 const DynamicDoughnut = React.lazy(() => import('../graphs/DynamicDoughnut'));
-const BarGraph = React.lazy(() => import('../graphs/BarGraph'));
+//const BarGraph = React.lazy(() => import('../graphs/BarGraph'));
 
 class PersonalReport extends Component {
     constructor() {

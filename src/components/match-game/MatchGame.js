@@ -1,24 +1,11 @@
 import React, { Component } from 'react';
 import MatchCard from "./MatchCard";
 import {
-  Badge,
-  Button,
-  ButtonDropdown,
-  ButtonGroup,
-  ButtonToolbar,
   Card,
   CardBody,
-  CardFooter,
-  CardHeader,
   CardTitle,
   Col,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Progress,
   Row,
-  Table,
 } from 'reactstrap';
 
 const IMAGES = ["cat", "dog", "mole", "fish", "mouse"];
