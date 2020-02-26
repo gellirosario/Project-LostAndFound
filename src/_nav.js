@@ -9,11 +9,6 @@ export default {
         },
       },
       {
-        name: 'Summary Report',
-        url: '/report/summary',
-        icon: 'icon-pie-chart',
-      },
-      {
         title: true,
         name: 'Profile',
         wrapper: {            // optional wrapper object

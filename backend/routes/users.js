@@ -34,7 +34,8 @@ router.post("/register", (req, res) => {
         email: req.body.email,
         password: req.body.password,
         age: req.body.age,
-        gender: req.body.gender
+        gender: req.body.gender,
+        userType: "User"
       });
 
       // Hash password before saving in database
@@ -82,7 +83,8 @@ router.post("/login", (req, res) => {
         // Create JWT Payload
         const payload = {
           id: user.id,
-          name: user.name
+          name: user.name,
+          userType: user.userType
         };
 
         // Sign token

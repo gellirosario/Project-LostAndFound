@@ -3,22 +3,18 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const GameSchema = new Schema({
-  name: {
+  gameType: {
     type: String,
     required: true
   },
-  email: {
+  gameName: {
     type: String,
     required: true
   },
-  password: {
-    type: String,
+  noOfPlay: {
+    type: Number,
     required: true
   },
-  date: {
-    type: Date,
-    default: Date.now
-  }
 });
 
 module.exports = Game = mongoose.model("game", GameSchema);

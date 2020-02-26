@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "../../utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "../../actions/authActions";
-import { Provider } from "react-redux";
+//import { Provider } from "react-redux";
 import store from "../../store";
 import {
   AppHeader,
@@ -22,10 +22,11 @@ import {
 
 // sidebar nav config
 import navigation from '../../_nav';
+import admin_navigation from '../../_nav_admin';
+
 // routes config
 import routes from '../../routes';
 
-const PrivateRoute = React.lazy(() => import('../private-route/PrivateRoute'));
 const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
 
 
@@ -47,10 +48,12 @@ if (localStorage.jwtToken) {
     // Redirect to login
     window.location.href = "./login";
   }
+
+ 
 }
 
 class DefaultLayout extends Component {
-
+  
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   signOut(e) {
@@ -67,6 +70,7 @@ class DefaultLayout extends Component {
   render() {
 
     const { user } = this.props.auth;
+    console.log("Role = " + user.userType);
 
     return (
       <div className="app">
@@ -80,7 +84,7 @@ class DefaultLayout extends Component {
             <AppSidebarHeader />
             <AppSidebarForm />
             <Suspense>
-              <AppSidebarNav navConfig={navigation} {...this.props} router={router} />
+              <AppSidebarNav navConfig={user.userType == "Admin" ? admin_navigation : navigation} {...this.props} router={router} />
             </Suspense>
             <AppSidebarFooter />
             <AppSidebarMinimizer />
@@ -113,11 +117,11 @@ class DefaultLayout extends Component {
 
 DefaultLayout.propTypes = {
   logoutUser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth  
 });
 
 export default connect(

@@ -194,7 +194,7 @@ class MoleGame extends Component {
 
     console.log(gameRecord);
 
-    axios.post('http://localhost:5000/record/add', gameRecord)
+    axios.post('/record/add', gameRecord)
       .then(res => console.log(res.data));
 
   }
