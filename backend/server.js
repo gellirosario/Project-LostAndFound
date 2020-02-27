@@ -6,8 +6,10 @@ const bodyParser = require("body-parser");
 require('dotenv').config(); 
 
 // Routes
-const users = require("./routes/users");
+const usersRouter = require("./routes/users");
+const gameRouter = require('./routes/game');
 const gameRecordRouter = require('./routes/gamerecord');
+
 
 const app = express();
 const port = process.env.PORT || 5000; // port number
@@ -31,7 +33,7 @@ const db = require("./config/keys").mongoURI;
 mongoose
   .connect(
     db,
-    { useNewUrlParser: true }
+    { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log("MongoDB successfully connected"))
   .catch(err => console.log(err));
@@ -49,8 +51,9 @@ app.use(passport.session()); // persistent login sessions
 require("./config/passport")(passport);
 
 // Routes
-app.use("/users", users);
+app.use('/users', usersRouter);
 app.use('/record', gameRecordRouter);
+app.use('/game',gameRouter)
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`); // start server

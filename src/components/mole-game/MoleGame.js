@@ -8,9 +8,10 @@ import {
   Col,
   Row,
 } from 'reactstrap';
-import PropTypes from "prop-types";
+import SecondsTohhmmss from '../../utils/SecondsTohhmmss'
 import { connect } from "react-redux";
 
+let offset = null, interval = null
 class MoleGame extends Component {
 
   constructor(props, context) {
@@ -35,17 +36,66 @@ class MoleGame extends Component {
       buttonMessage: 'Start Game',
       gameOver: 'none',
       display: '',
-      scoreDisplay: 'block',
+      scoreDisplay: 'none',
       buttonDisplay: 'inline-block',
       restart: false,
+      time: '',
+      clock: 0,
+      reactionTime: 0,
+      avgReactionTime: 0,
     }
 
   }
 
+  //******** TIMER  */
+
+  componentWillUnmount() {
+    this.pause()
+  }
+
+  pause() {
+    if (interval) {
+      clearInterval(interval)
+      interval = null
+    }
+  }
+
+  play() {
+    if (!interval) {
+      offset = Date.now()
+      interval = setInterval(this.update.bind(this), 0)
+    }
+  }
+
+  reset() {
+    let clockReset = 0
+    this.setState({ clock: clockReset })
+    let time = SecondsTohhmmss(clockReset / 1000)
+    this.setState({ time: time })
+  }
+
+  update() {
+    let clock = this.state.clock
+    clock += this.calculateOffset()
+    this.setState({ clock: clock })
+    let time = SecondsTohhmmss(clock / 1000)
+    this.setState({ time: time })
+  }
+
+  calculateOffset() {
+    let now = Date.now()
+    let newOffset = now - offset
+    offset = now
+    return newOffset
+  }
+
+  //******** GAME  */
   timeOut(num) {
     if (this.state.started) {
       this.setState({
         restart: true,
+        time: '',
+            clock: 0,
       })
       return;
     };
@@ -63,12 +113,14 @@ class MoleGame extends Component {
     }, num);
   }
 
+  // Start Mole Game
   startGame() {
     if (this.state.started) { return; }
 
     this.setState({
       started: true,
-      score: 0
+      score: 0,
+      reactionTime: 0,
     });
 
     let x = 0;
@@ -85,7 +137,9 @@ class MoleGame extends Component {
             restart: false,
             buttonMessage: 'Restart Game',
             buttonDisplay: 'inline-block',
-            score: 0,
+            time: '',
+            clock: 0,
+            reactionTime: 0,
           });
 
           this.startGame();
@@ -108,15 +162,20 @@ class MoleGame extends Component {
             buttonDisplay: 'inline-block',
             restart: false,
             started: false,
+            time: '',
+            clock: 0,
           });
 
           // Game Over
+          // Pause Time
+          this.pause();
           this.saveRecord();
         }, 850)
       }
     }, 1000);
   }
 
+  // Clear Moles after pop up
   clearMoles() {
     for (let value in this.state) {
       if (!isNaN(value)) {
@@ -127,7 +186,12 @@ class MoleGame extends Component {
     }
   }
 
+  // Display Moles for mole pop up
   displayMoles() {
+
+    // Start Time
+    this.play();
+
     let activeMole = Math.ceil(Math.random() * 10);
 
     if (this.state.lastMole[0] === activeMole) {
@@ -141,17 +205,26 @@ class MoleGame extends Component {
       lastMole: [activeMole],
       [activeMole]: 'translate(0, 50%)' // Mole pop up
     });
+
+
   }
 
+  // Reset Mole state
   resetMole() {
     window.setTimeout(() => {
-      this.setState({ moleWhacked: false }) // Reset mole state
+      this.setState({ moleWhacked: false })
     }, 550)
   }
 
+  // Mole Clicked -- Add score
   onMoleClick(event) {
-    // Mole whacked == true; no need to do anything
     if (this.state.moleWhacked) { return; }
+
+    // Reset Time
+    this.setState({
+      reactionTime: this.state.reactionTime + (this.state.clock / 1000)
+    })
+    this.reset();
 
     let target = event.target;
     target.parentNode.classList.add('game_whacked');
@@ -170,6 +243,7 @@ class MoleGame extends Component {
     }, 450)
   }
 
+  // Create Mole Holes
   createMoleHoles() {
     var mole_holes = [];
 
@@ -184,22 +258,36 @@ class MoleGame extends Component {
     );
   }
 
-  saveRecord() {
+  // Save to Database
+  async saveRecord() {
+
+    // Get Game Data
+    let res = await axios.get('/game/Whack A Mole');
+
+    this.setState({
+      avgReactionTime: Math.round((this.state.reactionTime / this.state.score) * 1000) / 1000
+    })
 
     const gameRecord = {
-      gameType: 2, //Whack A Mole
-      userId: "test", //testdata
-      score: this.state.score
+      gameId: res.data._id,
+      userId: this.props.auth.user.id,
+      score: this.state.score,
+      reactionTime: this.state.avgReactionTime
     }
 
     console.log(gameRecord);
 
+    // Add To Game Record
     axios.post('/record/add', gameRecord)
       .then(res => console.log(res.data));
 
+    this.setState({
+      reactionTime: 0
+    })
   }
 
   render() {
+
     return (
       <div className="animated fadeIn">
         <Card>
@@ -218,12 +306,13 @@ class MoleGame extends Component {
             <div style={{ display: this.state.gameOver }}>
               <h1>GAME OVER!</h1>
               <p>You scored {this.state.score}/20</p>
+              <p>Average Reaction Time: {this.state.avgReactionTime}</p>
             </div>
 
             <div style={{ display: this.state.display }}>
               {this.createMoleHoles()}
             </div>
-            <br/>
+            <br />
             <div style={{ display: this.state.scoreDisplay }}>
               <h2 style={{ textAlign: "center" }}> Score: {this.state.score}</h2>
             </div>
