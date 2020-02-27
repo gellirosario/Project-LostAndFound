@@ -8,7 +8,7 @@ import {
   Col,
   Row,
 } from 'reactstrap';
-import PropTypes from "prop-types";
+//import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 class MoleGame extends Component {
@@ -35,9 +35,9 @@ class MoleGame extends Component {
       buttonMessage: 'Start Game',
       gameOver: 'none',
       display: '',
-      scoreDisplay: 'block',
+      scoreDisplay: 'none',
       buttonDisplay: 'inline-block',
-      restart: false,
+      restart: false
     }
 
   }
@@ -184,11 +184,13 @@ class MoleGame extends Component {
     );
   }
 
-  saveRecord() {
+  async saveRecord() {
+
+    let res = await axios.get('/game/Whack A Mole');
 
     const gameRecord = {
-      gameType: 2, //Whack A Mole
-      userId: "test", //testdata
+      gameId: res.data._id,
+      userId: this.props.auth.user.id,
       score: this.state.score
     }
 
@@ -200,6 +202,7 @@ class MoleGame extends Component {
   }
 
   render() {
+
     return (
       <div className="animated fadeIn">
         <Card>

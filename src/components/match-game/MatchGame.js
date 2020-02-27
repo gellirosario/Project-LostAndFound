@@ -8,6 +8,7 @@ import {
   Col,
   Row,
 } from 'reactstrap';
+import { connect } from "react-redux";
 
 const IMAGES = ["cat", "dog", "mole", "fish", "mouse"];
 var CARDS = [];
@@ -21,19 +22,18 @@ class MatchGame extends Component {
 
     this.state = {
       cards: CARDS,
-      selected: Array.from(Array(CARDS.length).keys()), //indexes which have been selected (show all initially)
+      selected: [],
       correct: [], //indexes which have been guessed correctly
       score: 0,
       text: "0/" + IMAGES.length,
       flips: 0,
-      isFlipDisabled: false
+      isFlipDisabled: true,
+      buttonMessage: 'Start Game',
+      gameOver: 'none',
+      display: '',
+      scoreDisplay: 'none'
     };
 
-    setTimeout(() => { //flip over all after a few seconds
-      this.setState({
-        selected: []
-      })
-    }, 5000);
   }
 
   restartGame() {
@@ -43,7 +43,11 @@ class MatchGame extends Component {
       score: 0,
       text: "0/" + IMAGES.length,
       flips: 0,
-      isFlipDisabled: true
+      isFlipDisabled: true,
+      buttonMessage: "Restart Game",
+      display: '',
+      gameOver: 'none',
+      scoreDisplay: ''
     }, function () {
       setTimeout(() => {
         this.setState({
@@ -87,8 +91,13 @@ class MatchGame extends Component {
         }, function () {
           if (this.state.score === IMAGES.length) {
             this.setState({
-              text: this.state.score + "/" + IMAGES.length + " All pairs found!"
+              text: this.state.score + "/" + IMAGES.length + " All pairs found!",
+              gameOver: 'block',
+              display: 'none',
+              scoreDisplay: 'none',
+              buttonMessage: 'Start Game'
             });
+            
             this.saveRecord();
           }
         });
@@ -105,17 +114,19 @@ class MatchGame extends Component {
     }
   }
 
-  saveRecord() {
+  async saveRecord() {
+
+    let res = await axios.get('/game/Card Match');
 
     const gameRecord = {
-      gameType: 1, //Card Match
-      userId: "test", //testdata
+      gameId: res.data._id,
+      userId: this.props.auth.user.id,
       score: this.state.score
     }
 
     console.log(gameRecord);
 
-    axios.post('http://localhost:5000/record/add', gameRecord)
+    axios.post('/record/add', gameRecord)
       .then(res => console.log(res.data));
 
   }
@@ -137,35 +148,49 @@ class MatchGame extends Component {
               </Col>
               <Col sm="1.2" style={{ marginRight: 20 }}>
                 <button type="button" className="start_button" onClick={this.restartGame.bind(this)}>
-                  Restart Game
-          </button>
+                  {this.state.buttonMessage}
+                </button>
               </Col>
             </Row>
-            <hr/>
-            <div className="card-container">
-            {cards.map((image, i) => (
-              <MatchCard
-                key={i}
-                image={image}
-                isCorrect={correct.includes(i)}
-                isSelected={selected.includes(i)}
-                onSelect={() => this.onCardClick(i)}
-                disabled={this.state.isFlipDisabled}
-              />
-            ))
-            }
-          </div>
-
-          <h2 style={{ textAlign: "center" }}>Score: {this.state.text}</h2>
-          <h2 style={{ textAlign: "center" }}>Flips Made: {this.state.flips}</h2>
+            <hr />
+            <div style={{ display: this.state.gameOver }}>
+              <h1>GAME OVER!</h1>
+              <p>You scored {this.state.text}</p>
+              <p>Flips Made: {this.state.flips}</p>
+            </div>
+            <div style={{ display: this.state.display }} className="card-container">
+              {cards.map((image, i) => (
+                <MatchCard
+                  key={i}
+                  image={image}
+                  isCorrect={correct.includes(i)}
+                  isSelected={selected.includes(i)}
+                  onSelect={() => this.onCardClick(i)}
+                  disabled={this.state.isFlipDisabled}
+                />
+              ))
+              }
+            </div>
+            <div style={{ display: this.state.scoreDisplay }}>
+            <h2 style={{ textAlign: "center" }}>Score: {this.state.text}</h2>
+            <h2 style={{ textAlign: "center" }}>Flips Made: {this.state.flips}</h2>
+            <br/>
+            <p style={{ textAlign: "center" }}>Cards will be shown for few seconds for you to remember.</p>
+            </div>
           </CardBody>
         </Card>
-        </div>
+      </div>
     );
   }
 
 }
 
-export default MatchGame;
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(
+  mapStateToProps
+)(MatchGame);
 
 

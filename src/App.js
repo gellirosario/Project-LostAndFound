@@ -7,11 +7,7 @@ import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { Provider } from "react-redux";
 import store from "./store";
 
-
 const loading = () => <div className="animated fadeIn pt-3 text-center">Loading...</div>;
-
-// Containers
-const DefaultLayout = React.lazy(() => import('./components/default-layout/DefaultLayout'));
 
 // Pages
 const Landing = React.lazy(() => import('./components/views/Landing'));

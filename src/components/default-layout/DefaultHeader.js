@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import { UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav } from 'reactstrap';
+import { UncontrolledDropdown, Nav } from 'reactstrap';
 import PropTypes from 'prop-types';
 import logo from '../../assets/images/logo.png'
 import logo1 from '../../assets/images/logo_1.png'

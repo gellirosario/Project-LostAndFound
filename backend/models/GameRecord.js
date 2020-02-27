@@ -4,7 +4,13 @@ const Schema = mongoose.Schema;
 
 const gameRecordSchema = new Schema({
     userId: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    gameId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Game',
         required: true,
     },
     score: {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Button, Card, CardBody, Container, Row, CardHeader } from 'reactstrap';
+import { Button, Card, CardBody, Container, Row } from 'reactstrap';
 
 class Landing extends Component {
     render() {
@@ -11,7 +11,7 @@ class Landing extends Component {
                         <Card className="text-white bg-primary py-5 d-md-down-none" style={{ width: '100%',height:'100%' }}>
                             <CardBody className="text-center">
                                 <div>
-                                <img style={{height:"450px"}} src="https://www.lumosity.com/static/playing_koi_2-5b383fb3d14273ad4dcdec5f33170193.svg"></img>
+                                <img alt="header" style={{height:"450px"}} src="https://www.lumosity.com/static/playing_koi_2-5b383fb3d14273ad4dcdec5f33170193.svg"></img>
                                     <h2 style={{fontSize:'52px'}}>Welcome to Lost&Found</h2>
                                     <p style={{fontSize:'30px'}}>Discover what your mind can do</p>
                                     <p style={{fontSize:'20px'}}>Challenge and Improve your mind</p>

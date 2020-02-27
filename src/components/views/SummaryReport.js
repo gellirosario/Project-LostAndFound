@@ -6,7 +6,7 @@ import {
     Col,
     Row,
 } from 'reactstrap';
-import PropTypes from "prop-types";
+//import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 const DynamicDoughnut = React.lazy(() => import('../graphs/DynamicDoughnut'));

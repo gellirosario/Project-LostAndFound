@@ -84,7 +84,7 @@ class DefaultLayout extends Component {
             <AppSidebarHeader />
             <AppSidebarForm />
             <Suspense>
-              <AppSidebarNav navConfig={user.userType == "Admin" ? admin_navigation : navigation} {...this.props} router={router} />
+              <AppSidebarNav navConfig={user.userType === "Admin" ? admin_navigation : navigation} {...this.props} router={router} />
             </Suspense>
             <AppSidebarFooter />
             <AppSidebarMinimizer />

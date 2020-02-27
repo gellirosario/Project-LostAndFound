@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import {
   Card,
   CardBody,
@@ -6,6 +7,7 @@ import {
   Col,
   Row,
 } from 'reactstrap';
+import { connect } from "react-redux";
 
 //Color buttons that animate and are clicked on by user
 const ColorButton = function (props) {
@@ -28,7 +30,7 @@ const SettingsControls = function (props) {
 //Displays the game round
 const DisplayCircle = function (props) {
   return (
-    <h2 style={{ textAlign: "center" }}>Score: {props.gameRound}
+    <h2 style={{ textAlign: "center", display: props.scoreDisplay}}>Score: {props.gameRound}
     </h2>
   )
 }
@@ -52,7 +54,12 @@ const SimonCircle = function (props) {
               className={props.className} />
           </Row>
           <hr />
-          <div class="column" style={{textAlign:"center"}}>
+          <div style={{ display: props.gameOver }}>
+            <h1>GAME OVER!</h1>
+            <p>You scored {props.score}</p>
+          </div>
+
+          <div className="column" style={{ textAlign: "center", display: props.display }}>
             <ColorButton id='red-circle'
               //animate the button with active-circle class and disable its pointer-events until the user's turn
               //color-circle is default class
@@ -68,7 +75,7 @@ const SimonCircle = function (props) {
               onClick={() => { props.handleUserInput('green') }} />
 
           </div>
-          <div class="column" style={{textAlign:"center"}}>
+          <div className="column" style={{ textAlign: "center", display: props.display }}>
             <ColorButton id='yellow-circle'
               className={props.activeColor === 'yellow' ? 'color-circle active-circle pointer-events-disabled'
                 : !props.readyForUserInput ? "color-circle pointer-events-disabled"
@@ -80,7 +87,7 @@ const SimonCircle = function (props) {
                   : 'color-circle'}
               onClick={() => { props.handleUserInput('blue') }} />
           </div>
-          <DisplayCircle gameRound={props.gameRound}> </DisplayCircle>
+          <DisplayCircle  gameRound={props.gameRound} scoreDisplay={props.scoreDisplay}> </DisplayCircle>
         </CardBody>
       </Card>
     </div>
@@ -93,8 +100,6 @@ var intervalRepeatSequence;
 var resetColor;
 
 class SimonGame extends React.Component {
-
-
 
   constructor(props) {
     super(props)
@@ -123,6 +128,9 @@ class SimonGame extends React.Component {
         yellow: new Audio('https://s3.amazonaws.com/freecodecamp/simonSound3.mp3'),
         blue: new Audio('https://s3.amazonaws.com/freecodecamp/simonSound4.mp3'),
       },
+      display: '',
+      gameOver: 'none',
+      scoreDisplay: 'none',
     }
     this.handleNewSequence = this.handleNewSequence.bind(this);
     this.handleUserInput = this.handleUserInput.bind(this);
@@ -147,6 +155,8 @@ class SimonGame extends React.Component {
       //Changes start to reset and disables strict button once game begins
       gameInProgress: true,
       strictRestart: false,
+
+      scoreDisplay: 'block'
     });
     this.state.sounds[randomColor].play();
     //Turn the animation off after a delay using timeout, also allow user to input once sequence is finished
@@ -165,7 +175,9 @@ class SimonGame extends React.Component {
     if (this.state.readyForUserInput) {
       //Prevent overlapping sounds if user clicks quickly
       this.state.sounds[color].pause();
-      this.state.sounds[color].currentTime = 0;
+      //this.state.sounds[color].currentTime = 0;
+
+
       //Record the user's move and animate the clicked button
       let inputtedColor = color;
       this.setState({
@@ -182,7 +194,7 @@ class SimonGame extends React.Component {
         });
       }, 100);
       //Runs after each user click to check if user's turn is over (when length of userMoves = length of cpuMoves)
-      let checkIfUserTurnIsOver = setTimeout(() => {
+      setTimeout(() => {
         //check if current move is oorrect or not
         let index = this.state.userMoves.length - 1;
         if (this.state.userMoves[index] !== this.state.cpuMoves[index] && !this.state.strictMode) {
@@ -204,7 +216,7 @@ class SimonGame extends React.Component {
       //Checks if user's move is correct after each click when strict mode is on (non-strict only checks at end of turn)
       if (this.state.strictMode) {
         //This timeout needs to run faster than checkIfUserTurnIsOver to give it priority
-        let strictTimeout = setTimeout(() => {
+        setTimeout(() => {
           let index = this.state.userMoves.length - 1;
           //If the user's current move is incorrect
           if (this.state.userMoves[index] !== this.state.cpuMoves[index]) {
@@ -219,7 +231,7 @@ class SimonGame extends React.Component {
             this.resetGame();
             //Start a new game
             //Needed to use timeout to have delay between restarting and starting new game
-            let timeoutNewSequence = setTimeout(() => {
+            setTimeout(() => {
               this.handleNewSequence()
             }, 500)
           }
@@ -275,7 +287,7 @@ class SimonGame extends React.Component {
         //Get the next color to repeat
         let currentColor = this.state.cpuMoves[index];
         //Animate the next color, used timeout bc need delay after clearing the previous color (in case same color)
-        let timeout = setTimeout(() => {
+        setTimeout(() => {
           this.setState({
             activeColor: currentColor,
           })
@@ -288,7 +300,7 @@ class SimonGame extends React.Component {
         clearInterval(intervalRepeatSequence);
         //If user was correct, run handleNewSequence (add a new color to the sequence)
         if (this.state.userIsWrong === false) {
-          let createNewSequence = setTimeout(() => {
+          setTimeout(() => {
             this.handleNewSequence()
           }, 500)
         }
@@ -305,8 +317,11 @@ class SimonGame extends React.Component {
   //Only enabled after game begins, will stop game and reset all values
   resetGame() {
     //Turn off any running intervals/timeouts
-    let stopGame = clearInterval(intervalRepeatSequence);
-    let stopGame2 = clearTimeout(resetColor);
+    //let stopGame = clearInterval(intervalRepeatSequence);
+    //let stopGame2 = clearTimeout(resetColor);
+    clearInterval(intervalRepeatSequence);
+    clearTimeout(resetColor);
+
     //Restore state values to default
     this.setState({
       cpuMoves: [],
@@ -332,6 +347,7 @@ class SimonGame extends React.Component {
 
   displayGameRound() {
     const { strictRestart, gameRound } = this.state;
+
     if (strictRestart) {
       return 'GAME-OVER';
     }
@@ -342,6 +358,23 @@ class SimonGame extends React.Component {
       return gameRound;
     } else
       return gameRound;
+  }
+
+  async saveRecord() {
+
+    let res = await axios.get('/game/Simon Says');
+
+    const gameRecord = {
+      gameId: res.data._id,
+      userId: this.props.auth.user.id,
+      score: this.state.score
+    }
+
+    console.log(gameRecord);
+
+    axios.post('/record/add', gameRecord)
+      .then(res => console.log(res.data));
+
   }
 
   render() {
@@ -366,16 +399,21 @@ class SimonGame extends React.Component {
               : !strictMode && gameInProgress ? 'strict-disabled pointer-events-disabled'
                 : 'strict-disabled'}
         toggleStrictMode={this.toggleStrictMode}
+        display={this.state.display}
+        scoreDisplay={this.state.scoreDisplay}
+        gameOver={this.state.gameOver}
         //Tracks and displays the round
         gameRound={this.displayGameRound()} />
     )
   }
 
-
-
-
-
 }
 
 
-export default SimonGame;
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(
+  mapStateToProps
+)(SimonGame);
