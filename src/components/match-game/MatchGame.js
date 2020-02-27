@@ -9,10 +9,12 @@ import {
   Row,
 } from 'reactstrap';
 import { connect } from "react-redux";
+import SecondsTohhmmss from '../../utils/SecondsTohhmmss'
 
 const IMAGES = ["cat", "dog", "mole", "fish", "mouse"];
 var CARDS = [];
 
+let offset = null, interval = null
 class MatchGame extends Component {
 
   constructor(props) {
@@ -31,12 +33,62 @@ class MatchGame extends Component {
       buttonMessage: 'Start Game',
       gameOver: 'none',
       display: '',
-      scoreDisplay: 'none'
+      scoreDisplay: 'none',
+      time: '',
+      clock: 0,
+      totalTime: 0,
     };
 
   }
 
+  //******** TIMER  */
+
+  componentWillUnmount() {
+    this.pause()
+  }
+
+  pause() {
+    if (interval) {
+      clearInterval(interval)
+      interval = null
+    }
+  }
+
+  play() {
+    if (!interval) {
+      offset = Date.now()
+      interval = setInterval(this.update.bind(this), 0)
+    }
+  }
+
+  reset() {
+    let clockReset = 0
+    this.setState({ clock: clockReset })
+    let time = SecondsTohhmmss(clockReset / 1000)
+    this.setState({ time: time })
+  }
+
+  update() {
+    let clock = this.state.clock
+    clock += this.calculateOffset()
+    this.setState({ clock: clock })
+    let time = SecondsTohhmmss(clock / 1000)
+    this.setState({ time: time })
+  }
+
+  calculateOffset() {
+    let now = Date.now()
+    let newOffset = now - offset
+    offset = now
+    return newOffset
+  }
+
+//******** GAME  */
   restartGame() {
+
+    //Reset Timer
+    this.reset();
+
     this.setState({
       selected: [],
       correct: [],
@@ -59,8 +111,15 @@ class MatchGame extends Component {
           this.setState({
             selected: []
           });
+
+          
+
+          //Start Timer
+          this.play();
+
         }, 5000);
       }, 1500);
+      
     });
   }
 
@@ -95,9 +154,13 @@ class MatchGame extends Component {
               gameOver: 'block',
               display: 'none',
               scoreDisplay: 'none',
-              buttonMessage: 'Start Game'
+              buttonMessage: 'Start Game',
+              totalTime: (this.state.clock/1000)
             });
             
+            //Pause Timer
+            this.pause();
+
             this.saveRecord();
           }
         });
@@ -118,10 +181,14 @@ class MatchGame extends Component {
 
     let res = await axios.get('/game/Card Match');
 
+    console.log(this.state.clock);
+    
     const gameRecord = {
       gameId: res.data._id,
       userId: this.props.auth.user.id,
-      score: this.state.score
+      score: this.state.score,
+      flips: this.state.flips,
+      totalTime: (this.state.clock/1000) // stored in seconds
     }
 
     console.log(gameRecord);
@@ -157,6 +224,7 @@ class MatchGame extends Component {
               <h1>GAME OVER!</h1>
               <p>You scored {this.state.text}</p>
               <p>Flips Made: {this.state.flips}</p>
+              <p>Total Time Taken: {this.state.totalTime}s</p>
             </div>
             <div style={{ display: this.state.display }} className="card-container">
               {cards.map((image, i) => (
@@ -174,6 +242,7 @@ class MatchGame extends Component {
             <div style={{ display: this.state.scoreDisplay }}>
             <h2 style={{ textAlign: "center" }}>Score: {this.state.text}</h2>
             <h2 style={{ textAlign: "center" }}>Flips Made: {this.state.flips}</h2>
+            <h2 style={{ textAlign: "center" }}>Timer: {this.state.time}</h2>
             <br/>
             <p style={{ textAlign: "center" }}>Cards will be shown for few seconds for you to remember.</p>
             </div>

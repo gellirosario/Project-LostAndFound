@@ -21,6 +21,15 @@ const gameRecordSchema = new Schema({
             message: '{VALUE} is not an integer value'
         }
     },
+    reactionTime:{
+        type: Number,
+    },
+    totalTime:{
+        type: Number,
+    },
+    flips:{
+        type: Number,
+    },
     date: {
         type: Date,
         default: Date.now

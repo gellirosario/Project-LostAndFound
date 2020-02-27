@@ -13,6 +13,9 @@ router.route('/add').post((req, res) => {
   const gameId = req.body.gameId;
   const userId = req.body.userId;
   const score = req.body.score;
+  const reactionTime = req.body.reactionTime;
+  const flips = req.body.flips;
+  const totalTime = req.body.totalTime;
 
   // Find user by userId
   User.
@@ -25,17 +28,13 @@ router.route('/add').post((req, res) => {
         populate('Game').
         exec(function (error, doc) {
 
-          const newGameRecord = new GameRecord({ userId, gameId, score });
+          const newGameRecord = new GameRecord({ userId, gameId, score, reactionTime, flips, totalTime});
 
           newGameRecord.save()
             .then(() => res.json('Game Record added!'))
             .catch(err => res.status(400).json('Error: ' + err));
         });
     });
-
-
-
-
 
 });
 
