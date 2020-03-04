@@ -43,6 +43,8 @@ class MoleGame extends Component {
       clock: 0,
       reactionTime: 0,
       avgReactionTime: 0,
+      noOfMoles: 10,
+      moleInterval: 1300,
     }
 
   }
@@ -95,7 +97,7 @@ class MoleGame extends Component {
       this.setState({
         restart: true,
         time: '',
-            clock: 0,
+        clock: 0,
       })
       return;
     };
@@ -123,56 +125,73 @@ class MoleGame extends Component {
       reactionTime: 0,
     });
 
-    let x = 0;
-    const intervalID = setInterval(() => {
+    this.resetMole();
+
+    window.clearInterval(this.intervalID);
+
+    this.setState({
+      moleInterval: 1300
+    })
+    this.x = 0;
+
+    this.setGameInterval(this.state.moleInterval);
+  }
+
+  setGameInterval(_interval, x) {
+
+
+    this.intervalID = setInterval(() => {
       this.displayMoles();
 
-      if (this.state.restart) {
-        window.clearInterval(intervalID);
-        this.clearMoles();
-        this.setState({ started: false });
+      if (this.state.started) {
+        if (this.state.restart) {
+          window.clearInterval(this.intervalID);
+          this.clearMoles();
+          this.setState({ started: false });
 
-        window.setTimeout(() => {
-          this.setState({
-            restart: false,
-            buttonMessage: 'Restart Game',
-            buttonDisplay: 'inline-block',
-            time: '',
-            clock: 0,
-            reactionTime: 0,
-          });
+          window.setTimeout(() => {
+            this.setState({
+              restart: false,
+              buttonMessage: 'Restart Game',
+              buttonDisplay: 'inline-block',
+              time: '',
+              clock: 0,
+              reactionTime: 0,
+            });
 
-          this.startGame();
-        })
+            this.startGame();
+          })
 
+        }
+        this.x += 1;
+        console.log("x = " + this.x);
+        //Max Points == 20
+        if (this.x === 21) {
+          window.clearInterval(this.intervalID);
+          this.clearMoles();
+          this.setState({ started: false });
+
+          window.setTimeout(() => {
+            this.setState({
+              display: 'none',
+              scoreDisplay: 'none',
+              gameOver: 'block',
+              buttonMessage: 'Play again',
+              buttonDisplay: 'inline-block',
+              restart: false,
+              started: false,
+              time: '',
+              clock: 0,
+            });
+
+            // Game Over
+            // Pause Time
+            this.pause();
+            this.saveRecord();
+          }, 850)
+        }
       }
-
-      //Max Points == 20
-      if (++x === 21) {
-        window.clearInterval(intervalID);
-        this.clearMoles();
-        this.setState({ started: false });
-
-        window.setTimeout(() => {
-          this.setState({
-            display: 'none',
-            scoreDisplay: 'none',
-            gameOver: 'block',
-            buttonMessage: 'Play again',
-            buttonDisplay: 'inline-block',
-            restart: false,
-            started: false,
-            time: '',
-            clock: 0,
-          });
-
-          // Game Over
-          // Pause Time
-          this.pause();
-          this.saveRecord();
-        }, 850)
-      }
-    }, 1000);
+    }, _interval);
   }
 
   // Clear Moles after pop up
@@ -189,18 +208,17 @@ class MoleGame extends Component {
   // Display Moles for mole pop up
   displayMoles() {
 
-    // Start Time
-    this.play();
+    this.clearMoles();
 
-    let activeMole = Math.ceil(Math.random() * 10);
+    let activeMole = Math.ceil(Math.random() * this.state.noOfMoles);
 
     if (this.state.lastMole[0] === activeMole) {
       this.displayMoles();
       return;
     }
 
-    this.clearMoles();
-
+    // Start Time
+    this.play();
     this.setState({
       lastMole: [activeMole],
       [activeMole]: 'translate(0, 50%)' // Mole pop up
@@ -212,13 +230,30 @@ class MoleGame extends Component {
   // Reset Mole state
   resetMole() {
     window.setTimeout(() => {
+      this.clearMoles();
       this.setState({ moleWhacked: false })
-    }, 550)
+    }, 250)
+  }
+
+  componentDidUpdate() {
+    if (this.state.moleWhacked === true) {
+
+    }
   }
 
   // Mole Clicked -- Add score
   onMoleClick(event) {
     if (this.state.moleWhacked) { return; }
+
+    console.log(this.state.moleInterval);
+    window.clearInterval(this.intervalID);
+
+    this.setState({
+      moleInterval: this.state.moleInterval - 25,
+      moleWhacked: false
+    })
+
+    this.setGameInterval(this.state.moleInterval);
 
     // Reset Time
     this.setState({
@@ -247,7 +282,7 @@ class MoleGame extends Component {
   createMoleHoles() {
     var mole_holes = [];
 
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; i <= this.state.noOfMoles; i++) {
       mole_holes.push(<MoleHole key={i} context={this.state} onClick={this.onMoleClick.bind(this)} holeNumber={i} />);
     }
 
@@ -261,29 +296,33 @@ class MoleGame extends Component {
   // Save to Database
   async saveRecord() {
 
-    // Get Game Data
-    let res = await axios.get('/game/Whack A Mole');
+    console.log("reaction time: " + this.state.reactionTime);
 
-    this.setState({
-      avgReactionTime: Math.round((this.state.reactionTime / this.state.score) * 1000) / 1000
-    })
+    if (!isNaN(this.state.reactionTime)) {
+      // Get Game Data
+      let res = await axios.get('/game/Whack A Mole');
 
-    const gameRecord = {
-      gameId: res.data._id,
-      userId: this.props.auth.user.id,
-      score: this.state.score,
-      reactionTime: this.state.avgReactionTime
+      this.setState({
+        avgReactionTime: Math.round((this.state.reactionTime / this.state.score) * 1000) / 1000
+      })
+
+      const gameRecord = {
+        gameId: res.data._id,
+        userId: this.props.auth.user.id,
+        score: this.state.score,
+        reactionTime: this.state.avgReactionTime
+      }
+
+      console.log(gameRecord);
+
+      // Add To Game Record
+      axios.post('/record/add', gameRecord)
+        .then(res => console.log(res.data));
+
+      this.setState({
+        reactionTime: 0
+      })
     }
-
-    console.log(gameRecord);
-
-    // Add To Game Record
-    axios.post('/record/add', gameRecord)
-      .then(res => console.log(res.data));
-
-    this.setState({
-      reactionTime: 0
-    })
   }
 
   render() {
@@ -303,7 +342,7 @@ class MoleGame extends Component {
               </Col>
             </Row>
             <hr />
-            <div style={{ display: this.state.gameOver }}>
+            <div style={{ display: this.state.gameOver, textAlign: "center" }}>
               <h1>GAME OVER!</h1>
               <p>You scored {this.state.score}/20</p>
               <p>Average Reaction Time: {this.state.avgReactionTime}</p>

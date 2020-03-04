@@ -30,6 +30,9 @@ const gameRecordSchema = new Schema({
     flips:{
         type: Number,
     },
+    difficulty:{
+        type: String,
+    },
     date: {
         type: Date,
         default: Date.now
