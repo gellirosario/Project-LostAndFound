@@ -162,13 +162,10 @@ class Register extends Component {
                 </CardBody>
                 <CardFooter className="p-4">
                   <Row>
-                    <Col xs="12" sm="6">
+                    <Col xs="12" sm="12">
                       <Link to="/login">
                         <Button color="secondary" block><span>Log In</span></Button>
                       </Link>
-                    </Col>
-                    <Col xs="12" sm="6">
-                      <Button color="secondary" block><span>Forget Password</span></Button>
                     </Col>
                   </Row>
                 </CardFooter>
