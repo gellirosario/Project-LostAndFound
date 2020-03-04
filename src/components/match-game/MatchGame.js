@@ -102,8 +102,8 @@ class MatchGame extends Component {
       IMAGES = ["cooky", "tata", "chimmy", "shooky"];
       CARDS = this.shuffleCards(IMAGES.slice().concat(IMAGES.slice()));
 
-      //Reset Timer
-      this.reset();
+      //Pause Timer
+      this.pause();
 
       this.setState({
         selected: [],
@@ -128,6 +128,9 @@ class MatchGame extends Component {
             this.setState({
               selected: []
             });
+
+            //Reset Timer
+            this.reset();
 
             //Start Timer
             this.play();
