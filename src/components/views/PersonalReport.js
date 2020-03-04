@@ -10,15 +10,19 @@ import {
 const DynamicDoughnut = React.lazy(() => import('../graphs/DynamicDoughnut'));
 //const BarGraph = React.lazy(() => import('../graphs/BarGraph'));
 
+
+
 class PersonalReport extends Component {
     constructor() {
         super();
         this.state = {
             chartData: {}
+            //user:[]
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
+       // asios.get('')
         this.getChartData();
     }
 

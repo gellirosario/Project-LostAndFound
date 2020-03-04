@@ -12,12 +12,27 @@ const validateLoginInput = require("../validations/login");
 // Load User model
 const User = require("../models/User");
 
+
 // @route POST api/users/register
 // @desc Register user
 // @access Public
+
+router.route('/:_id').get((req, res) => {
+  User.findOne({ _id: (req.params._id) })
+    .then(userid => res.json(userid))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+router.route('/').get((req, res) => {
+  User.find()
+    .then(users => res.json(users))
+    .catch(err => res.status(400).json('Error:' + err));
+});
+
+
+
 router.post("/register", (req, res) => {
   
-  // Form validation
+  // Form validatinpon
   const { errors, isValid } = validateRegisterInput(req.body);
 
   // Check validation
@@ -75,6 +90,8 @@ router.post("/login", (req, res) => {
     if (!user) {
       return res.status(404).json({ email: "Email not found" });
     }
+
+    
 
     // Check password
     bcrypt.compare(password, user.password).then(isMatch => {
