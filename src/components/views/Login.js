@@ -4,7 +4,6 @@ import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGr
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
-//import classnames from "classnames";
 
 class Login extends Component {
 
@@ -100,9 +99,6 @@ class Login extends Component {
                       <Row>
                         <Col xs="6">
                           <Button type="submit" color="primary" className="px-4">Log In</Button>
-                        </Col>
-                        <Col xs="6" className="text-right">
-                          <Button color="link" className="px-0">Forgot password?</Button>
                         </Col>
                       </Row>
                     </Form>

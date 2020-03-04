@@ -1,12 +1,19 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
-//import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-function MainPage() {
-  return (
 
-    <div>
+class MainPage extends Component {
+
+  render (){
+
+    const { user } = this.props.auth;
+
+    if (user.isAuthenticated) return <Link to="/home" />; 
+
+    return (
+      <div>
       <div>
         <img src="https://cdn.psychologytoday.com/sites/default/files/field_blog_entry_images/2017-12/dementia_istock_000029744938_large.jpg" class="img-fluid" alt="Header"></img>
       </div>
@@ -45,11 +52,17 @@ function MainPage() {
         </div>
       </div>
     </div>
-  );
+    )
+  }
 }
 
+
+MainPage.propTypes = {
+  auth: PropTypes.object.isRequired,
+};
+
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth  
 });
 
 export default connect(
