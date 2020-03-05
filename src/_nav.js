@@ -19,15 +19,13 @@ export default {
       },
       {
         name: 'View Profile',
-        url: '/profile',
+        url: '/profile/view',
         icon: 'icon-user',
-        children: [
-          {
-            name: 'Edit Profile',
-            url: '/profile/edit',
-            icon: 'icon-pencil'
-          }
-        ]
+      },
+      {
+        name: 'Edit Profile',
+        url: '/profile/edit',
+        icon: 'icon-pencil'
       },
       {
         name: 'Personal Report',
@@ -67,7 +65,7 @@ export default {
       {
         name: 'Logout',
         url: '/logout',
-        icon: 'icon-star',
+        icon: 'icon-logout',
       }
     ],
   };

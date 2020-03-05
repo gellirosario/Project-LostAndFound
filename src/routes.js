@@ -8,6 +8,7 @@ const SimonGame = React.lazy(() => import('./components/simonsays-game/SimonGame
 const SummaryReport = React.lazy(() => import('./components/views/SummaryReport'));
 const PersonalReport = React.lazy(() => import('./components/views/PersonalReport'));
 const Profile = React.lazy(() => import('./components/views/Profile'));
+const EditProfile = React.lazy(() => import('./components/views/EditProfile'));
 const Logout = React.lazy(() => import('./components/views/Logout'));
 
 const routes = [
@@ -19,7 +20,8 @@ const routes = [
   { path: '/game/simongame', name: 'Simon Says', component: SimonGame},
   { path: '/report/summary', name: 'Summary Report', component: SummaryReport},
   { path: '/profile/report', name: 'Personal Report', component: PersonalReport},
-  { path: '/profile/edit', name: 'Edit Profile', component: Profile }
+  { path: '/profile/view', name: 'Profile', component: Profile },
+  { path: '/profile/edit', name: 'Edit Profile', component: EditProfile }
 ];
 
 export default routes;

@@ -1,7 +1,22 @@
 import React, { Component } from 'react';
-import { Button, Card, CardTitle, CardBody, Col, Row, Form, FormGroup, Label, Input } from 'reactstrap';
+import {
+  Card,
+  CardBody,
+  CardTitle,
+  Col,
+  Row,
+} from 'reactstrap';
+//import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 class Profile extends Component {
+  constructor() {
+    super();
+    this.state = {
+    }
+  }
+
+
   render() {
     return (
       <div className="animated fadeIn">
@@ -9,30 +24,35 @@ class Profile extends Component {
           <Col>
             <Card>
               <CardBody>
-                <CardTitle className="h3">Edit Profile</CardTitle>
-                <br></br>
-                <Form>
-                  <FormGroup>
-                    <Label for="username">Username</Label>
-                    <Input type="username" name="username" id="username" defaultValue="username_placeholder" />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="email">Email</Label>
-                    <Input type="email" name="email" id="email" defaultValue="email@example.com" />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="password">Password</Label>
-                    <Input type="password" name="password" id="password" placeholder="Type in new password" />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="confirmPassword">Confirm Password</Label>
-                    <Input type="password" name="password" id="confirmPassword" placeholder="Repeat the same password" />
-                  </FormGroup>
-                  <br></br>
-                  <Button variant="primary" type="submit">
-                    Update Information
-                  </Button>
-                </Form>
+                <Row>
+                  <Col>
+                    <Row>
+                      <Col>
+                        <CardTitle className="h3" style={{ paddingTop: 10 }}>View Profile</CardTitle>
+                      </Col>
+                      <Col sm="1.2" style={{ marginRight: 20 }}>
+                        <button type="button" className="start_button orange">Edit Profile</button>
+                      </Col>
+                    </Row>
+                    <hr />
+                    <Row>
+                      <Col>
+                        <Card>
+                          <CardBody>
+                            <h4> PROFILE DATA here <br /><br /><br /><br /><br /><br /><br /><br /></h4>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                      
+                    </Row>
+                    <Row>
+                    <Col>
+                        <h4>History</h4>
+                        <hr />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
               </CardBody>
             </Card>
           </Col>
@@ -42,5 +62,10 @@ class Profile extends Component {
   }
 }
 
-export default Profile;
+const mapStateToProps = state => ({
+  auth: state.auth
+});
 
+export default connect(
+  mapStateToProps
+)(Profile);
