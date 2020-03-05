@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+import { connect } from "react-redux";
 import {
     Card,
     CardBody,
@@ -12,17 +14,35 @@ const DynamicDoughnut = React.lazy(() => import('../graphs/DynamicDoughnut'));
 
 
 
+
+var users;
 class PersonalReport extends Component {
     constructor() {
         super();
         this.state = {
-            chartData: {}
-            //user:[]
+            chartData: {},
+
+            users:[]
         }
     }
+    
+  
+  componentDidMount() {
+    // asios.get('')
 
-    componentDidMount() {
-       // asios.get('')
+    const {user} = this.props.auth;
+    console.log(this.props.auth.user.id);
+
+      axios.get('users/')
+       .then(response => {
+         this.setState({ users: response.data.map(user => user.name) });
+       })
+       .catch((error) => {
+         console.log(error);
+       })
+       
+
+     
         this.getChartData();
     }
 
@@ -72,7 +92,7 @@ class PersonalReport extends Component {
                                     <Col>
                                         <Row>
                                             <Col>
-                                                <CardTitle className="h3">Name's Report</CardTitle>
+                                                <CardTitle className="h3"> {users}  LOL</CardTitle>
                                                 <div className="small text-muted">January 2020 - December 2020</div>
                                                 <br></br>
                                             </Col>
@@ -189,4 +209,10 @@ class PersonalReport extends Component {
     }
 }
 
-export default PersonalReport;
+const mapStateToProps = state => ({
+    auth: state.auth
+  });
+
+  export default connect(
+    mapStateToProps
+  )(PersonalReport);
