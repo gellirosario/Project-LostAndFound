@@ -97,30 +97,6 @@ class Profile extends Component {
                                 />
                               </FormGroup>
                               <FormGroup>
-                                <Label for="gender">
-                                  <h6>Gender</h6>
-                                </Label>
-                                <Input
-                                  type="gender"
-                                  name="gender"
-                                  id="gender"
-                                  placeholder={this.state.user.gender}
-                                  disabled
-                                />
-                              </FormGroup>
-                              <FormGroup>
-                                <Label for="gender">
-                                  <h6>Age</h6>
-                                </Label>
-                                <Input
-                                  type="password"
-                                  name="password"
-                                  id="password"
-                                  placeholder={this.state.user.age}
-                                  disabled
-                                />
-                              </FormGroup>
-                              <FormGroup>
                                 <Label for="password">
                                   <h6>Password</h6>
                                 </Label>
@@ -149,6 +125,30 @@ class Profile extends Component {
                                   name="password"
                                   id="confirmPassword"
                                   placeholder="Repeat the same password"
+                                />
+                              </FormGroup>                              
+                              <FormGroup>
+                                <Label for="gender">
+                                  <h6>Gender</h6>
+                                </Label>
+                                <Input
+                                  type="gender"
+                                  name="gender"
+                                  id="gender"
+                                  placeholder={this.state.user.gender}
+                                  disabled
+                                />
+                              </FormGroup>
+                              <FormGroup>
+                                <Label for="gender">
+                                  <h6>Age</h6>
+                                </Label>
+                                <Input
+                                  type="password"
+                                  name="password"
+                                  id="password"
+                                  placeholder={this.state.user.age}
+                                  disabled
                                 />
                               </FormGroup>
                               <br></br>
