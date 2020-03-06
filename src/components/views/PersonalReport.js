@@ -22,27 +22,27 @@ class PersonalReport extends Component {
         this.state = {
             chartData: {},
 
-            users:[]
+            users: []
         }
     }
-    
-  
-  componentDidMount() {
-    // asios.get('')
 
-    const {user} = this.props.auth;
-    console.log(this.props.auth.user.id);
 
-      axios.get('users/')
-       .then(response => {
-         this.setState({ users: response.data.map(user => user.name) });
-       })
-       .catch((error) => {
-         console.log(error);
-       })
-       
+    componentDidMount() {
+        // asios.get('')
 
-     
+        const { user } = this.props.auth;
+        console.log(this.props.auth.user.id);
+
+        axios.get('users/'+this.props.auth.user.id)
+            .then(response => {
+                this.setState({ users: response.data.map(user => user.name) });
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
+
+
         this.getChartData();
     }
 
@@ -100,7 +100,7 @@ class PersonalReport extends Component {
                                                 <button type="button" className="start_button orange">Print Report</button>
                                             </Col>
                                         </Row>
-                                        <Row>   
+                                        <Row>
                                             <Col>
                                                 <h4>Brain Areas Exercised</h4>
                                                 <hr />
@@ -211,8 +211,8 @@ class PersonalReport extends Component {
 
 const mapStateToProps = state => ({
     auth: state.auth
-  });
+});
 
-  export default connect(
+export default connect(
     mapStateToProps
-  )(PersonalReport);
+)(PersonalReport);

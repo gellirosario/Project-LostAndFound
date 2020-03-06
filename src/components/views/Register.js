@@ -4,7 +4,7 @@ import { Button, Card, CardBody, CardFooter, Col, Container, Form, Input, InputG
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
-//import classnames from "classnames";
+import moment from 'moment';
 
 class Register extends Component {
 
@@ -48,7 +48,7 @@ class Register extends Component {
       name: this.state.name,
       email: this.state.email,
       gender: this.state.gender,
-      age: this.state.age,
+      dateOfBirth: this.state.dateOfBirth,
       password: this.state.password,
       password2: this.state.password2
     };
@@ -117,12 +117,12 @@ class Register extends Component {
                       </InputGroupAddon>
                       <Input
                         onChange={this.onChange}
-                        value={this.state.age}
-                        invalid={!!(errors.age)}
-                        id="age"
-                        placeholder="Age"
-                        min={0} max={100}
-                        type="number" name="age" required
+                        value={this.state.dateOfBirth}
+                        invalid={!!(errors.dateOfBirth)}
+                        id="dateOfBirth"
+                        placeholder="dateOfBirth"
+                        max={moment().format("YYYY-MM-DD")}
+                        type="date" name="dateOfBirth" required
                       />
                       <FormFeedback>{errors.age}</FormFeedback>
                     </InputGroup>

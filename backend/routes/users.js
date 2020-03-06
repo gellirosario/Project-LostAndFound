@@ -13,9 +13,7 @@ const validateLoginInput = require("../validations/login");
 const User = require("../models/User");
 
 
-// @route POST api/users/register
-// @desc Register user
-// @access Public
+
 
 router.route('/:_id').get((req, res) => {
   User.findOne({ _id: (req.params._id) })
@@ -29,7 +27,9 @@ router.route('/').get((req, res) => {
 });
 
 
-
+// @route POST api/users/register
+// @desc Register user
+// @access Public
 router.post("/register", (req, res) => {
   
   // Form validatinpon
@@ -48,7 +48,7 @@ router.post("/register", (req, res) => {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
-        age: req.body.age,
+        dateOfBirth: req.body.dateOfBirth,
         gender: req.body.gender,
         userType: "User"
       });
