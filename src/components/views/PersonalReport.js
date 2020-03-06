@@ -15,32 +15,40 @@ const DynamicDoughnut = React.lazy(() => import('../graphs/DynamicDoughnut'));
 
 
 
-var users;
+var months    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var now       = new Date();
+var thisMonth = months[now.getMonth()];
+var year = new Date().getFullYear(); //Current Year
+
+console.log(thisMonth);
+console.log(year);
 class PersonalReport extends Component {
     constructor() {
         super();
         this.state = {
             chartData: {},
 
-            users:[]
+            users:"",
+            games:[],
+            SimonSaysId:""
         }
     }
     
   
-  componentDidMount() {
-    // asios.get('')
+  async componentDidMount() {
 
-    const {user} = this.props.auth;
-    console.log(this.props.auth.user.id);
 
-      axios.get('users/')
+    let res = await axios.get('/game/Whack A Mole');
+    console.log(res.data._id);
+      axios.get('users/'+ this.props.auth.user.id)
        .then(response => {
-         this.setState({ users: response.data.map(user => user.name) });
+         this.setState({ users: response.data.name });
        })
        .catch((error) => {
          console.log(error);
        })
        
+      
 
      
         this.getChartData();
@@ -92,8 +100,8 @@ class PersonalReport extends Component {
                                     <Col>
                                         <Row>
                                             <Col>
-                                                <CardTitle className="h3"> {users}  LOL</CardTitle>
-                                                <div className="small text-muted">January 2020 - December 2020</div>
+                                                <CardTitle className="h3"> {this.state.users}'s Report</CardTitle>
+                                                <div className="small text-muted">January {year} - {thisMonth} {year}</div>
                                                 <br></br>
                                             </Col>
                                             <Col sm="1.2" style={{ marginRight: 20 }}>

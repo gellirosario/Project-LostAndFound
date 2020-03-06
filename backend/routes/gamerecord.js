@@ -9,6 +9,20 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.route('/:userId').get((req, res) => {
+  GameRecord.find()
+    .then(gameRecorduserid => res.json(gameRecorduserid))
+    .catch(err => res.status(400).json('Error: ' + err));
+  
+});
+
+
+/*router.route('/:gameId').get((req, res) => {
+  GameRecord.findOne({ gameId: (req.body.gameId) })
+    .then(gammeid => res.json(gammeid))
+    .catch(err => res.status(400).json('Error: ' + err));
+});*/
+
 router.route('/add').post((req, res) => {
   const gameId = req.body.gameId;
   const userId = req.body.userId;
