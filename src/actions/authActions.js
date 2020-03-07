@@ -2,7 +2,7 @@ import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 
-import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from "./types";
+import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING, ALERT_SUCCESS } from "./types";
 
 // Register User
 export const registerUser = (userData, history) => dispatch => {
@@ -45,7 +45,14 @@ export const loginUser = userData => dispatch => {
 export const editUser = editedData => dispatch => {
   axios
     .put("users/edit", editedData)
-    .then(res => console.log(res))
+    .then(res => { 
+      console.log(res);
+      //notify front-end
+      dispatch({
+        type: ALERT_SUCCESS,
+        payload: true
+      });
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

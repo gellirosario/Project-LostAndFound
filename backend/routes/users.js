@@ -56,7 +56,7 @@ router.put("/edit", (req, res) => {
           }, {new: true},
           (err,Event) => {
             if (err) throw err;
-            res.json({ success: true });
+            res.status(200).send("success");
           });
         });
       });

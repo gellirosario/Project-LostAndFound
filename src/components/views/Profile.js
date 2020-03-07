@@ -47,11 +47,20 @@ class Profile extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
-      this.setState({
-        errors: nextProps.errors
-      });
-    }
+    console.log(nextProps.errors);
+    console.log(nextProps.success);
+
+    // if (nextProps.errors) {
+    //   this.setState({
+    //     errors: nextProps.errors
+    //   });
+    // }
+
+    // if (nextProps.success) {
+    //   this.setState({
+    //     success: nextProps.success
+    //   });
+    // }
   }
 
   onChange = e => {
@@ -240,11 +249,13 @@ Profile.propTypes = {
   editUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
+  success: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
+  success: state.success
 });
 
 export default connect(
