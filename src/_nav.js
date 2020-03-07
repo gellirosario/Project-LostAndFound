@@ -23,11 +23,6 @@ export default {
         icon: 'icon-user',
       },
       {
-        name: 'Edit Profile',
-        url: '/profile/edit',
-        icon: 'icon-pencil'
-      },
-      {
         name: 'Personal Report',
         url: '/profile/report',
         icon: 'icon-chart',

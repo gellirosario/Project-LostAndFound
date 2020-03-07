@@ -23,7 +23,6 @@ const SimonGame = React.lazy(() => import('./components/simonsays-game/SimonGame
 const SummaryReport = React.lazy(() => import('./components/views/SummaryReport'));
 const PersonalReport = React.lazy(() => import('./components/views/PersonalReport'));
 const Profile = React.lazy(() => import('./components/views/Profile'));
-const EditProfile = React.lazy(() => import('./components/views/EditProfile'));
 
 
 // Check for token to keep user logged in
@@ -66,7 +65,6 @@ class App extends Component {
               <PrivateRoute path="/game/matchgame" name="Card Match" Component={MatchGame} />} />
               <PrivateRoute path="/report/summary" name="Summary Report" Component={SummaryReport} />} />
               <PrivateRoute path="/profile/view" name="Profile" Component={Profile} />} />
-              <PrivateRoute path="/profile/edit" name="Edit Profile" Component={EditProfile} />} />
               <PrivateRoute path="/profile/report" name="Personal Report" Component={PersonalReport} />} />
               <PrivateRoute path="*" component={Page404}/>
             </Switch>
