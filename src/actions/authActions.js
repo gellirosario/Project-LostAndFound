@@ -44,7 +44,8 @@ export const loginUser = userData => dispatch => {
 
 export const editUser = editedData => dispatch => {
   axios
-    .post("users/edit", editedData)
+    .put("users/edit", editedData)
+    .then(res => console.log(res))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

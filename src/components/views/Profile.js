@@ -27,7 +27,8 @@ class Profile extends Component {
       email: "",
       password: "",
       password2: "",
-      errors: {}
+      errors: {},
+      success: false
     };
   }
 
@@ -60,6 +61,7 @@ class Profile extends Component {
   onSubmit = e => {
     e.preventDefault();
     const editedData = {
+      id: this.props.auth.user.id,
       name: this.state.name,
       email: this.state.email,
       password: this.state.password,
@@ -237,12 +239,12 @@ class Profile extends Component {
 Profile.propTypes = {
   editUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
 });
 
 export default connect(

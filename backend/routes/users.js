@@ -27,14 +27,41 @@ router.route('/').get((req, res) => {
 
 
 // Edit profile
-router.post("/edit", (req, res) => {
+router.put("/edit", (req, res) => {
+  const { errors, isValid } = validateEditInput(req.body);
 
-    const { errors, isValid } = validateEditInput(req.body);
+  if (!isValid){
+    return res.status(400).json(errors);
+  }
 
-    if (!isValid){
-      return res.status(400).json(errors);
+  User.findOne({ email: req.body.email }).then(user => {
+    if (user && req.body.id !== user.id) {
+      return res.status(400).json({ email: "Email already registered to another user"});
+    } else {
+      console.log(req.body);
+
+      //Hash new password
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(req.body.password, salt, (err, hash) => {
+          if (err) throw err;
+          req.body.password = hash;
+          console.log(req.body);
+          
+          User.findByIdAndUpdate(req.body.id, {
+            $set: {
+              name: req.body.name,
+              email: req.body.email,
+              password: req.body.password
+            }
+          }, {new: true},
+          (err,Event) => {
+            if (err) throw err;
+            res.json({ success: true });
+          });
+        });
+      });
     }
-
+  });
 });
 
 // @route POST api/users/register
