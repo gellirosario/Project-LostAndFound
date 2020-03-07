@@ -1,26 +1,33 @@
 import React, { Component } from "react";
 import {
+  Button,
   Card,
   CardBody,
   CardTitle,
   Col,
   Row,
-  Container,
   Form,
   FormGroup,
   Label,
-  Input
+  Input,
+  FormFeedback
 } from "reactstrap";
-//import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import axios from "axios";
+import { editUser } from "../../actions/authActions";
 
 class Profile extends Component {
   constructor() {
     super();
     this.state = {
       user: [],
-      edit: false
+      edit: false,
+      name: "",
+      email: "",
+      password: "",
+      password2: "",
+      errors: {}
     };
   }
 
@@ -30,7 +37,36 @@ class Profile extends Component {
     axios.get("/users/" + this.props.auth.user.id).then(res => {
       this.setState({ user: res.data });
       console.log(this.state.user);
+
+      this.setState({
+        name: this.state.user.name,
+        email: this.state.user.email,
+      });
     });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
+
+  onChange = e => {
+    this.setState({ [e.target.id]: e.target.value });
+  }
+
+  onSubmit = e => {
+    e.preventDefault();
+    const editedData = {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      password2: this.state.password2
+    }
+    console.log(editedData);
+    this.props.editUser(editedData);
   }
 
   editProfile() {
@@ -40,6 +76,9 @@ class Profile extends Component {
   }
 
   render() {
+
+    const { errors } = this.state;
+
     return (
       <div className="animated fadeIn">
         <Row>
@@ -71,36 +110,43 @@ class Profile extends Component {
                       <Col>
                         <Card>
                           <CardBody>
-                            <Form>
+                            <Form onSubmit={this.onSubmit}>
                               <FormGroup>
-                                <Label for="username">
+                                <Label for="name">
                                   <h6>Username</h6>
                                 </Label>
                                 <Input
-                                  type="username"
-                                  name="username"
-                                  id="username"
+                                  onChange={this.onChange}
+                                  type="name"
+                                  name="name"
+                                  id="name"
                                   defaultValue={this.state.user.name}
+                                  invalid={!!(errors.name)}
                                   disabled={!this.state.edit}
                                 />
+                              <FormFeedback>{errors.name}</FormFeedback>
                               </FormGroup>
                               <FormGroup>
                                 <Label for="email">
                                   <h6>Email</h6>
                                 </Label>
                                 <Input
+                                  onChange={this.onChange}
                                   type="email"
                                   name="email"
                                   id="email"
                                   defaultValue={this.state.user.email}
+                                  invalid={!!(errors.email)}
                                   disabled={!this.state.edit}
                                 />
+                              <FormFeedback>{errors.email}</FormFeedback>
                               </FormGroup>
                               <FormGroup>
                                 <Label for="password">
                                   <h6>Password</h6>
                                 </Label>
                                 <Input
+                                  onChange={this.onChange}
                                   type="password"
                                   name="password"
                                   id="password"
@@ -109,23 +155,28 @@ class Profile extends Component {
                                       ? "Type in a new password"
                                       : "******"
                                   }
+                                  invalid={!!(errors.password)}
                                   disabled={!this.state.edit}
                                 />
+                              <FormFeedback>{errors.password}</FormFeedback>  
                               </FormGroup>
                               <FormGroup
                                 style={
                                   this.state.edit ? {} : { display: "none" }
                                 }
                               >
-                                <Label for="confirmPassword">
+                                <Label for="password2">
                                   <h6>Confirm Password</h6>
                                 </Label>
                                 <Input
+                                  onChange={this.onChange}
                                   type="password"
-                                  name="password"
-                                  id="confirmPassword"
+                                  name="password2"
+                                  id="password2"
                                   placeholder="Repeat the same password"
+                                  invalid={!!(errors.password2)}
                                 />
+                              <FormFeedback>{errors.password2}</FormFeedback>    
                               </FormGroup>                              
                               <FormGroup>
                                 <Label for="gender">
@@ -135,67 +186,33 @@ class Profile extends Component {
                                   type="gender"
                                   name="gender"
                                   id="gender"
-                                  placeholder={this.state.user.gender}
+                                  defaultValue={this.state.user.gender}
                                   disabled
                                 />
                               </FormGroup>
                               <FormGroup>
-                                <Label for="gender">
+                                <Label for="age">
                                   <h6>Age</h6>
                                 </Label>
                                 <Input
-                                  type="password"
-                                  name="password"
-                                  id="password"
-                                  placeholder={this.state.user.age}
+                                  type="age"
+                                  name="age"
+                                  id="age"
+                                  defaultValue={this.state.user.age}
                                   disabled
                                 />
                               </FormGroup>
                               <br></br>
-                              <button
-                                type="button"
-                                className="start_button orange"
+                              <Button
+                                type="submit"
+                                color="primary"
                                 style={
                                   this.state.edit ? {} : { display: "none" }
                                 }
                               >
                                 Update Information
-                              </button>
+                              </Button>
                             </Form>
-                            {/* <Row>
-                              <Col>
-                                <h5>Username</h5>
-                              </Col>
-                            </Row>
-                            <Row>
-                                {this.state.user.name}
-                              </Row>
-                            <br/>
-                            <Row>
-                              <Col>
-                                <h5>Email</h5>
-                              </Col>
-                              <Col>
-                              {this.state.user.email}
-                              </Col>
-                            </Row>
-                            <br/>
-                            <Row>
-                              <Col>
-                                <h5>Gender</h5>
-                              </Col>
-                              <Col>
-                              {this.state.user.gender}
-                              </Col>
-                            </Row>
-                            <br/>
-                            <Row>
-                              <Col>
-                                <h5>Age</h5>
-                              </Col>
-                              <Col>
-                              </Col>
-                            </Row> */}
                           </CardBody>
                         </Card>
                       </Col>
@@ -217,8 +234,18 @@ class Profile extends Component {
   }
 }
 
+Profile.propTypes = {
+  editUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+}
+
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  errors: state.errors
 });
 
-export default connect(mapStateToProps)(Profile);
+export default connect(
+  mapStateToProps,
+  { editUser }
+)(Profile);

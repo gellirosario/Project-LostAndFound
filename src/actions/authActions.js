@@ -42,6 +42,17 @@ export const loginUser = userData => dispatch => {
     );
 };
 
+export const editUser = editedData => dispatch => {
+  axios
+    .post("users/edit", editedData)
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+}
+
 // Set logged in user
 export const setCurrentUser = decoded => {
   return {

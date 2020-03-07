@@ -8,11 +8,10 @@ const passport = require("passport");
 // Load input validation
 const validateRegisterInput = require("../validations/register");
 const validateLoginInput = require("../validations/login");
+const validateEditInput = require("../validations/edit");
 
 // Load User model
 const User = require("../models/User");
-
-
 
 
 router.route('/:_id').get((req, res) => {
@@ -26,6 +25,17 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).json('Error:' + err));
 }); 
 
+
+// Edit profile
+router.post("/edit", (req, res) => {
+
+    const { errors, isValid } = validateEditInput(req.body);
+
+    if (!isValid){
+      return res.status(400).json(errors);
+    }
+
+});
 
 // @route POST api/users/register
 // @desc Register user
