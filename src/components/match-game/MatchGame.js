@@ -294,7 +294,6 @@ class MatchGame extends Component {
     const gameRecord = {
       gameId: res.data._id,
       userId: this.props.auth.user.id,
-      score: this.state.score,
       flips: this.state.flips,
       totalTime: (this.state.clock / 1000) // stored in seconds
     }
