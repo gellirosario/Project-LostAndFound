@@ -9,6 +9,11 @@ export default {
         },
       },
       {
+        name: 'Chat',
+        url: '/chat',
+        icon: 'icon-speech',
+      },
+      {
         name: 'Summary Report',
         url: '/report/summary',
         icon: 'icon-pie-chart',
