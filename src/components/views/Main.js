@@ -16,9 +16,9 @@ class MainPage extends Component {
   constructor(props) {
     super(props);
 
-    var username = this.props.auth.user.email.split('@')[0];
+    var username = this.props.auth.user.email;
 
-    console.log("here" + this.props.auth.user.email.split('@')[0]);
+    console.log("here" + this.props.auth.user.email);
 
     this.state = {
       currentUsername: username,

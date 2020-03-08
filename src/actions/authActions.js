@@ -2,7 +2,7 @@ import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 
-import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING, ALERT_SUCCESS } from "./types";
+import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING, ALERT_SUCCESS, ALERT_FAILURE } from "./types";
 
 // Register User
 export const registerUser = (userData, history) => dispatch => {
@@ -49,16 +49,25 @@ export const editUser = editedData => dispatch => {
       console.log(res);
       //notify front-end
       dispatch({
+        type: GET_ERRORS,
+        payload: {}
+      })
+      dispatch({
         type: ALERT_SUCCESS,
         payload: true
-      });
+      })
     })
-    .catch(err =>
+    .catch(err => {
+      console.log(err);
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
       })
-    );
+      dispatch({
+        type: ALERT_FAILURE,
+        payload: false
+      })
+    })
 }
 
 // Set logged in user

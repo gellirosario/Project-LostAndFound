@@ -50,20 +50,19 @@ class Profile extends Component {
     console.log(nextProps.errors);
     console.log(nextProps.success);
 
-    // if (nextProps.errors) {
-    //   this.setState({
-    //     errors: nextProps.errors
-    //   });
-    // }
+    this.setState({
+      success: nextProps.success,
+    });
 
-    // if (nextProps.success) {
-    //   this.setState({
-    //     success: nextProps.success
-    //   });
-    // }
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors,
+      });
+    }
   }
 
-  onChange = e => {
+  onInput = e => {
+    console.log("CHANGE")
     this.setState({ [e.target.id]: e.target.value });
   }
 
@@ -82,7 +81,9 @@ class Profile extends Component {
 
   editProfile() {
     this.setState({
-      edit: !this.state.edit
+      edit: !this.state.edit,
+      errors: false,
+      success: false
     });
   }
 
@@ -124,10 +125,10 @@ class Profile extends Component {
                             <Form onSubmit={this.onSubmit}>
                               <FormGroup>
                                 <Label for="name">
-                                  <h6>Username</h6>
+                                  <h6>Name</h6>
                                 </Label>
                                 <Input
-                                  onChange={this.onChange}
+                                  onInput={this.onInput}
                                   type="name"
                                   name="name"
                                   id="name"
@@ -142,7 +143,7 @@ class Profile extends Component {
                                   <h6>Email</h6>
                                 </Label>
                                 <Input
-                                  onChange={this.onChange}
+                                  onInput={this.onInput}
                                   type="email"
                                   name="email"
                                   id="email"
@@ -157,7 +158,7 @@ class Profile extends Component {
                                   <h6>Password</h6>
                                 </Label>
                                 <Input
-                                  onChange={this.onChange}
+                                  onInput={this.onInput}
                                   type="password"
                                   name="password"
                                   id="password"
@@ -180,7 +181,7 @@ class Profile extends Component {
                                   <h6>Confirm Password</h6>
                                 </Label>
                                 <Input
-                                  onChange={this.onChange}
+                                  onInput={this.onInput}
                                   type="password"
                                   name="password2"
                                   id="password2"
@@ -224,6 +225,7 @@ class Profile extends Component {
                                 Update Information
                               </Button>
                             </Form>
+                            <h6 style={this.state.success && (Object.keys(this.state.errors).length === 0) ? {} : { display: "none"}}><br/>Profile successfully updated!</h6>
                           </CardBody>
                         </Card>
                       </Col>
