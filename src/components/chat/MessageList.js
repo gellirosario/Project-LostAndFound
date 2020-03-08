@@ -9,7 +9,7 @@ class MessageList extends Component {
             <ul className="message-list">
                 {this.props.messages.map((message, index) => (
                     <li className="message-box" key={index}>
-                        <h4 className="message-sender">{message.senderId} @ <Moment
+                        <h4 className="message-sender">{message.senderId} [<Moment
                             calendar={{
                                 lastDay: '[Yesterday at] LT',
                                 sameDay: '[Today at] LT',
@@ -22,7 +22,7 @@ class MessageList extends Component {
                             }}
                         >
                             {message.createdAt}
-                        </Moment>
+                        </Moment>]
                         </h4>
                         <p className="message-text">{message.text}</p>
                     </li>
