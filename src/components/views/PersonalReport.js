@@ -49,26 +49,22 @@ class PersonalReport extends Component {
         var simongames = Array.from(Array(2), () => new Array(4));
         var matchgames = Array.from(Array(2), () => new Array(4));
 
-        var mi=0;
-        var mj=0;
+        var mi = 0;
+        var mj = 0;
 
-        var si=0;
-        var sj=0;
+        var si = 0;
+        var sj = 0;
 
-        var mi=0;
-        var mj=0;
-        molegames[0,0] = 99999;
-        molegames[0,1] = 23333;
+        var mi = 0;
+        var mj = 0;
+        molegames[0, 0] = 99999;
+        molegames[0, 1] = 23333;
 
 
         let moleid = await axios.get('/game/WhackAMole');
         let simonid = await axios.get('/game/SimonSays');
         let matchid = await axios.get('/game/CardMatch');
-        console.log("LOL");
-        axios.get('users/' + this.props.auth.user.id)
-            .then(response => {
-                console.log("LOL");
-                console.log(response.data.name);
+
         axios.get('users/' + this.props.auth.user.id)
             .then(response => {
                 this.setState({ users: response.data.name });
@@ -81,25 +77,24 @@ class PersonalReport extends Component {
             .then(response => {
 
                 console.log(response.data);
-                var newArr= __(response.data).orderBy('score','desc').value();
+                var newArr = __(response.data).orderBy('score', 'desc').value();
                 this.data = newArr;
+
+
                 this.data.forEach((data) => {
-                   if (data.gameId === moleid.data._id) {
-               
-                this.data.forEach((data) => {
-                   
+
                     if (data.gameId === moleid.data._id) {
 
-                       
-                     //   console.log(data.gameId);
-                      // console.log(data.score, data.date);
+
+                        //   console.log(data.gameId);
+                        // console.log(data.score, data.date);
                     }
                     else if (data.gameId === simonid.data._id) {
-                     //   console.log(data);
-                     console.log(data.score, data.date);
+                        //   console.log(data);
+                        console.log(data.score, data.date);
                     }
                     else if (data.gameId === matchid.data._id) {
-                     //   console.log(data.gameId);
+                        //   console.log(data.gameId);
                     }
 
 
@@ -110,7 +105,7 @@ class PersonalReport extends Component {
 
 
                 });
-               
+
 
 
             })
