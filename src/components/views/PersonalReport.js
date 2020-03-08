@@ -28,7 +28,9 @@ class PersonalReport extends Component {
             chartData: {},
 
             users:"",
-            games:[],
+            simongames:[],
+            molegames:[],
+            matchgames:[],
             SimonSaysId:""
         }
     }
@@ -36,7 +38,7 @@ class PersonalReport extends Component {
   
   async componentDidMount() {
 
-console.log("LOLOLOL");
+
     let moleid = await axios.get('/game/Whack A Mole');
     let simonid = await axios.get('/game/Simon Says');
     let matchid = await axios.get('/game/Card Match');
@@ -51,7 +53,7 @@ console.log("LOLOLOL");
          console.log(error);
        })
        
-       axios.get('record/' + this.props.auth.user.id + '/' + matchid.data._id)
+       axios.get('record/' + this.props.auth.user.id + '/' + simonid.data._id)
        .then(response => {
          this.setState({ games: response.data });
          console.log(response.data);
