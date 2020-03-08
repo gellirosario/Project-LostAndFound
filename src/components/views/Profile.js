@@ -27,6 +27,7 @@ class Profile extends Component {
       email: "",
       password: "",
       password2: "",
+      age: "",
       errors: {},
       success: false
     };
@@ -42,19 +43,37 @@ class Profile extends Component {
       this.setState({
         name: this.state.user.name,
         email: this.state.user.email,
+        age: this.calculateAge(this.state.user.dateOfBirth)
       });
     });
   }
 
+  calculateAge(dateOfBirth){
+    var today = new Date();
+    var formattedDob = new Date(dateOfBirth);
+    var diff = today.getTime() - formattedDob.getTime();
+    var age = Math.floor(diff/31557600000);
+
+    return age;
+  }
+
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.errors);
-    console.log(nextProps.success);
+    console.log(nextProps)
 
-    this.setState({
-      success: nextProps.success,
-    });
+    if (this.props.success !== nextProps.success){
+      this.setState({
+        success: nextProps.success,
+      })
+    }
 
-    if (nextProps.errors) {
+    if (nextProps.success === true && (Object.keys(nextProps.errors).length === 0)) {
+      this.setState({
+        password: "",
+        password2: ""
+      })
+    }
+
+    if (this.props.errors !== nextProps.errors) {
       this.setState({
         errors: nextProps.errors,
       });
@@ -62,7 +81,6 @@ class Profile extends Component {
   }
 
   onInput = e => {
-    console.log("CHANGE")
     this.setState({ [e.target.id]: e.target.value });
   }
 
@@ -83,7 +101,9 @@ class Profile extends Component {
     this.setState({
       edit: !this.state.edit,
       errors: false,
-      success: false
+      success: false,
+      password: "",
+      password2: ""
     });
   }
 
@@ -132,7 +152,7 @@ class Profile extends Component {
                                   type="name"
                                   name="name"
                                   id="name"
-                                  defaultValue={this.state.user.name}
+                                  value={this.state.name}
                                   invalid={!!(errors.name)}
                                   disabled={!this.state.edit}
                                 />
@@ -147,7 +167,7 @@ class Profile extends Component {
                                   type="email"
                                   name="email"
                                   id="email"
-                                  defaultValue={this.state.user.email}
+                                  value={this.state.email}
                                   invalid={!!(errors.email)}
                                   disabled={!this.state.edit}
                                 />
@@ -162,6 +182,7 @@ class Profile extends Component {
                                   type="password"
                                   name="password"
                                   id="password"
+                                  value={this.state.password}
                                   placeholder={
                                     this.state.edit
                                       ? "Type in a new password"
@@ -185,6 +206,7 @@ class Profile extends Component {
                                   type="password"
                                   name="password2"
                                   id="password2"
+                                  value={this.state.password2}
                                   placeholder="Repeat the same password"
                                   invalid={!!(errors.password2)}
                                 />
@@ -198,7 +220,7 @@ class Profile extends Component {
                                   type="gender"
                                   name="gender"
                                   id="gender"
-                                  defaultValue={this.state.user.gender}
+                                  value={this.state.user.gender}
                                   disabled
                                 />
                               </FormGroup>
@@ -210,7 +232,7 @@ class Profile extends Component {
                                   type="age"
                                   name="age"
                                   id="age"
-                                  defaultValue={this.state.user.age}
+                                  value={this.state.age}
                                   disabled
                                 />
                               </FormGroup>
