@@ -20,8 +20,7 @@ var now       = new Date();
 var thisMonth = months[now.getMonth()];
 var year = new Date().getFullYear(); //Current Year
 
-console.log(thisMonth);
-console.log(year);
+
 class PersonalReport extends Component {
     constructor() {
         super();
@@ -29,7 +28,9 @@ class PersonalReport extends Component {
             chartData: {},
 
             users:"",
-            games:[],
+            simongames:[],
+            molegames:[],
+            matchgames:[],
             SimonSaysId:""
         }
     }
@@ -38,8 +39,12 @@ class PersonalReport extends Component {
   async componentDidMount() {
 
 
-    let res = await axios.get('/game/Whack A Mole');
-    console.log(res.data._id);
+    let moleid = await axios.get('/game/Whack A Mole');
+    let simonid = await axios.get('/game/Simon Says');
+    let matchid = await axios.get('/game/Card Match');
+
+    
+    
       axios.get('users/'+ this.props.auth.user.id)
        .then(response => {
          this.setState({ users: response.data.name });
@@ -48,9 +53,17 @@ class PersonalReport extends Component {
          console.log(error);
        })
        
-      
+       axios.get('record/' + this.props.auth.user.id + '/' + simonid.data._id)
+       .then(response => {
+         this.setState({ games: response.data });
+         console.log(response.data);
+         console.log(this.state.game)
+       })
+       .catch((error) => {
+         console.log(error);
+       })
 
-     
+
         this.getChartData();
     }
 
