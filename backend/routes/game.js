@@ -8,6 +8,12 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.route('/:_id').get((req, res) => {
+  Game.findOne({ _id: (req.params._id) })
+    .then(userid => res.json(userid))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
 router.route('/:name').get((req, res) => {
   Game.findOne({ name: (req.params.name) })
     .then(game => res.json(game))

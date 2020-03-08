@@ -29,7 +29,8 @@ class Profile extends Component {
       password2: "",
       age: "",
       errors: {},
-      success: false
+      success: false,
+      tabledata: [],
     };
   }
 
@@ -38,7 +39,7 @@ class Profile extends Component {
 
     axios.get("/users/" + this.props.auth.user.id).then(res => {
       this.setState({ user: res.data });
-      console.log(this.state.user);
+      //console.log(this.state.user);
 
       this.setState({
         name: this.state.user.name,
@@ -46,6 +47,12 @@ class Profile extends Component {
         age: this.calculateAge(this.state.user.dateOfBirth)
       });
     });
+
+    axios.get("/record/" + this.props.auth.user.id).then(res => {
+      this.setState({ tabledata: res.data });
+      console.log(this.state.tabledata);
+    });
+  
   }
 
   calculateAge(dateOfBirth){
@@ -55,6 +62,12 @@ class Profile extends Component {
     var age = Math.floor(diff/31557600000);
 
     return age;
+  }
+
+  getGameName(gameId){
+    axios.get("/game/" + gameId).then(res => {
+      return res.data.name;
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -153,10 +166,10 @@ class Profile extends Component {
                                   name="name"
                                   id="name"
                                   value={this.state.name}
-                                  invalid={!!(errors.name)}
+                                  invalid={!!errors.name}
                                   disabled={!this.state.edit}
                                 />
-                              <FormFeedback>{errors.name}</FormFeedback>
+                                <FormFeedback>{errors.name}</FormFeedback>
                               </FormGroup>
                               <FormGroup>
                                 <Label for="email">
@@ -168,10 +181,10 @@ class Profile extends Component {
                                   name="email"
                                   id="email"
                                   value={this.state.email}
-                                  invalid={!!(errors.email)}
+                                  invalid={!!errors.email}
                                   disabled={!this.state.edit}
                                 />
-                              <FormFeedback>{errors.email}</FormFeedback>
+                                <FormFeedback>{errors.email}</FormFeedback>
                               </FormGroup>
                               <FormGroup>
                                 <Label for="password">
@@ -188,10 +201,10 @@ class Profile extends Component {
                                       ? "Type in a new password"
                                       : "******"
                                   }
-                                  invalid={!!(errors.password)}
+                                  invalid={!!errors.password}
                                   disabled={!this.state.edit}
                                 />
-                              <FormFeedback>{errors.password}</FormFeedback>  
+                                <FormFeedback>{errors.password}</FormFeedback>
                               </FormGroup>
                               <FormGroup
                                 style={
@@ -208,10 +221,10 @@ class Profile extends Component {
                                   id="password2"
                                   value={this.state.password2}
                                   placeholder="Repeat the same password"
-                                  invalid={!!(errors.password2)}
+                                  invalid={!!errors.password2}
                                 />
-                              <FormFeedback>{errors.password2}</FormFeedback>    
-                              </FormGroup>                              
+                                <FormFeedback>{errors.password2}</FormFeedback>
+                              </FormGroup>
                               <FormGroup>
                                 <Label for="gender">
                                   <h6>Gender</h6>
@@ -247,7 +260,17 @@ class Profile extends Component {
                                 Update Information
                               </Button>
                             </Form>
-                            <h6 style={this.state.success && (Object.keys(this.state.errors).length === 0) ? {} : { display: "none"}}><br/>Profile successfully updated!</h6>
+                            <h6
+                              style={
+                                this.state.success &&
+                                Object.keys(this.state.errors).length === 0
+                                  ? {}
+                                  : { display: "none" }
+                              }
+                            >
+                              <br />
+                              Profile successfully updated!
+                            </h6>
                           </CardBody>
                         </Card>
                       </Col>
@@ -255,6 +278,31 @@ class Profile extends Component {
                     <Row>
                       <Col>
                         <h4>History</h4>
+                        <table id="history">
+                          <tbody>
+                            <tr>
+                              <th>Game</th>
+                              <th>Flips</th>
+                              <th>Total Time</th>
+                              <th>Score</th>
+                              <th>Reaction Time</th>
+                              <th>Date</th>
+                            </tr>
+                            {this.state.tabledata.map(item => {
+                              console.log(item);
+                              return (
+                                <tr>
+                                  <td>{this.getGameName(item.gameId)}</td>
+                                  <td>{item.flips}</td>
+                                  <td>{item.totalTime}</td>
+                                  <td>{item.score}</td>
+                                  <td>{item.reactionTime}</td>
+                                  <td>{item.date}</td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
                         <hr />
                       </Col>
                     </Row>
