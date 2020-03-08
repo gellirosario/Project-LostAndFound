@@ -3,6 +3,17 @@ import { ChatManager, TokenProvider } from '@pusher/chatkit-client';
 import Input from './Input';
 import MessageList from './MessageList';
 
+function extractData(data) {
+    const regex = /(@trbot)\s+translate.*\['"\](.+)['"].*to\W*(\w+)/gim
+    const found = regex.exec(data);
+
+    if (!found || found.length < 4) {
+      return false
+    }
+
+    return {text: found[2], language: found[3]}
+}
+
 class ChatApp extends Component {
     constructor(props) {
         super(props);
@@ -30,7 +41,7 @@ class ChatApp extends Component {
                 this.setState({ currentUser: currentUser })
 
                 return currentUser.subscribeToRoom({
-                    roomId: "76475d2e-5361-469a-a801-57fb282d5d03",
+                    roomId: "95130309-e65d-47f6-a9df-39b76f41600c",
                     messageLimit: 100,
                     hooks: {
                         onMessage: message => {
@@ -48,7 +59,7 @@ class ChatApp extends Component {
                 })
             })
             .catch(error => console.log(error))
-        }
+    }
 
 
     addMessage(text) {
@@ -63,7 +74,8 @@ class ChatApp extends Component {
     render() {
         return (
             <div>
-                <h2 className="header">Let's Talk</h2>
+                <h2 className="chat-header">Let's Talk</h2>
+                <hr/>
                 <MessageList messages={this.state.messages} />
                 <Input className="input-field" onSubmit={this.addMessage} />
             </div>

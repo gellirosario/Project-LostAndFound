@@ -9,6 +9,11 @@ export default {
         },
       },
       {
+        name: 'Chat',
+        url: '/chat',
+        icon: 'icon-speech',
+      },
+      {
         title: true,
         name: 'Profile',
         wrapper: {            // optional wrapper object

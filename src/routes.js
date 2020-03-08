@@ -9,9 +9,11 @@ const SummaryReport = React.lazy(() => import('./components/views/SummaryReport'
 const PersonalReport = React.lazy(() => import('./components/views/PersonalReport'));
 const Profile = React.lazy(() => import('./components/views/Profile'));
 const Logout = React.lazy(() => import('./components/views/Logout'));
+const Chat = React.lazy(() => import('./components/chat/Chat'));
 
 const routes = [
   { path: '/home', exact: true, name: 'Home' , component: MainPage},
+  { path: '/chat', exact: true, name: 'Chat' , component: Chat},
   { path: '/404', exact: true, name: '404' , component: Page404},
   { path: '/logout', component: Logout },
   { path: '/game/molegame', name: 'Whack A Mole', component: MoleGame },

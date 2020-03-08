@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "lostandfound-270418",
+  "private_key_id": "42377865c58d7fb401b9b96352202b41475f66d7",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCvD53nFBC6lf0Y\nXDDs5RZU50zYuUKJsX3F3DktIFceGK6abq0DpJKrTVLEFAJKD/2joWf6ulQ3tIGg\nyFPDkWSO8oCxGbjs7GJ/uYitcY1FzxGtd3qlOpZjApDYUtP+KdRk84oySO1oNMW5\npuhILtI8qyDn3e8KP+GgjTXK2b5xUh6VX0slWBgePMBHndftEIxHxKMp3MXwmdhc\nbx5SkZ1wRr0wO7OL7t2YD4AOl/J5pcoY4dOuGJ1tyC1V7z0cXYqe6pHHF4IBP2fI\nt+n0R3npa+nxeMop9R/nQ7W3gqcy0rktpNBLiXM7Pvt4vJS526T6ckqAShId0I7O\n8qdUdmmJAgMBAAECggEAAWJVZHEqAVz+j3WUeh2vk66b0sTYNqrSwes6qoAsdX5K\nzHQekGj53eUycn7EATOSKlE0N20cuFoILQNtzMiMASiqsCZyFLF5GpBsI7mXnTCE\nxRiCPZHdLt2OKUpdBw/r8CZldn38HoxNmekCF3wDSTEt2pd3HzTKbbtgFwFUuk72\nuKqR6H1F672tvEhzJVaCQZQ4XDtDvX9tLQVYhN7slfvcVCXFeqOytzkewzr9jaPT\n9jeFqLwCWpzeGpe9GGB/uqPYgnz9fj0PSYeLxduWIbhdfXrG+BdH5VIgZm8gar3P\n1+CQ2S35CB/VhlUIgyP1yaTDGS8Q/KJKRF1bdcIA7wKBgQDhHsfzkOsIUVWSRYdV\n04XfIP76zGrp2bQgif8Wprjxgg/7+WbfRj1LhDeXTT7D6iIsaAkXwMUxCCUjqHd9\nKC+cxxUuEMsLiUrvG6N0t/jAiVOTKe9QDgHGy3PHvPUWSGVqs5Y2hLG6/b45IPK2\nyDZ7jSPvjZZO0AG8SVB5hJtWAwKBgQDHEvqG5ZuL9u4wvo8CVAKaATxsm+FdPHHx\nPXiS4uDtWu5jAugd7f6hrdIm/zn/ueV4SRqrKtWP03QUEn8RVSGbmPhPicB9xC1b\nUYQg4gxcrAP6oi+///7h6P8VoyzjZ6NH4N0/vQzO1hDdmSOdIzp7jXofsFX5TavL\nMxDZry8igwKBgGdkz8kaQhhr4rVvoZzVraKxcOqXgHMvPf/D4ZjxsfeaGOVNwuXB\nSN2qOC4RmEY6/r8OeT6jlu3SI9ygv2CIWHXVKfEiXV9LC1OOiiBNbr5fVDc/B17p\nT/+R6fdO3fICBjJfkRoxD8AmUnvCmjdA9WUBigO4L9S6zFFCCugE86MpAoGAHmA2\n+f5vDZxQG//3slM/UmB959ShPqjKehT3IPKdf5owZcs7v9Vg1SrAtlKbdvnWmdQN\nzbBrhdauD6IC4ZIr3qIowXozdP1KLnTxxFK5sCpPMR8uSg21xqLWyWZsowZdU8pr\n+B3Qpn7jc+y6EnAdrFyaFdvCQpgnbooMOCsS9iECgYEAvX2K1XCma/q4IRHan6CM\nMtHczYZRjTbx0jRvkjgEmpTmIRwuxRJ+Ro7LB0AlXlxpsK6FfQuwvvZEwp+Fk7bC\n/ZKj/v/Ac6TOrFtkLt7bG/BpXFyWoMdR6IMUEDSyevMXX0x3UegeKdTLnIgPHddU\nUpZJ0pA8gqVcR9r20cg12ZE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "translatorbot@lostandfound-270418.iam.gserviceaccount.com",
+  "client_id": "106286207730493391499",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/translatorbot%40lostandfound-270418.iam.gserviceaccount.com"
+}
