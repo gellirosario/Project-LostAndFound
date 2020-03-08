@@ -23,7 +23,7 @@ const SimonGame = React.lazy(() => import('./components/simonsays-game/SimonGame
 const SummaryReport = React.lazy(() => import('./components/views/SummaryReport'));
 const PersonalReport = React.lazy(() => import('./components/views/PersonalReport'));
 const Profile = React.lazy(() => import('./components/views/Profile'));
-
+const Chat = React.lazy(() => import('./components/chat/Chat'));
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -59,6 +59,7 @@ class App extends Component {
             </Switch>
             <Switch>
               <PrivateRoute path="/home" name="Home" Component={MainPage} />} />
+              <PrivateRoute path="/chat" name="Chat" Component={Chat} />} />
               <PrivateRoute path="/logout" Component={Logout} />} />
               <PrivateRoute path="/game/molegame" name="Whack A Mole" Component={MoleGame} />} />
               <PrivateRoute path="/game/simongame" name="Simon Says" Component={SimonGame} />} />

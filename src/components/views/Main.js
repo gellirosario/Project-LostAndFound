@@ -2,70 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import ChatMessage from '../chat/ChatMessage';
-import ChatApp from '../chat/ChatApp';
-import { default as Chatkit } from '@pusher/chatkit-server';
-
-const chatkit = new Chatkit({
-  instanceLocator: "v1:us1:de78f0a4-48a8-489c-ad96-64d645e64c91",
-  key: "5c6d321d-eebb-404e-b7ae-7c025dbb54cc:Kx9HrJpQsNqKLX3cMT4tplzwf2HV93/NGwik85JiFjY="
-})
 
 class MainPage extends Component {
-
-  constructor(props) {
-    super(props);
-
-    var username = this.props.auth.user.email;
-
-    console.log("here" + this.props.auth.user.email);
-
-    this.state = {
-      currentUsername: username,
-      currentId: this.props.auth._id,
-      currentView: 'ChatMessage'
-    }
-    this.changeView = this.changeView.bind(this);
-    this.createUser(this.state.currentUsername);
-  }
-
-  createUser(username) {
-    chatkit.createUser({
-      id: username,
-      name: username,
-    })
-      .then((currentUser) => {
-        this.setState({
-          currentUsername: username,
-          currentId: username,
-          currentView: 'chatApp'
-        })
-      }).catch((err) => {
-        if (err.status === 400) {
-          this.setState({
-            currentUsername: username,
-            currentId: username,
-            currentView: 'chatApp'
-          })
-        } else {
-          console.log(err.status);
-        }
-      });
-  }
-
-  changeView(view) {
-    this.setState({
-      currentView: view
-    })
-  }
-
   render() {
-    let view = '';
-    if (this.state.currentView === "ChatMessage") {
-      view = <ChatMessage  changeView={this.changeView}/>
-  } else if (this.state.currentView === "chatApp") {
-      view = <ChatApp currentId={this.state.currentId} />
-  }
 
     const { user } = this.props.auth;
 
@@ -73,10 +12,6 @@ class MainPage extends Component {
 
     return (
       <div>
-
-        <div className="App">
-          {view}
-        </div>
         <br></br>
         <p className="h1">Featured Games</p>
         <div className="card-deck" style={{ marginTop: "20px", marginBottom: "20px" }}>
