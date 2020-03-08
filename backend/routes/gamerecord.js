@@ -2,6 +2,7 @@ const router = require('express').Router();
 let GameRecord = require('../models/GameRecord');
 let User = require("../models/User");
 let Game = require('../models/Game');
+const { ObjectID } = require('mongodb');
 
 router.route('/').get((req, res) => {
   GameRecord.find()
@@ -10,18 +11,22 @@ router.route('/').get((req, res) => {
 });
 
 router.route('/:userId').get((req, res) => {
-  GameRecord.find()
-    .then(gameRecorduserid => res.json(gameRecorduserid))
+  //GameRecord.find()
+  const userId= req.params.userId;
+    GameRecord.find({"userId": ObjectID(userId)})
+    .then(gameRecord => res.json(gameRecord))
     .catch(err => res.status(400).json('Error: ' + err));
-  
 });
 
-
-/*router.route('/:gameId').get((req, res) => {
-  GameRecord.findOne({ gameId: (req.body.gameId) })
-    .then(gammeid => res.json(gammeid))
+router.route('/:userId/:gameId').get((req, res) => {
+  //GameRecord.find()
+  const userId= req.params.userId;
+  const gameId= req.params.gameId;
+    GameRecord.find({"userId": ObjectID(userId),"gameId": ObjectID(gameId) })
+    .then(gameRecord => res.json(gameRecord))
     .catch(err => res.status(400).json('Error: ' + err));
-});*/
+});
+
 
 router.route('/add').post((req, res) => {
   const gameId = req.body.gameId;
