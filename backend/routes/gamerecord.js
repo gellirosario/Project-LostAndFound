@@ -11,18 +11,21 @@ router.route('/').get((req, res) => {
 });
 
 router.route('/:userId').get((req, res) => {
-  //GameRecord.find()
+  GameRecord.find()
   const userId= req.params.userId;
     GameRecord.find({"userId": ObjectID(userId)})
     .then(gameRecord => res.json(gameRecord))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+
+
 router.route('/:userId/:gameId').get((req, res) => {
-  //GameRecord.find()
+  GameRecord.find()
   const userId= req.params.userId;
   const gameId= req.params.gameId;
     GameRecord.find({"userId": ObjectID(userId),"gameId": ObjectID(gameId) })
+    .sort({ score: -1 })
     .then(gameRecord => res.json(gameRecord))
     .catch(err => res.status(400).json('Error: ' + err));
 });
