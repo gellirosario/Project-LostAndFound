@@ -69,6 +69,8 @@ class PersonalReport extends Component {
             .then(response => {
                 console.log("LOL");
                 console.log(response.data.name);
+        axios.get('users/' + this.props.auth.user.id)
+            .then(response => {
                 this.setState({ users: response.data.name });
             })
             .catch((error) => {
@@ -83,6 +85,10 @@ class PersonalReport extends Component {
                 this.data = newArr;
                 this.data.forEach((data) => {
                    if (data.gameId === moleid.data._id) {
+               
+                this.data.forEach((data) => {
+                   
+                    if (data.gameId === moleid.data._id) {
 
                        
                      //   console.log(data.gameId);
