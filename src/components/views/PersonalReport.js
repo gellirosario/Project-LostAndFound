@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from "react-redux";
+
 import {
     Card,
     CardBody,
@@ -14,54 +15,102 @@ const DynamicDoughnut = React.lazy(() => import('../graphs/DynamicDoughnut'));
 
 
 
-
-var months    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-var now       = new Date();
+var __ = require('lodash');
+var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+var now = new Date();
 var thisMonth = months[now.getMonth()];
 var year = new Date().getFullYear(); //Current Year
 
 
 class PersonalReport extends Component {
+
+
+
+
     constructor() {
+
         super();
         this.state = {
             chartData: {},
 
-            users:"",
-            simongames:[],
-            molegames:[],
-            matchgames:[],
-            SimonSaysId:""
+            users: "",
+            // simongames:[[],[],
+            //  molegames:[[],[]], 
+            //  matchgames:[[],[]],
+            SimonSaysId: ""
         }
     }
-    
-  
-  async componentDidMount() {
 
 
-    let moleid = await axios.get('/game/Whack A Mole');
-    let simonid = await axios.get('/game/Simon Says');
-    let matchid = await axios.get('/game/Card Match');
 
-    
-    
-      axios.get('users/'+ this.props.auth.user.id)
-       .then(response => {
-         this.setState({ users: response.data.name });
-       })
-       .catch((error) => {
-         console.log(error);
-       })
-       
-       axios.get('record/' + this.props.auth.user.id + '/' + simonid.data._id)
-       .then(response => {
-         this.setState({ games: response.data });
-         console.log(response.data);
-         console.log(this.state.game)
-       })
-       .catch((error) => {
-         console.log(error);
-       })
+    async componentDidMount() {
+
+        var molegames = Array.from(Array(2), () => new Array(4));
+        var simongames = Array.from(Array(2), () => new Array(4));
+        var matchgames = Array.from(Array(2), () => new Array(4));
+
+        var mi=0;
+        var mj=0;
+
+        var si=0;
+        var sj=0;
+
+        var mi=0;
+        var mj=0;
+        molegames[0,0] = 99999;
+        molegames[0,1] = 23333;
+
+
+        let moleid = await axios.get('/game/WhackAMole');
+        let simonid = await axios.get('/game/SimonSays');
+        let matchid = await axios.get('/game/CardMatch');
+        console.log("LOL");
+        axios.get('users/' + this.props.auth.user.id)
+            .then(response => {
+                console.log("LOL");
+                console.log(response.data.name);
+                this.setState({ users: response.data.name });
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
+        axios.get('record/' + this.props.auth.user.id)
+            .then(response => {
+
+                console.log(response.data);
+                var newArr= __(response.data).orderBy('score','desc').value();
+                this.data = newArr;
+                this.data.forEach((data) => {
+                   if (data.gameId === moleid.data._id) {
+
+                       
+                     //   console.log(data.gameId);
+                      // console.log(data.score, data.date);
+                    }
+                    else if (data.gameId === simonid.data._id) {
+                     //   console.log(data);
+                     console.log(data.score, data.date);
+                    }
+                    else if (data.gameId === matchid.data._id) {
+                     //   console.log(data.gameId);
+                    }
+
+
+
+                    //     console.log(data.score);
+                    //     console.log(data.date);
+                    //   console.log(this.state.game)
+
+
+                });
+               
+
+
+            })
+            .catch((error) => {
+                console.log(error);
+            })
 
 
         this.getChartData();
@@ -121,7 +170,7 @@ class PersonalReport extends Component {
                                                 <button type="button" className="start_button orange">Print Report</button>
                                             </Col>
                                         </Row>
-                                        <Row>   
+                                        <Row>
                                             <Col>
                                                 <h4>Brain Areas Exercised</h4>
                                                 <hr />
@@ -232,8 +281,8 @@ class PersonalReport extends Component {
 
 const mapStateToProps = state => ({
     auth: state.auth
-  });
+});
 
-  export default connect(
+export default connect(
     mapStateToProps
-  )(PersonalReport);
+)(PersonalReport);
