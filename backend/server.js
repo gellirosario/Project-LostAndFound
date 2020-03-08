@@ -11,6 +11,7 @@ require('dotenv').config();
 const usersRouter = require("./routes/users");
 const gameRouter = require('./routes/game');
 const gameRecordRouter = require('./routes/gamerecord');
+const summaryRouter = require('./routes/summary');
 
 const app = express();
 const port = process.env.PORT || 5000; // port number
@@ -54,7 +55,8 @@ require("./config/passport")(passport);
 // Routes
 app.use('/users', usersRouter);
 app.use('/record', gameRecordRouter);
-app.use('/game', gameRouter)
+app.use('/game', gameRouter);
+app.use('/summary',summaryRouter);
 
 // Initialises chatkit client
 const chatkit = new Chatkit.default({
