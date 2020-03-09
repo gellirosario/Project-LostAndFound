@@ -22,8 +22,8 @@ var thisMonth = months[now.getMonth()];
 var year = new Date().getFullYear(); //Current Year
 let simongames = [
     {
-        score: "",
-        date: ""
+        score: {},
+        date: {}
     }
 ];
 let molegames = [
@@ -35,8 +35,8 @@ let molegames = [
 ];
 let matchgames = [
     {
-        totalTime: "",
-        date: ""
+        totalTime: {},
+        date: {}
     }
 ];
 
@@ -49,7 +49,6 @@ class PersonalReport extends Component {
             users: "",
             simonGames: [],
             moleGames: [],
-            moleRecord: {},
             matchGames: [],
         }
     }
@@ -84,17 +83,23 @@ class PersonalReport extends Component {
                         moleGames.push({ id: moleid.data._id, score: data.score, date: data.date })
                         this.setState({ moleGames: moleGames })
                         i++;
+                        this.setState({molegames: molegames});
+                       
+
                     }
                     else if (data.gameId === simonid.data._id) {
                         simongames[j] = ({ id: simonid.data._id, score: data.score, date: data.date });
                         j++;
+                        this.setState({simongames: simongames});
                     }
                 });
+
+                console.log(molegames[0]);
             })
             .catch((error) => {
                 console.log(error);
             })
-
+           
         //Get Matchgame sort by fastest totalTime
         axios.get('record/' + this.props.auth.user.id)
             .then(response => {
@@ -103,7 +108,10 @@ class PersonalReport extends Component {
                 this.data.forEach((data) => {
 
                     if (data.gameId === matchid.data._id) {
-                        matchgames[k] = ({ totalTime: data.totalTime, date: data.date });
+                        
+                       matchgames[k] = { totalTime: data.totalTime, date: data.date };
+                       this.setState({ matchgames:  matchgames});
+                        console.log(matchgames[0]);
                         k++;
                     }
                 });
@@ -134,6 +142,8 @@ class PersonalReport extends Component {
     }
 
     getChartData() {
+
+        console.log(simongames[0]);
         // Ajax calls here
         this.setState({
             chartData: {
