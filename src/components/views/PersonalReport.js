@@ -11,9 +11,6 @@ import {
     Row,
 } from 'reactstrap';
 
-const DynamicDoughnut = React.lazy(() => import('../graphs/DynamicDoughnut'));
-//const BarGraph = React.lazy(() => import('../graphs/BarGraph'));
-
 
 
 var __ = require('lodash');
@@ -188,7 +185,6 @@ class PersonalReport extends Component {
                                             <Col>
                                                 <h4>Brain Areas Exercised</h4>
                                                 <hr />
-                                                <DynamicDoughnut />
                                             </Col>
                                             <Col>
                                                 <h4>Overview</h4>

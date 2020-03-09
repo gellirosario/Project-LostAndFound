@@ -18,8 +18,6 @@ router.route('/:userId').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-
-
 router.route('/:userId/:gameId').get((req, res) => {
   GameRecord.find()
   const userId= req.params.userId;

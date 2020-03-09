@@ -11,8 +11,7 @@ import {
     Row,
 } from 'reactstrap';
 
-import { Radar } from 'react-chartjs-2';
-import { Doughnut } from 'react-chartjs-2';
+import { Radar, Doughnut, Line } from 'react-chartjs-2';
 
 var __ = require('lodash');
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -27,12 +26,24 @@ class IndividualReport extends Component {
         super();
         this.state = {
             doughnutChartData: {},
+            lineData: {},
             radarChartData: {},
             users: "",
             userList: [],
             simonGames: [],
             moleGames: [],
             matchGames: [],
+            simonGames2: [],
+            moleGames2: [],
+            matchGames2: [],
+            totalSimonGames: [],
+            totalMatchGames: [],
+            totalMoleGames: [],
+            avgFlips:0,
+            avgTotalTime:0,
+            avgReactionTime:0,
+            avgSimonScore:0,
+            avgMoleScore:0,
         }
     }
 
@@ -74,6 +85,7 @@ class IndividualReport extends Component {
                 console.log(error);
             })
 
+        // Get first user from user list
         await axios.get('users/' + this.state.userList[0].value)
             .then(response => {
                 this.setState({ users: response.data.name });
@@ -82,8 +94,81 @@ class IndividualReport extends Component {
                 console.log(error);
             })
 
+        // Get all game records
+        await axios.get('record/')
+            .then(response => {
+                var newArr = __(response.data).orderBy('score', 'desc').value();
+                this.data = newArr;
 
+                this.data.forEach((data) => {
+                    if (data.gameId === moleid.data._id) {
+                        let { totalMoleGames } = this.state;
+                        totalMoleGames.push({ id: moleid.data._id, score: data.score, reactionTime: data.reactionTime, date: data.date })
+                        this.setState({ totalMoleGames: totalMoleGames })
+                    }
+                    else if (data.gameId === simonid.data._id) {
+                        let { totalSimonGames } = this.state;
+                        totalSimonGames.push({ id: simonid.data._id, score: data.score, date: data.date })
+                        this.setState({ totalSimonGames: totalSimonGames })
+                    }
+                    else if (data.gameId === matchid.data._id) {
+                        let { totalMatchGames } = this.state;
+                        totalMatchGames.push({ id: matchid.data._id, flips: data.flips, totalTime: data.totalTime, date: data.date })
+                        this.setState({ totalMatchGames: totalMatchGames })
+                    }
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            })
 
+        let avgFlips = 0;
+        let avgTotalTime = 0;
+        let avgReactionTime = 0;
+        let avgSimonScore = 0;
+        let avgMoleScore = 0;
+
+        //Calculation for comparison (line graph)
+        if(this.state.totalMatchGames != null)
+        {
+            for (let i = 0; i < this.state.totalMatchGames.length; i++) {
+                avgFlips += this.state.totalMatchGames[i].flips;
+                avgTotalTime += this.state.totalMatchGames[i].totalTime;
+            }
+        }
+
+        if(this.state.totalMoleGames != null)
+        {
+            for (let i = 0; i < this.state.totalMoleGames.length; i++) {
+                avgReactionTime += this.state.totalMoleGames[i].reactionTime;
+                avgMoleScore += this.state.totalMoleGames[i].score;
+            }
+        }
+
+        if(this.state.totalSimonGames != null)
+        {
+            for (let i = 0; i < this.state.totalSimonGames.length; i++) {
+                avgSimonScore += this.state.totalSimonGames[i].score;
+            }
+        }
+console.log(this.state.totalMatchGames)
+
+        avgFlips /= this.state.totalMatchGames.length;
+        avgTotalTime /= this.state.totalMatchGames.length;
+        avgReactionTime /= this.state.totalMoleGames.length;
+        avgMoleScore /= this.state.totalMoleGames.length;
+        avgSimonScore /= this.state.totalSimonGames.length;
+
+        this.setState({
+            avgFlips:avgFlips,
+            avgTotalTime:avgTotalTime,
+            avgReactionTime:avgReactionTime,
+            avgSimonScore:avgSimonScore,
+            avgMoleScore:avgMoleScore,
+            totalMatchGames: [],
+            totalMoleGames: [],
+            totalSimonGames: [],
+        })
         await this.getGameRecordData(this.state.userList[0].value);
     }
 
@@ -93,23 +178,26 @@ class IndividualReport extends Component {
             simonGames: [],
             moleGames: [],
             matchGames: [],
-            doughnutChartData: []
+            doughnutChartData: [],
+            radarChartData: [],
+            mixData: []
         })
 
         await axios.get('record/' + id)
             .then(response => {
                 var newArr = __(response.data).orderBy('score', 'desc').value();
                 this.data = newArr;
+
                 this.data.forEach((data) => {
                     if (data.gameId === moleid.data._id) {
                         let { moleGames } = this.state;
                         moleGames.push({ id: moleid.data._id, score: data.score, reactionTime: data.reactionTime, date: data.date })
-                        this.setState({ moleGames: moleGames })
+                        this.setState({ moleGames: moleGames, moleGames2: moleGames })
                     }
                     else if (data.gameId === simonid.data._id) {
                         let { simonGames } = this.state;
                         simonGames.push({ id: simonid.data._id, score: data.score, date: data.date })
-                        this.setState({ simonGames: simonGames })
+                        this.setState({ simonGames: simonGames, simonGames2: simonGames })
                     }
                 });
             })
@@ -127,7 +215,7 @@ class IndividualReport extends Component {
                     if (data.gameId === matchid.data._id) {
                         let { matchGames } = this.state;
                         matchGames.push({ id: matchid.data._id, flips: data.flips, totalTime: data.totalTime, date: data.date })
-                        this.setState({ matchGames: matchGames })
+                        this.setState({ matchGames: matchGames, matchGames2: matchGames })
                     }
                 });
             })
@@ -135,70 +223,127 @@ class IndividualReport extends Component {
                 console.log(error);
             })
         console.log(this.state.matchGames.length);
-        await this.getChartData();
+
+        this.getChartData();
     }
 
-    getChartData() {
+    async getChartData() {
+
+        // Sort by date
+        this.state.matchGames2.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
+        this.state.moleGames2.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
+        this.state.simonGames2.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
 
         // Set Doughnut Data
-        this.setState({
-            doughnutChartData: {
-                labels: ['Memory', 'Reaction Time', 'Perception'],
-                datasets: [
-                    {
-                        label: 'No. of Plays',
-                        data: [
-                            this.state.matchGames.length,
-                            this.state.moleGames.length,
-                            this.state.simonGames.length,
-                        ],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(255, 206, 86, 0.6)',
-                        ],
-                        borderWidth: 1,
-                        hoverBackgroundColor: [
-                            'rgba(255, 99, 132, 0.3)',
-                            'rgba(54, 162, 235, 0.3)',
-                            'rgba(255, 206, 86, 0.3)',
-                        ],
-                        hoverBorderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                        ],
-                    }
-                ]
-            },
-            radarChartData: {
-                labels: ['Flips', 'Timing', 'Reaction Time', 'Mole Whacked', 'Simon Says Round'],
-                datasets: [
-                    {
-                        label: 'First Game',
-                        backgroundColor: 'rgba(179,181,198,0.2)',
-                        borderColor: 'rgba(179,181,198,1)',
-                        pointBackgroundColor: 'rgba(179,181,198,1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(179,181,198,1)',
-                        data: [this.state.matchGames[0].flips, this.state.matchGames[0].totalTime, 
-                        this.state.moleGames[0].reactionTime, this.state.moleGames[0].score, this.state.simonGames[0].score]
-                    },
-                    {
-                        label: 'Latest Game',
-                        backgroundColor: 'rgba(255,99,132,0.2)',
-                        borderColor: 'rgba(255,99,132,1)',
-                        pointBackgroundColor: 'rgba(255,99,132,1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(255,99,132,1)',
-                        data: [this.state.matchGames[this.state.matchGames.length-1].flips, this.state.matchGames[this.state.matchGames.length-1].totalTime, 
-                        this.state.moleGames[this.state.matchGames.length-1].reactionTime, this.state.moleGames[this.state.matchGames.length-1].score, this.state.simonGames[this.state.matchGames.length-1].score]
-                    }
-                ]
-            }
-        });
+        if (this.state.matchGames != null) {
+            this.setState({
+                doughnutChartData: {
+                    labels: ['Memory', 'Reaction Time', 'Perception'],
+                    datasets: [
+                        {
+                            label: 'No. of Plays',
+                            data: [
+                                this.state.matchGames.length,
+                                this.state.moleGames.length,
+                                this.state.simonGames.length,
+                            ],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.6)',
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(255, 206, 86, 0.6)',
+                            ],
+                            borderWidth: 1,
+                            hoverBackgroundColor: [
+                                'rgba(255, 99, 132, 0.3)',
+                                'rgba(54, 162, 235, 0.3)',
+                                'rgba(255, 206, 86, 0.3)',
+                            ],
+                            hoverBorderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                            ],
+                        }
+                    ]
+                },
+                radarChartData: {
+                    labels: ['Flips', 'Timing', 'Reaction Time', 'Mole Whacked', 'Simon Says Round'],
+                    datasets: [
+                        {
+                            label: 'First Game',
+                            backgroundColor: 'rgba(179,181,198,0.2)',
+                            borderColor: 'rgba(179,181,198,1)',
+                            pointBackgroundColor: 'rgba(179,181,198,1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(179,181,198,1)',
+                            data: [this.state.matchGames2[0].flips, this.state.matchGames2[0].totalTime,
+                            this.state.moleGames2[0].reactionTime, this.state.moleGames2[0].score, this.state.simonGames2[0].score]
+                        },
+                        {
+                            label: 'Latest Game',
+                            backgroundColor: 'rgba(255,99,132,0.2)',
+                            borderColor: 'rgba(255,99,132,1)',
+                            pointBackgroundColor: 'rgba(255,99,132,1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(255,99,132,1)',
+                            data: [this.state.matchGames2[this.state.matchGames2.length - 1].flips, this.state.matchGames2[this.state.matchGames2.length - 1].totalTime,
+                            this.state.moleGames2[this.state.moleGames2.length - 1].reactionTime, this.state.moleGames2[this.state.moleGames2.length - 1].score, this.state.simonGames2[this.state.simonGames2.length - 1].score]
+                        }
+                    ]
+                },
+                lineData: {
+                    labels: ['Flips', 'Timing', 'Reaction Time', 'Mole Whacked', 'Simon Says Round'],
+                    datasets: [
+                        {
+                            label: 'My Data',
+                            fill: false,
+                            lineTension: 0.1,
+                            backgroundColor: 'rgba(75,192,192,0.4)',
+                            borderColor: 'rgba(75,192,192,1)',
+                            borderCapStyle: 'butt',
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            borderJoinStyle: 'miter',
+                            pointBorderColor: 'rgba(75,192,192,1)',
+                            pointBackgroundColor: '#fff',
+                            pointBorderWidth: 1,
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+                            pointHoverBorderColor: 'rgba(220,220,220,1)',
+                            pointHoverBorderWidth: 2,
+                            pointRadius: 1,
+                            pointHitRadius: 10,
+                            data: [this.state.matchGames[0].flips, this.state.matchGames[0].totalTime,
+                            this.state.moleGames[0].reactionTime, this.state.moleGames[0].score, this.state.simonGames[0].score]
+                        },
+                        {
+                            label: 'Average Data',
+                            fill: false,
+                            lineTension: 0.1,
+                            backgroundColor: 'rgba(255, 99, 132, 0.4)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderCapStyle: 'butt',
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            borderJoinStyle: 'miter',
+                            pointBorderColor: 'rgba(255, 99, 132, 1)',
+                            pointBackgroundColor: '#fff',
+                            pointBorderWidth: 1,
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: 'rgba(255, 99, 132, 1)',
+                            pointHoverBorderColor: 'rgba(220,220,220,1)',
+                            pointHoverBorderWidth: 2,
+                            pointRadius: 1,
+                            pointHitRadius: 10,
+                            data: [this.state.avgFlips, this.state.avgTotalTime,
+                            this.state.avgReactionTime, this.state.avgMoleScore, this.state.avgSimonScore]
+                        }
+                    ]
+                }
+            });
+        }
     }
 
     render() {
@@ -223,15 +368,23 @@ class IndividualReport extends Component {
                                             </Col>
                                         </Row>
                                         <Row>
-                                            <Col sm="4">
+                                            <Col sm="5">
                                                 <h4>Brain Areas Exercised</h4>
                                                 <hr />
                                                 <Doughnut data={this.state.doughnutChartData} />
                                             </Col>
-                                            <Col sm="6">
-                                                <h4>Improvements</h4>
+                                            <Col sm="5">
+                                                <h4>Improvement Since Start</h4>
                                                 <hr />
                                                 <Radar data={this.state.radarChartData} />
+                                            </Col>
+                                        </Row>
+                                        <br />
+                                        <Row>
+                                            <Col sm="5">
+                                                <h4>User's Average</h4>
+                                                <hr />
+                                                <Line data={this.state.lineData} />
                                             </Col>
                                         </Row>
                                         <br></br>
