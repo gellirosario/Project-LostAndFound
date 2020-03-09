@@ -31,10 +31,12 @@ class Profile extends Component {
       errors: {},
       success: false,
       tabledata: [],
+      games:{}
     };
   }
 
   componentDidMount() {
+
     console.log(this.props.auth.user.id);
 
     axios.get("/users/" + this.props.auth.user.id).then(res => {
@@ -51,8 +53,26 @@ class Profile extends Component {
     axios.get("/record/" + this.props.auth.user.id).then(res => {
       this.setState({ tabledata: res.data });
       console.log(this.state.tabledata);
+
+
+      // this.state.tabledata.forEach(arrayItem => {
+      //   // this.state.gameNames.push(arrayItem.gameId)
+      //   console.log(arrayItem.gameId);
+      //   this.getGameNames(arrayItem.gameId);
+      // })
     });
-  
+    this.getGameId("WhackAMole");
+    this.getGameId("CardMatch");
+    this.getGameId("SimonSays");
+  }
+
+  getGameId(gameName) {
+    axios.get('/game/find/' + gameName).then(res => {
+      let gameid = res.data._id.toString();
+      Object.assign(this.state.games, { [gameName] : gameid})
+
+      this.setState({ games : this.state.games });
+    })
   }
 
   calculateAge(dateOfBirth){
@@ -62,12 +82,6 @@ class Profile extends Component {
     var age = Math.floor(diff/31557600000);
 
     return age;
-  }
-
-  getGameName(gameId){
-    axios.get("/game/" + gameId).then(res => {
-      return res.data.name;
-    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -278,28 +292,80 @@ class Profile extends Component {
                     <Row>
                       <Col>
                         <h4>History</h4>
-                        <table id="history">
+                        <br/>
+                        <h5>Whack A Mole</h5>
+                        <table id="moleTable" class="history_table">
                           <tbody>
-                            <tr>
-                              <th>Game</th>
-                              <th>Flips</th>
-                              <th>Total Time</th>
-                              <th>Score</th>
-                              <th>Reaction Time</th>
-                              <th>Date</th>
+                            <tr class="history_table-tr">
+                              <th class="history_table-th">Score</th>
+                              <th class="history_table-th">Reaction Time (seconds)</th>
+                              <th class="history_table-th">Date</th>
                             </tr>
                             {this.state.tabledata.map(item => {
-                              console.log(item);
-                              return (
-                                <tr>
-                                  <td>{this.getGameName(item.gameId)}</td>
-                                  <td>{item.flips}</td>
-                                  <td>{item.totalTime}</td>
-                                  <td>{item.score}</td>
-                                  <td>{item.reactionTime}</td>
-                                  <td>{item.date}</td>
-                                </tr>
-                              );
+
+                              if (item.gameId === this.state.games["WhackAMole"]) {
+                              let recordDate = new Date(item.date);
+
+                                return (
+                                  <tr class="history_table-tr">
+                                    <td class="history_table-td">{item.score}</td>
+                                    <td class="history_table-td">{item.reactionTime}</td>
+                                    <td class="history_table-td">{recordDate.toString()}</td>
+                                  </tr>
+                                );
+                              }
+                              else return false;
+                            })}
+                          </tbody>
+                        </table>
+                        <br/>
+                        <h5>Card Match</h5>
+                        <table id="matchTable" class="history_table">
+                          <tbody>
+                            <tr class="history_table-tr">
+                              <th class="history_table-th">Flips</th>
+                              <th class="history_table-th">Total Time (seconds)</th>
+                              <th class="history_table-th">Date</th>
+                            </tr>
+                            {this.state.tabledata.map(item => {
+
+                              if (item.gameId === this.state.games["CardMatch"]) {
+                              
+                                let recordDate = new Date(item.date);
+
+                                return (
+                                  <tr class="history_table-tr">
+                                    <td class="history_table-td">{item.flips}</td>
+                                    <td class="history_table-td">{item.totalTime}</td>
+                                    <td class="history_table-td">{recordDate.toString()}</td>
+                                  </tr>
+                                );
+                              }
+                              else return false;
+                            })}
+                          </tbody>
+                        </table>
+                        <br/>
+                        <h5>Simon Says</h5>                        
+                        <table id="simonTable" class="history_table">
+                          <tbody>
+                            <tr class="history_table-tr">
+                              <th class="history_table-th">Score</th>
+                              <th class="history_table-th">Date</th>
+                            </tr>
+                            {this.state.tabledata.map(item => {
+
+                              if (item.gameId === this.state.games["SimonSays"]) {
+                              
+                                let recordDate = new Date(item.date);
+
+                                return (
+                                  <tr class="history_table-tr">
+                                    <td class="history_table-td">{item.score}</td>
+                                    <td class="history_table-td">{recordDate.toString()}</td>
+                                  </tr>
+                                );
+                              } else return false;
                             })}
                           </tbody>
                         </table>

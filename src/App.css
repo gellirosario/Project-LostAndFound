@@ -150,6 +150,13 @@ to {
   box-shadow: 0px 5px 0px 0px #CD6509;
 }
 
+/* Profile: History table */
+.history_table, .history_table-th, .history_table-tr, .history_table-td {
+  border: 1px solid lightgrey;
+  padding: 10px;
+}
+
+
 /* Card Match */
 .card-box {
   width: 7.5vw;
