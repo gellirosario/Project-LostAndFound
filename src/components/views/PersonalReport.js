@@ -28,6 +28,7 @@ let simongames = [
 ];
 let molegames = [
     {
+        id: 0,
         score: "",
         date: ""
     }
@@ -41,23 +42,17 @@ let matchgames = [
 
 
 class PersonalReport extends Component {
-
-
     constructor() {
-
         super();
         this.state = {
             chartData: {},
-
             users: "",
-            // simongames:[[],[],
-            //  molegames:[[],[]], 
-            //  matchgames:[[],[]],
-            SimonSaysId: ""
+            simonGames: [],
+            moleGames: [],
+            moleRecord: {},
+            matchGames: [],
         }
     }
-
-
 
     async componentDidMount() {
         let i = 0;
@@ -83,11 +78,15 @@ class PersonalReport extends Component {
                 this.data = newArr;
                 this.data.forEach((data) => {
                     if (data.gameId === moleid.data._id) {
-                        molegames[i] = ({ score: data.score, date: data.date });
+                        //moleGames = { id: moleid.data._id, score: data.score, date: data.date };
+
+                        let { moleGames } = this.state;
+                        moleGames.push({ id: moleid.data._id, score: data.score, date: data.date })
+                        this.setState({ moleGames: moleGames })
                         i++;
                     }
                     else if (data.gameId === simonid.data._id) {
-                        simongames[j] = ({ score: data.score, date: data.date });
+                        simongames[j] = ({ id: simonid.data._id, score: data.score, date: data.date });
                         j++;
                     }
                 });
@@ -113,19 +112,24 @@ class PersonalReport extends Component {
                 console.log(error);
             })
 
-            console.log("simongames");
-            console.log(simongames);
+        //console.log("simongames");
+        //console.log(simongames);
 
-            console.log("molegames");
-            console.log(molegames);
+        console.log("molegames");
+        console.log(molegames);
+
+        console.log("here111111");
+        console.log(this.state.moleGames);
 
 
-            console.log("matchgames");
-            console.log(matchgames);
+        //console.log("matchgames");
+        //console.log(matchgames);
 
-            //var scoreee = simongames[0]["score"].value();
-            var scoreee = parseInt(simongames[0].score)
-            console.log(scoreee);
+        //var scoreee = simongames[0]["score"].value();
+        var scoreee = parseInt(this.state.moleGames.score)
+        console.log(scoreee);
+
+
         this.getChartData();
     }
 
@@ -165,6 +169,7 @@ class PersonalReport extends Component {
     }
 
     render() {
+
         return (
             <div className="animated fadeIn">
                 <Row>
@@ -215,22 +220,12 @@ class PersonalReport extends Component {
                                                                 <td>Mark</td>
                                                                 <td>Otto</td>
                                                             </tr>
-                                                            <tr>
-                                                                <th scope="row">2</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">3</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                            </tr>
-                                                           
+
                                                         </tbody>
                                                     </table>
                                                 </div>
                                                 <br></br>
-                                                <h5>Reaction Time</h5>
+                                                <h5>Reaction Time (Mole Game)</h5>
                                                 <div>
                                                     <table class="table">
                                                         <thead>
@@ -241,11 +236,20 @@ class PersonalReport extends Component {
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
-                                                                <th scope="row">1</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                            </tr>
+                                                            {
+
+                                                                this.state.moleGames.map((game, index) => {
+                                                                    console.log(this.state.moleGames);
+                                                                    console.log("here" + game.score);
+
+                                                                    return (
+                                                                        <tr key={game.id}>
+                                                                            <th scope="col">{index + 1}</th>
+                                                                            <td scope="col">{game.score === "" ? "null" : game.score}</td>
+                                                                            <td scope="col">{game.date}</td>
+                                                                        </tr>
+                                                                    );
+                                                                })}
                                                         </tbody>
                                                     </table>
                                                 </div>
