@@ -192,16 +192,21 @@ console.log(this.state.totalMatchGames)
                 this.data.forEach((data) => {
                     if (data.gameId === moleid.data._id) {
                         let { moleGames } = this.state;
+                        let { moleGames2 } = this.state;
                         moleGames.push({ id: moleid.data._id, score: data.score, reactionTime: data.reactionTime, date: data.date })
-                        this.setState({ moleGames: moleGames, moleGames2: moleGames })
+                        moleGames2.push({ id: moleid.data._id, score: data.score, reactionTime: data.reactionTime, date: data.date })
+                        this.setState({ moleGames: moleGames, moleGames2: moleGames2 })
                     }
                     else if (data.gameId === simonid.data._id) {
                         let { simonGames } = this.state;
+                        let { simonGames2 } = this.state;
                         simonGames.push({ id: simonid.data._id, score: data.score, date: data.date })
-                        this.setState({ simonGames: simonGames, simonGames2: simonGames })
+                        simonGames2.push({ id: simonid.data._id, score: data.score, date: data.date })
+                        this.setState({ simonGames: simonGames, simonGames2: simonGames2 })
                     }
                 });
             })
+           
             .catch((error) => {
                 console.log(error);
             })
@@ -215,8 +220,10 @@ console.log(this.state.totalMatchGames)
 
                     if (data.gameId === matchid.data._id) {
                         let { matchGames } = this.state;
+                        let { matchGames2 } = this.state;
                         matchGames.push({ id: matchid.data._id, flips: data.flips, totalTime: data.totalTime, date: data.date })
-                        this.setState({ matchGames: matchGames, matchGames2: matchGames })
+                        matchGames2.push({ id: matchid.data._id, flips: data.flips, totalTime: data.totalTime, date: data.date })
+                        this.setState({ matchGames: matchGames, matchGames2: matchGames2 })
                     }
                 });
             })
@@ -224,7 +231,6 @@ console.log(this.state.totalMatchGames)
                 console.log(error);
             })
         console.log(this.state.matchGames.length);
-
         this.getChartData();
     }
 

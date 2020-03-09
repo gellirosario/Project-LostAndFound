@@ -158,8 +158,11 @@ console.log(this.state.totalMatchGames)
                         //moleGames = { id: moleid.data._id, score: data.score, date: data.date };
 
                         let { moleGames } = this.state;
+                        let { moleGames2 } = this.state;
                         moleGames.push({ id: moleid.data._id, score: data.score, reactionTime: data.reactionTime, date: data.date })
-                        this.setState({ moleGames: moleGames })
+                        moleGames2.push({ id: moleid.data._id, score: data.score, reactionTime: data.reactionTime, date: data.date })
+                        this.setState({ moleGames: moleGames,
+                                        moleGames2: moleGames2  });
 
 
 
@@ -167,9 +170,13 @@ console.log(this.state.totalMatchGames)
                     }
                     else if (data.gameId === simonid.data._id) {
                         let { simonGames } = this.state;
+                        let { simonGames2 } = this.state;
                         simonGames.push({ id: simonid.data._id, score: data.score, date: data.date });
-                        this.setState({ simonGames: simonGames });
-
+                        simonGames2.push({ id: simonid.data._id, score: data.score, date: data.date });
+                        this.setState({ simonGames: simonGames, 
+                                        simonGames2: simonGames2 
+                                         });
+                        
                     }
                 });
 
@@ -192,9 +199,11 @@ console.log(this.state.totalMatchGames)
 
                     if (data.gameId === matchid.data._id) {
                         let { matchGames } = this.state;
+                        let { matchGames2 } = this.state;
 
                         matchGames.push({ id: matchid.data._id, flips: data.flips, totalTime: data.totalTime, date: data.date });
-                        this.setState({ matchGames: matchGames });
+                        matchGames2.push({ id: matchid.data._id, flips: data.flips, totalTime: data.totalTime, date: data.date });
+                        this.setState({ matchGames: matchGames, matchGames2: matchGames2 });
 
                     }
                 });
@@ -254,14 +263,14 @@ console.log(this.state.totalMatchGames)
                 datasets: [
                     {
                         label: 'First Game',
-                        backgroundColor: 'rgba(179,181,198,0.2)',
-                        borderColor: 'rgba(179,181,198,1)',
-                        pointBackgroundColor: 'rgba(179,181,198,1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(179,181,198,1)',
-                        data: [this.state.matchGames[0].flips, this.state.matchGames[0].totalTime,
-                        this.state.moleGames[0].reactionTime, this.state.moleGames[0].score, this.state.simonGames[0].score]
+                            backgroundColor: 'rgba(179,181,198,0.2)',
+                            borderColor: 'rgba(179,181,198,1)',
+                            pointBackgroundColor: 'rgba(179,181,198,1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(179,181,198,1)',
+                            data: [this.state.matchGames2[0].flips, this.state.matchGames2[0].totalTime,
+                            this.state.moleGames2[0].reactionTime, this.state.moleGames2[0].score, this.state.simonGames2[0].score]
                     },
                     {
                         label: 'Latest Game',
@@ -271,8 +280,8 @@ console.log(this.state.totalMatchGames)
                         pointBorderColor: '#fff',
                         pointHoverBackgroundColor: '#fff',
                         pointHoverBorderColor: 'rgba(255,99,132,1)',
-                        data: [this.state.matchGames[this.state.matchGames.length - 1].flips, this.state.matchGames[this.state.matchGames.length - 1].totalTime,
-                        this.state.moleGames[this.state.matchGames.length - 1].reactionTime, this.state.moleGames[this.state.matchGames.length - 1].score, this.state.simonGames[this.state.matchGames.length - 1].score]
+                        data: [this.state.matchGames2[this.state.matchGames2.length - 1].flips, this.state.matchGames2[this.state.matchGames2.length - 1].totalTime,
+                        this.state.moleGames2[this.state.moleGames2.length - 1].reactionTime, this.state.moleGames2[this.state.moleGames2.length - 1].score, this.state.simonGames2[this.state.simonGames2.length - 1].score]
                     }
                 ]
             },
@@ -353,13 +362,13 @@ console.log(this.state.totalMatchGames)
                                             </Col>
                                         </Row>
                                         <Row>
-                                            <Col sm='4'>
+                                            <Col sm='5'>
                                                 <h4>Brain Areas Exercised</h4>
                                                 <hr />
                                                 <Doughnut data={this.state.doughnutChartData} />
                                             </Col>
-                                            <Col sm="6">
-                                                <h4>Improvements</h4>
+                                            <Col sm="5">
+                                                <h4>Improvement Since Start</h4>
                                                 <hr />
                                                 <Radar data={this.state.radarChartData} />
                                             </Col>
@@ -456,7 +465,7 @@ console.log(this.state.totalMatchGames)
                                                                         <tr key={game.id}>
                                                                             <th scope="col">{index + 1}</th>
                                                                             <td scope="col">{game.score === "" ? "null" : game.score}</td>
-                                                                            <td scope="col">{moment(game.date).format("DD-MMM-YYYY")}</td>
+                                                                            <td scope="col">{moment(game.date).format("YYYY-MM-DD HH:MM:SS")}</td>
                                                                         </tr>
                                                                     );
                                                                 })}
