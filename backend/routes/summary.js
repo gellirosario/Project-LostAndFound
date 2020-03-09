@@ -5,10 +5,11 @@ let Game = require('../models/Game');
 const { ObjectID } = require('mongodb');
 
 const dict = {
-            "CardMatch":["5e57968f64000fb4ecc0c365","flips","time"],
-            "WhackAMole":["5e5796a364000fb4ecc0c366","score","time"],
-            "SimonSays":["5e5796ab64000fb4ecc0c367","score"]};
+            "5e57968f64000fb4ecc0c365":"flips",
+            "5e5796a364000fb4ecc0c366":"score",
+            "5e5796ab64000fb4ecc0c367":"score"};
 
+            
 
 //count of all game records
 router.route('/').get((req, res) => {
@@ -19,20 +20,21 @@ router.route('/').get((req, res) => {
   });
 
 
-// find all record of one game one user sort by measurement(descending)
-// router.route('/:gameId/:userId').get((req, res) => {
-//     // const gameName = String(req.params.gameName)
-//     // console.log(gameName)
-//     // sort_dict = {}
-//     // sort_keys = dict[gameName].slice(1,)
-//     // console.log(sort_keys)
-//     // sort_keys.forEach(element => {
-//     //     sort_dict[element] = -1
-//     // });
-//       GameRecord.find({"gameId":req.params.gameId,"userId": req.params.userId}).sort(sort_dict)
-//       .then(gameRecord => res.json(gameRecord))
-//       .catch(err => res.status(400).json('Error: ' + err));
-//   });
+// find all record  of one game one user sort by measurement(descending)
+router.route('/:gameId').get((req, res) => {
+    const gameId = String(req.params.gameId)
+    // console.log(gameName)
+    sort_dict = {}
+    sort_key = dict[gameId]
+    console.log(sort_key)
+    // sort_keys.forEach(element => {
+    //     sort_dict[element] = -1
+    // });
+    // console.log(sort_dict)
+      GameRecord.find({"gameId":ObjectID(req.params.gameId)}).sort(sort_key)
+      .then(gameRecord => res.json(gameRecord))
+      .catch(err => res.status(400).json('Error: ' + err));
+  });
 
 
 //number of record of userId and gameId

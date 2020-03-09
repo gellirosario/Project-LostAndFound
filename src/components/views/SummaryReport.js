@@ -6,21 +6,28 @@ import {
     Col,
     Row,
 } from 'reactstrap';
+import moment from 'moment';
+
 //import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import axios from 'axios';
-
-const DynamicDoughnut = React.lazy(() => import('../graphs/DynamicDoughnut'));
-//const BarGraph = React.lazy(() => import('../graphs/BarGraph'));
-
+import { Doughnut, Line} from 'react-chartjs-2';
+// const DynamicDoughnut = React.lazy(() => import('../graphs/DynamicDoughnut'));
+// const BarGraph = React.lazy(() => import('../graphs/BarGraph'));
+var __ = require('lodash');
 class SummaryReport extends Component {
     constructor() {
         super();
         this.state = {
-            chartData: {},
-            simonGameCount:1,
-            moleGamesCount:1,
-            matchGamesCount:1,
+            doughnutChartData: [],
+            simonGamesCount :0,
+            moleGamesCount :0,
+            matchGamesCount : 0,
+            simonAvgScore:0,
+            moleAvgScore: 0,
+            matchAvgFlips:0,
+            avgTotalTime:0,
+            avgReactionTime:0,
             simonGames: [],
             moleGames: [],
             matchGames: [],
@@ -28,16 +35,13 @@ class SummaryReport extends Component {
     }
 
     async componentWillMount() {
-        this.getChartData();
         
         let moleid = axios.get('/game/find/WhackAMole');
         let simonid = axios.get('/game/find/SimonSays');
         let matchid = axios.get('/game/find/CardMatch');
         console.log(moleid.data)
 
-        
-
-        axios.get('summary/'+String((await moleid).data._id) + '/count')
+        await axios.get('summary/'+String((await moleid).data._id) + '/count')
             .then(res =>{
                 this.setState({moleGamesCount: res.data})
                 console.log(this.state.moleGamesCount)
@@ -46,7 +50,7 @@ class SummaryReport extends Component {
                 console.log(error)
             })
 
-        axios.get('summary/'+String((await simonid).data._id) + '/count')
+        await   axios.get('summary/'+String((await simonid).data._id) + '/count')
             .then(res =>{
                 this.setState({simonGamesCount: res.data})
                 console.log(this.state.simonGamesCount)
@@ -55,27 +59,89 @@ class SummaryReport extends Component {
                 console.log(error)
             })
 
-        axios.get('summary/'+String((await matchid).data._id) + '/count')
+        await axios.get('summary/'+String((await matchid).data._id) + '/count')
             .then(res =>{
-                this.setState({matchGamesCount: (res.data._id)})
+                this.setState({matchGamesCount: (res.data)})
                 console.log(this.state.matchGamesCount)
             })
             .catch((error)=>{
                 console.log(error)
             })
+            
+        // match sort by flips
+        await axios.get('summary/'+ String((await matchid).data._id))
+        .then(res =>{
+            // var newArr = __(res.data).orderBy('score', 'desc').value();
+            // this.data = newArr;
+            var data = res.data;
+            const sum_flips = Object.values(data).reduce((acc, current) => acc + current.flips, 0);
+            const sum_totalTime = Object.values(data).reduce((acc, current) => acc + current.totalTime, 0);
+            const avg_flips = sum_flips / Object.values(data).length;
+            const avg_totalTime = sum_totalTime / Object.values(data).length;
 
+            this.setState({avgTotalTime:avg_totalTime});
+            this.setState({matchAvgFlips:avg_flips});
+            // console.log(data.slice(-3,).reverse())
+            this.setState({matchGames:data.slice(-3,).reverse()})
+            // console.log(this.state.matchGames)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+
+        //mole sort by score
+        await axios.get('summary/'+String((await moleid).data._id))
+        .then(res =>{
+            var data = res.data;
+
+            const sum_score = Object.values(data).reduce((acc, current) => acc + current.score, 0);
+            const sum_reactionTime = Object.values(data).reduce((acc, current) => acc + current.reactionTime, 0);
+            const avg_score = sum_score / Object.values(data).length;
+            const avg_reactionTime = sum_reactionTime / Object.values(data).length;
+
+            this.setState({moleAvgScore:avg_score});
+            this.setState({avgReactionTime:avg_reactionTime});
+
+            this.setState({moleGames:data.slice(-3,).reverse()})
+            console.log(this.state.moleGames)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+
+        // simon sort by score
+        await   axios.get('summary/'+String((await simonid).data._id))
+            .then(res =>{
+                var data = res.data;
+                const sum = Object.values(data).reduce((acc, current) => acc + current.score, 0);
+                const average = sum / Object.values(data).length;
+                this.setState({simonAvgScore:average})
+                // console.log(data)
+                // console.log(average);
+                // console.log(data.slice(-3,).reverse())
+                this.setState({simonGames:data.slice(-3,).reverse()})
+                // console.log(this.state.simonGames)
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+    console.log(this.state.moleGamesCount)
+    await this.getChartData()
     }
 
-    getChartData() {
+    async getChartData() {
+        
         // Ajax calls here
         this.setState({
-            chartData: {
+            doughnutChartData: {
                 labels: ['Card Match', 'Whack A Mole', 'Simon Says'],
                 datasets: [
                     {
                         label: 'No. of Plays',
                         data: [
-                            10,10,10
+                            this.state.matchGamesCount,
+                            this.state.moleGamesCount,
+                            this.state.simonGamesCount
                         ],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.6)',
@@ -95,8 +161,40 @@ class SummaryReport extends Component {
                         ],
                     }
                 ]
+            },
+
+            lineData: {
+                labels: ['Flips', 'Timing', 'Reaction Time', 'Mole Whacked', 'Simon Says Round'],
+                datasets: [
+                    {
+                        label: 'Average Data',
+                        fill: false,
+                        lineTension: 0.1,
+                        backgroundColor: 'rgba(255, 99, 132, 0.4)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderCapStyle: 'butt',
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: 'miter',
+                        pointBorderColor: 'rgba(255, 99, 132, 1)',
+                        pointBackgroundColor: '#fff',
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: 'rgba(255, 99, 132, 1)',
+                        pointHoverBorderColor: 'rgba(220,220,220,1)',
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 1,
+                        pointHitRadius: 10,
+                        data: [this.state.matchAvgFlips, this.state.avgTotalTime,
+                        this.state.avgReactionTime, this.state.moleAvgScore, this.state.simonAvgScore]
+                    }
+                ]
             }
         });
+        // console.log(this.state.simonGamesCount)
+        // console.log(this.state.moleGamesCount)
+        // console.log(this.state.matchGamesCount)
+        // console.log(this.state.chartData)
     }
 
     render() {
@@ -122,11 +220,18 @@ class SummaryReport extends Component {
                                             <Col>
                                                 <h4>Total Game Plays</h4>
                                                 <hr />
-                                                <DynamicDoughnut />
+                                                <Doughnut data = {this.state.doughnutChartData}/>
                                             </Col>
                                             <Col>
                                                 <h4>Overview</h4>
                                                 <hr />
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col sm="5">
+                                                <h4>User's Average</h4>
+                                                <hr />
+                                                <Line data={this.state.lineData} />
                                             </Col>
                                         </Row>
                                         <br></br>
@@ -134,67 +239,59 @@ class SummaryReport extends Component {
                                             <Col>
                                                 <h4>Top Ranking</h4>
                                                 <hr />
-                                                <h5>Memory</h5>
+                                                <h5>Memor(CardMatch)</h5>
                                                 <div>
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">#</th>
                                                                 <th scope="col">Score</th>
+                                                                <th scope="col">Time</th>
                                                                 <th scope="col">Date</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
-                                                                <th scope="row">1</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">2</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">3</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">4</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">5</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                            </tr>
+                                                            {this.state.matchGames.map((game, index) => {
+                                                                return (
+                                                                    <tr >
+                                                                        <th scope="col">{index + 1}</th>
+                                                                        <td scope="col">{game.flips}</td>
+                                                                        <td scope="col">{game.totalTime}s</td>
+                                                                        <td scope="col">{moment(game.date).format("YYYY-MM-DD HH:MM:SS")}</td>
+                                                                    </tr>
+                                                                );
+                                                            })}
                                                         </tbody>
                                                     </table>
                                                 </div>
                                                 <br></br>
-                                                <h5>Reaction Time</h5>
+                                                <h5>Reaction Time(WhackAMole)</h5>
                                                 <div>
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">#</th>
                                                                 <th scope="col">Score</th>
+                                                                <th scope="col">Reaction Time</th>
                                                                 <th scope="col">Date</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
-                                                                <th scope="row">1</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                            </tr>
+                                                            {this.state.moleGames.map((game, index) => {
+                                                                return (
+                                                                    <tr >
+                                                                        <th scope="col">{index + 1}</th>
+                                                                        <td scope="col">{game.score}</td>
+                                                                        <td scope="col">{game.reactionTime}s</td>
+                                                                        <td scope="col">{moment(game.date).format("YYYY-MM-DD HH:MM:SS")}</td>
+                                                                    </tr>
+                                                                );
+                                                            })}
                                                         </tbody>
                                                     </table>
                                                 </div>
                                                 <br></br>
-                                                <h5>Perception</h5>
+                                                <h5>Perception (SimonSays)</h5>
                                                 <div>
                                                     <table class="table">
                                                         <thead>
@@ -205,11 +302,15 @@ class SummaryReport extends Component {
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
-                                                                <th scope="row">1</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                            </tr>
+                                                            {this.state.simonGames.map((game, index) => {
+                                                                return (
+                                                                    <tr >
+                                                                        <th scope="col">{index + 1}</th>
+                                                                        <td scope="col">{game.score}</td>
+                                                                        <td scope="col">{moment(game.date).format("YYYY-MM-DD HH:MM:SS")}</td>
+                                                                    </tr>
+                                                                );
+                                                            })}
                                                         </tbody>
                                                     </table>
                                                 </div>
