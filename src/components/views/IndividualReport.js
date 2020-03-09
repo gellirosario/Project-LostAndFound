@@ -244,9 +244,7 @@ console.log(this.state.totalMatchGames)
                         {
                             label: 'No. of Plays',
                             data: [
-                                this.state.matchGames.length,
-                                this.state.moleGames.length,
-                                this.state.simonGames.length,
+                                9,7,8
                             ],
                             backgroundColor: [
                                 'rgba(255, 99, 132, 0.6)',
