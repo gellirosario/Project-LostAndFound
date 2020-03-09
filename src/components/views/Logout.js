@@ -3,10 +3,27 @@ import PropTypes from "prop-types";
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import * as authActionCreators from '../../actions/authActions'
+import Swal from 'sweetalert2'
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  onOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
+})
 
 class Logout extends Component {
 
   componentWillMount() {
+    Toast.fire({
+      icon: 'success',
+      title: 'Signed out successfully'
+    })
     this.props.dispatch(authActionCreators.logoutUser());
   }
 

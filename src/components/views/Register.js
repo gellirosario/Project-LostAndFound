@@ -5,6 +5,19 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
 import moment from 'moment';
+import Swal from 'sweetalert2'
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  onOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
+})
 
 class Register extends Component {
 
@@ -30,7 +43,14 @@ class Register extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    
     if (nextProps.errors) {
+
+      Toast.fire({
+        icon: 'error',
+        title: 'Registered fail'
+      })
+
       this.setState({
         errors: nextProps.errors
       });
@@ -53,8 +73,8 @@ class Register extends Component {
       password2: this.state.password2
     };
     console.log(newUser);
-    console.log(this.state.errors.ema);
     this.props.registerUser(newUser, this.props.history);
+    
   };
 
   render() {

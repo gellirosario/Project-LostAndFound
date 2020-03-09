@@ -2,18 +2,24 @@ import React, { Component } from 'react';
 import { ChatManager, TokenProvider } from '@pusher/chatkit-client';
 import Input from './Input';
 import MessageList from './MessageList';
+import {
+    CardTitle,
+    Col,
+    Row,
+} from 'reactstrap';
+import Swal from 'sweetalert2'
 
-function extractData(data) {
-    const regex = /(@trbot)\s+translate.*\['"\](.+)['"].*to\W*(\w+)/gim
-    const found = regex.exec(data);
-
-    if (!found || found.length < 4) {
-      return false
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    onOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
-
-    return {text: found[2], language: found[3]}
-}
-
+})
 class ChatApp extends Component {
     constructor(props) {
         super(props);
@@ -27,6 +33,12 @@ class ChatApp extends Component {
     }
 
     componentDidMount() {
+
+        Toast.fire({
+            icon: 'info',
+            title: 'Loading...'
+        })
+
         const chatManager = new ChatManager({
             instanceLocator: "v1:us1:de78f0a4-48a8-489c-ad96-64d645e64c91",
             userId: this.props.currentId,
@@ -59,6 +71,8 @@ class ChatApp extends Component {
                 })
             })
             .catch(error => console.log(error))
+
+
     }
 
 
@@ -71,11 +85,31 @@ class ChatApp extends Component {
             .catch(error => console.error('error', error));
     }
 
+    getCommands() {
+        Swal.fire({
+            icon: "icon",
+            title: "Bot Command",
+            html:
+                "<p><b>[Translate]</b></br><b>Input:</b> @trbot translate 'message' to 'language'</br>" +
+                "<i><b>Example:</b> @trbot translate 'hello' to french</i></p>",
+            footer: "<a href='https://cloud.google.com/translate/docs/languages'>Supported Languages</a>"
+        })
+    }
+
     render() {
         return (
             <div>
-                <h2 className="chat-header">Let's Talk</h2>
-                <hr/>
+                <Row>
+                    <Col>
+                        <CardTitle className="h1" style={{ paddingTop: 10 }}>Let's Talk!</CardTitle>
+                    </Col>
+                    <Col sm="1.2" style={{ marginRight: 20 }}>
+                        <button className="start_button" onClick={this.getCommands}>Bot Commands</button>
+                    </Col>
+                </Row>
+                <h2 className="chat-header"></h2>
+
+                <hr />
                 <MessageList messages={this.state.messages} />
                 <Input className="input-field" onSubmit={this.addMessage} />
             </div>

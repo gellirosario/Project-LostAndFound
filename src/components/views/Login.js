@@ -4,6 +4,19 @@ import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGr
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
+import Swal from 'sweetalert2'
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  onOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
+})
 
 class Login extends Component {
 
@@ -25,6 +38,10 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
+      Toast.fire({
+        icon: 'success',
+        title: 'Signed in successfully'
+      })
       this.props.history.push("/home");
     }
 

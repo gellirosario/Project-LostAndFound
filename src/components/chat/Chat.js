@@ -8,9 +8,6 @@ import { default as Chatkit } from '@pusher/chatkit-server';
 import {
     Card,
     CardBody,
-    CardTitle,
-    Col,
-    Row,
 } from 'reactstrap';
 
 const chatkit = new Chatkit({
@@ -41,7 +38,7 @@ class Chat extends Component {
             id: username,
             name: username,
         })
-            .then((currentUser) => {
+            .then((username) => {
                 this.setState({
                     currentUsername: username,
                     currentId: username,
@@ -79,7 +76,7 @@ class Chat extends Component {
         if (user.isAuthenticated === false) return <Link to="/" />;
 
         return (
-            <div>
+            <div className="animated fadeIn">
                 <Card style={{height:'100%'}}>
                     <CardBody style={{height:'100%'}}>
                         <div >

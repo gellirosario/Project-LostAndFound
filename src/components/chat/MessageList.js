@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
-import moment from 'moment';
 import Moment from 'react-moment';
+import Swal from 'sweetalert2'
+
 
 class MessageList extends Component {
-
+    
     render() {
+
         return (
             <ul className="message-list">
-                {this.props.messages.map((message, index) => (
+                {
+                        
+                this.props.messages.map((message, index) => (
                     <li className="message-box" key={index}>
                         <h4 className="message-sender">{message.senderId} [<Moment
                             calendar={{
