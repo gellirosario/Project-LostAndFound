@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from "react-redux";
+import moment from 'moment';
 
 import {
     Card,
@@ -211,12 +212,12 @@ class PersonalReport extends Component {
                                                         </thead>
                                                         <tbody>
                                                             {
-                                                                this.state.matchGames.map((game, index) => {
+                                                                this.state.matchGames.slice(0, 3).map((game, index) => {
                                                                     return (
                                                                         <tr key={game.id}>
                                                                             <th scope="col">{index + 1}</th>
                                                                             <td scope="col">{game.totalTime === "" ? "null" : game.totalTime+ "sec"}</td>
-                                                                            <td scope="col">{game.date}</td>
+                                                                            <td scope="col">{moment(game.date).format("DD-MMM-YYYY")}</td>
                                                                         </tr>
                                                                     );
                                                                 })}
@@ -237,7 +238,7 @@ class PersonalReport extends Component {
                                                         <tbody>
                                                             {
 
-                                                                this.state.moleGames.map((game, index) => {
+                                                                this.state.moleGames.slice(0, 3).map((game, index) => {
                                                                     //   console.log(this.state.moleGames);
                                                                     //  console.log("here" + game.score);
 
@@ -245,7 +246,7 @@ class PersonalReport extends Component {
                                                                         <tr key={game.id}>
                                                                             <th scope="col">{index + 1}</th>
                                                                             <td scope="col">{game.score === "" ? "null" : game.score}</td>
-                                                                            <td scope="col">{game.date}</td>
+                                                                            <td scope="col">{moment(game.date).format("DD-MMM-YYYY")}</td>
                                                                         </tr>
                                                                     );
                                                                 })}
@@ -266,7 +267,7 @@ class PersonalReport extends Component {
                                                         <tbody>
                                                             {
 
-                                                                this.state.simonGames.map((game, index) => {
+                                                                this.state.simonGames.slice(0, 3).map((game, index) => {
                                                                     //   console.log(this.state.moleGames);
                                                                     //  console.log("here" + game.score);
 
@@ -274,7 +275,7 @@ class PersonalReport extends Component {
                                                                         <tr key={game.id}>
                                                                             <th scope="col">{index + 1}</th>
                                                                             <td scope="col">{game.score === "" ? "null" : game.score}</td>
-                                                                            <td scope="col">{game.date}</td>
+                                                                            <td scope="col">{moment(game.date).format("DD-MMM-YYYY")}</td>
                                                                         </tr>
                                                                     );
                                                                 })}
