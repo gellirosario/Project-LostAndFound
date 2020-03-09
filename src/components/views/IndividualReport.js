@@ -363,7 +363,7 @@ console.log(this.state.totalMatchGames)
                                                 <div className="small text-muted">January {year} - {thisMonth} {year}</div>
                                                 <br></br>
                                             </Col>
-                                            <Col><Select options={this.state.userList} onChange={this.onChange}></Select></Col>
+                                            <Col sm="3" style={{marginTop:'10px'}}><Select  options={this.state.userList} onChange={this.onChange}></Select></Col>
                                             <Col sm="1.2" style={{ marginRight: 20 }}>
                                                 <button type="button" className="start_button orange" onClick={() => window.print()}>Print Report</button>
                                             </Col>
