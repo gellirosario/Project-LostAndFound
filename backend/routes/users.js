@@ -19,24 +19,24 @@ router.route('/:_id').get((req, res) => {
     .then(userid => res.json(userid))
     .catch(err => res.status(400).json('Error: ' + err));
 });
+
 router.route('/').get((req, res) => {
   User.find()
     .then(users => res.json(users))
     .catch(err => res.status(400).json('Error:' + err));
-}); 
-
+});
 
 // Edit profile
 router.put("/edit", (req, res) => {
   const { errors, isValid } = validateEditInput(req.body);
 
-  if (!isValid){
+  if (!isValid) {
     return res.status(400).json(errors);
   }
 
   User.findOne({ email: req.body.email }).then(user => {
     if (user && req.body.id !== user.id) {
-      return res.status(400).json({ email: "Email already registered to another user"});
+      return res.status(400).json({ email: "Email already registered to another user" });
     } else {
       console.log(req.body);
 
@@ -46,18 +46,18 @@ router.put("/edit", (req, res) => {
           if (err) throw err;
           req.body.password = hash;
           console.log(req.body);
-          
+
           User.findByIdAndUpdate(req.body.id, {
             $set: {
               name: req.body.name,
               email: req.body.email,
               password: req.body.password
             }
-          }, {new: true},
-          (err,Event) => {
-            if (err) throw err;
-            res.status(200).send("success");
-          });
+          }, { new: true },
+            (err, Event) => {
+              if (err) throw err;
+              res.status(200).send("success");
+            });
         });
       });
     }
@@ -68,7 +68,7 @@ router.put("/edit", (req, res) => {
 // @desc Register user
 // @access Public
 router.post("/register", (req, res) => {
-  
+
   // Form validatinpon
   const { errors, isValid } = validateRegisterInput(req.body);
 
@@ -128,7 +128,7 @@ router.post("/login", (req, res) => {
       return res.status(404).json({ email: "Email not found" });
     }
 
-    
+
 
     // Check password
     bcrypt.compare(password, user.password).then(isMatch => {

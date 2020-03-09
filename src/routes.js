@@ -7,6 +7,7 @@ const MatchGame = React.lazy(() => import('./components/match-game/MatchGame'));
 const SimonGame = React.lazy(() => import('./components/simonsays-game/SimonGame'));
 const SummaryReport = React.lazy(() => import('./components/views/SummaryReport'));
 const PersonalReport = React.lazy(() => import('./components/views/PersonalReport'));
+const IndividualReport = React.lazy(() => import('./components/views/IndividualReport'));
 const Profile = React.lazy(() => import('./components/views/Profile'));
 const Logout = React.lazy(() => import('./components/views/Logout'));
 const Chat = React.lazy(() => import('./components/chat/Chat'));
@@ -20,6 +21,7 @@ const routes = [
   { path: '/game/matchgame', name: 'Card Match', component: MatchGame },
   { path: '/game/simongame', name: 'Simon Says', component: SimonGame},
   { path: '/report/summary', name: 'Summary Report', component: SummaryReport},
+  { path: '/report/individual', name: 'Individual Report', component: IndividualReport},
   { path: '/profile/report', name: 'Personal Report', component: PersonalReport},
   { path: '/profile/view', name: 'Profile', component: Profile },
 ];
