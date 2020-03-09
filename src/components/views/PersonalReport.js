@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from "react-redux";
+import moment from 'moment';
 
 import {
     Card,
@@ -20,25 +21,6 @@ var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'A
 var now = new Date();
 var thisMonth = months[now.getMonth()];
 var year = new Date().getFullYear(); //Current Year
-let simongames = [
-    {
-        score: {},
-        date: {}
-    }
-];
-let molegames = [
-    {
-        id: 0,
-        score: "",
-        date: ""
-    }
-];
-let matchgames = [
-    {
-        totalTime: {},
-        date: {}
-    }
-];
 
 
 class PersonalReport extends Component {
@@ -82,24 +64,25 @@ class PersonalReport extends Component {
                         let { moleGames } = this.state;
                         moleGames.push({ id: moleid.data._id, score: data.score, date: data.date })
                         this.setState({ moleGames: moleGames })
-                        i++;
-                        this.setState({molegames: molegames});
-                       
+
+
+
 
                     }
                     else if (data.gameId === simonid.data._id) {
-                        simongames[j] = ({ id: simonid.data._id, score: data.score, date: data.date });
-                        j++;
-                        this.setState({simongames: simongames});
+                        let { simonGames } = this.state;
+                        simonGames.push({ id: simonid.data._id, score: data.score, date: data.date });
+                        this.setState({ simonGames: simonGames });
+
                     }
                 });
 
-                console.log(molegames[0]);
+
             })
             .catch((error) => {
                 console.log(error);
             })
-           
+
         //Get Matchgame sort by fastest totalTime
         axios.get('record/' + this.props.auth.user.id)
             .then(response => {
@@ -108,11 +91,11 @@ class PersonalReport extends Component {
                 this.data.forEach((data) => {
 
                     if (data.gameId === matchid.data._id) {
-                        
-                       matchgames[k] = { totalTime: data.totalTime, date: data.date };
-                       this.setState({ matchgames:  matchgames});
-                        console.log(matchgames[0]);
-                        k++;
+                        let { matchGames } = this.state;
+
+                        matchGames.push({ id: matchid.data._id, totalTime: data.totalTime, date: data.date });
+                        this.setState({ matchGames: matchGames });
+
                     }
                 });
             })
@@ -123,19 +106,22 @@ class PersonalReport extends Component {
         //console.log("simongames");
         //console.log(simongames);
 
-        console.log("molegames");
-        console.log(molegames);
+
 
         console.log("here111111");
         console.log(this.state.moleGames);
+
+        console.log(this.state.matchGames);
+        console.log(this.state.simonGames);
+
 
 
         //console.log("matchgames");
         //console.log(matchgames);
 
         //var scoreee = simongames[0]["score"].value();
-        var scoreee = parseInt(this.state.moleGames.score)
-        console.log(scoreee);
+
+
 
 
         this.getChartData();
@@ -143,7 +129,7 @@ class PersonalReport extends Component {
 
     getChartData() {
 
-        console.log(simongames[0]);
+
         // Ajax calls here
         this.setState({
             chartData: {
@@ -214,23 +200,27 @@ class PersonalReport extends Component {
                                             <Col>
                                                 <h4>Personal Best</h4>
                                                 <hr />
-                                                <h5>Memory</h5>
+                                                <h5>Memory (Card Game)</h5>
                                                 <div>
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">#</th>
-                                                                <th scope="col">Score</th>
+                                                                <th scope="col">Time</th>
                                                                 <th scope="col">Date</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
-                                                                <th scope="row">1</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                            </tr>
-
+                                                            {
+                                                                this.state.matchGames.slice(0, 3).map((game, index) => {
+                                                                    return (
+                                                                        <tr key={game.id}>
+                                                                            <th scope="col">{index + 1}</th>
+                                                                            <td scope="col">{game.totalTime === "" ? "null" : game.totalTime+ "sec"}</td>
+                                                                            <td scope="col">{moment(game.date).format("DD-MMM-YYYY")}</td>
+                                                                        </tr>
+                                                                    );
+                                                                })}
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -248,15 +238,15 @@ class PersonalReport extends Component {
                                                         <tbody>
                                                             {
 
-                                                                this.state.moleGames.map((game, index) => {
-                                                                    console.log(this.state.moleGames);
-                                                                    console.log("here" + game.score);
+                                                                this.state.moleGames.slice(0, 3).map((game, index) => {
+                                                                    //   console.log(this.state.moleGames);
+                                                                    //  console.log("here" + game.score);
 
                                                                     return (
                                                                         <tr key={game.id}>
                                                                             <th scope="col">{index + 1}</th>
                                                                             <td scope="col">{game.score === "" ? "null" : game.score}</td>
-                                                                            <td scope="col">{game.date}</td>
+                                                                            <td scope="col">{moment(game.date).format("DD-MMM-YYYY")}</td>
                                                                         </tr>
                                                                     );
                                                                 })}
@@ -264,7 +254,7 @@ class PersonalReport extends Component {
                                                     </table>
                                                 </div>
                                                 <br></br>
-                                                <h5>Perception</h5>
+                                                <h5>Perception (Simon Game)</h5>
                                                 <div>
                                                     <table class="table">
                                                         <thead>
@@ -275,11 +265,20 @@ class PersonalReport extends Component {
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
-                                                                <th scope="row">1</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                            </tr>
+                                                            {
+
+                                                                this.state.simonGames.slice(0, 3).map((game, index) => {
+                                                                    //   console.log(this.state.moleGames);
+                                                                    //  console.log("here" + game.score);
+
+                                                                    return (
+                                                                        <tr key={game.id}>
+                                                                            <th scope="col">{index + 1}</th>
+                                                                            <td scope="col">{game.score === "" ? "null" : game.score}</td>
+                                                                            <td scope="col">{moment(game.date).format("DD-MMM-YYYY")}</td>
+                                                                        </tr>
+                                                                    );
+                                                                })}
                                                         </tbody>
                                                     </table>
                                                 </div>

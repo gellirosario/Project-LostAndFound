@@ -24,6 +24,7 @@ const SummaryReport = React.lazy(() => import('./components/views/SummaryReport'
 const PersonalReport = React.lazy(() => import('./components/views/PersonalReport'));
 const Profile = React.lazy(() => import('./components/views/Profile'));
 const Chat = React.lazy(() => import('./components/chat/Chat'));
+const IndividualReport = React.lazy(() => import('./components/views/IndividualReport'));
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -65,6 +66,7 @@ class App extends Component {
               <PrivateRoute path="/game/simongame" name="Simon Says" Component={SimonGame} />} />
               <PrivateRoute path="/game/matchgame" name="Card Match" Component={MatchGame} />} />
               <PrivateRoute path="/report/summary" name="Summary Report" Component={SummaryReport} />} />
+              <PrivateRoute path="/report/individual" name="Individual Report" Component={IndividualReport} />} />
               <PrivateRoute path="/profile/view" name="Profile" Component={Profile} />} />
               <PrivateRoute path="/profile/report" name="Personal Report" Component={PersonalReport} />} />
               <PrivateRoute path="*" component={Page404}/>
