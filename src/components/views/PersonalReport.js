@@ -13,9 +13,6 @@ import {
     Row,
 } from 'reactstrap';
 
-const DynamicDoughnut = React.lazy(() => import('../graphs/DynamicDoughnut'));
-//const BarGraph = React.lazy(() => import('../graphs/BarGraph'));
-
 
 
 var __ = require('lodash');
