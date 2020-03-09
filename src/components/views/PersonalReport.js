@@ -181,7 +181,6 @@ class PersonalReport extends Component {
                                             </Col>
                                             <Col sm="1.2" style={{ marginRight: 20 }}>
                                                 <button type="button" className="start_button orange" onClick={() => window.print()}>Print Report</button>
-                                                <button type="button" className="start_button orange">Print Report</button>
                                             </Col>
                                         </Row>
                                         <Row>
@@ -226,16 +225,7 @@ class PersonalReport extends Component {
                                                                 <td>Mark</td>
                                                                 <td>Otto</td>
                                                             </tr>
-                                                            <tr>
-                                                                <th scope="row">4</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">5</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                            </tr>
+                                                           
                                                         </tbody>
                                                     </table>
                                                 </div>
