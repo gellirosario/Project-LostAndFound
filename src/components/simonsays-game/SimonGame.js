@@ -284,7 +284,7 @@ class SimonGame extends React.Component {
   async saveRecord() {
 
     // Get Game Data
-    let res = await axios.get('/game/Simon Says');
+    let res = await axios.get('/game/find/SimonSays');
 
     const gameRecord = {
       gameId: res.data._id,

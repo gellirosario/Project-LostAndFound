@@ -287,7 +287,7 @@ class MatchGame extends Component {
 
   async saveRecord() {
 
-    let res = await axios.get('/game/Card Match');
+    let res = await axios.get('/game/find/CardMatch');
 
     console.log(this.state.clock);
 

@@ -300,12 +300,13 @@ class MoleGame extends Component {
 
     if (!isNaN(this.state.reactionTime)) {
       // Get Game Data
-      let res = await axios.get('/game/Whack A Mole');
+      let res = await axios.get('/game/find/WhackAMole');
 
       this.setState({
         avgReactionTime: Math.round((this.state.reactionTime / this.state.score) * 1000) / 1000
       })
 
+      console.log(res.data)
       const gameRecord = {
         gameId: res.data._id,
         userId: this.props.auth.user.id,
