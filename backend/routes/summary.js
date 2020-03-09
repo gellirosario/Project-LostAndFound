@@ -19,39 +19,25 @@ router.route('/').get((req, res) => {
   });
 
 
-//find all record of one game one user sort by measurement(descending)
-router.route('/:gameName/:userId').get((req, res) => {
-    const gameName = String(req.params.gameName)
-    console.log(gameName)
-    sort_dict = {}
-    sort_keys = dict[gameName].slice(1,)
-    console.log(sort_keys)
-    sort_keys.forEach(element => {
-        sort_dict[element] = -1
-    });
-      GameRecord.find({"gameId":ObjectID(dict[gameName][0]),"userId": req.params.userId}).sort(sort_dict)
-      .then(gameRecord => res.json(gameRecord))
-      .catch(err => res.status(400).json('Error: ' + err));
-  });
+// find all record of one game one user sort by measurement(descending)
+// router.route('/:gameId/:userId').get((req, res) => {
+//     // const gameName = String(req.params.gameName)
+//     // console.log(gameName)
+//     // sort_dict = {}
+//     // sort_keys = dict[gameName].slice(1,)
+//     // console.log(sort_keys)
+//     // sort_keys.forEach(element => {
+//     //     sort_dict[element] = -1
+//     // });
+//       GameRecord.find({"gameId":req.params.gameId,"userId": req.params.userId}).sort(sort_dict)
+//       .then(gameRecord => res.json(gameRecord))
+//       .catch(err => res.status(400).json('Error: ' + err));
+//   });
 
 
 //number of record of userId and gameId
-router.route('/:gameName/:userId/count').get((req, res)=>{
-    const gameName = String(req.params.gameName)
-    console.log(gameName)
-    sort_dict = {}
-    sort_keys = dict[gameName].slice(1,)
-    console.log(sort_keys)
-    sort_keys.forEach(element => {
-        sort_dict[element] = -1
-    });
-
-    const userId= req.params.userId;
-    GameRecord.find({"gameId":ObjectID(dict[gameName][0]),"userId": req.params.userId}).count()
-    // GameRecord.aggregate([
-    //        {$match :{"userId" : ObjectID(userId),"gameId":ObjectID(dict[gameName][0])}},
-    //        { $group: { _id: {gameId:"gameId"}, count: { $sum: "score" } } }
-    // ])
+router.route('/:gameId/count').get((req, res)=>{
+    GameRecord.find({"gameId":ObjectID(req.params.gameId)}).count()
       .then(gameRecord => res.json(gameRecord))
       .catch(err => res.status(400).json('Error: ' + err));
 })

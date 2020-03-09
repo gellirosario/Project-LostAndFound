@@ -8,6 +8,7 @@ import {
 } from 'reactstrap';
 //import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import axios from 'axios';
 
 const DynamicDoughnut = React.lazy(() => import('../graphs/DynamicDoughnut'));
 //const BarGraph = React.lazy(() => import('../graphs/BarGraph'));
@@ -16,12 +17,53 @@ class SummaryReport extends Component {
     constructor() {
         super();
         this.state = {
-            chartData: {}
+            chartData: {},
+            simonGameCount:1,
+            moleGamesCount:1,
+            matchGamesCount:1,
+            simonGames: [],
+            moleGames: [],
+            matchGames: [],
         }
     }
 
-    componentWillMount() {
+    async componentWillMount() {
         this.getChartData();
+        
+        let moleid = axios.get('/game/find/WhackAMole');
+        let simonid = axios.get('/game/find/SimonSays');
+        let matchid = axios.get('/game/find/CardMatch');
+        console.log(moleid.data)
+
+        
+
+        axios.get('summary/'+String((await moleid).data._id) + '/count')
+            .then(res =>{
+                this.setState({moleGamesCount: res.data})
+                console.log(this.state.moleGamesCount)
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+
+        axios.get('summary/'+String((await simonid).data._id) + '/count')
+            .then(res =>{
+                this.setState({simonGamesCount: res.data})
+                console.log(this.state.simonGamesCount)
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+
+        axios.get('summary/'+String((await matchid).data._id) + '/count')
+            .then(res =>{
+                this.setState({matchGamesCount: (res.data._id)})
+                console.log(this.state.matchGamesCount)
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+
     }
 
     getChartData() {
@@ -33,9 +75,7 @@ class SummaryReport extends Component {
                     {
                         label: 'No. of Plays',
                         data: [
-                            34,
-                            45,
-                            60,
+                            10,10,10
                         ],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.6)',
