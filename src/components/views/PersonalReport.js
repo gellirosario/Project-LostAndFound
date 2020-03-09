@@ -20,6 +20,24 @@ var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'A
 var now = new Date();
 var thisMonth = months[now.getMonth()];
 var year = new Date().getFullYear(); //Current Year
+let simongames = [
+    {
+        score: "",
+        date: ""
+    }
+];
+let molegames = [
+    {
+        score: "",
+        date: ""
+    }
+];
+let matchgames = [
+    {
+        totalTime: "",
+        date: ""
+    }
+];
 
 
 class PersonalReport extends Component {
@@ -42,28 +60,15 @@ class PersonalReport extends Component {
 
 
     async componentDidMount() {
-
-        var molegames = Array.from(Array(2), () => new Array(4));
-        var simongames = Array.from(Array(2), () => new Array(4));
-        var matchgames = Array.from(Array(2), () => new Array(4));
-
-        var mi = 0;
-        var mj = 0;
-
-        var si = 0;
-        var sj = 0;
-
-        var mi = 0;
-        var mj = 0;
-        molegames[0, 0] = 99999;
-        molegames[0, 1] = 23333;
-
-        var Sgame= {};
-        var person = {firstName:"John", lastName:"Doe", age:46};
+        let i = 0;
+        let j = 0;
+        let k = 0;
         let moleid = await axios.get('/game/find/WhackAMole');
         let simonid = await axios.get('/game/find/SimonSays');
         let matchid = await axios.get('/game//find/CardMatch');
-       
+
+
+        //Get simongame & molegame sort by highest score first
         axios.get('users/' + this.props.auth.user.id)
             .then(response => {
                 this.setState({ users: response.data.name });
@@ -74,56 +79,53 @@ class PersonalReport extends Component {
 
         axios.get('record/' + this.props.auth.user.id)
             .then(response => {
-
-                console.log(response.data);
                 var newArr = __(response.data).orderBy('score', 'desc').value();
                 this.data = newArr;
-
-                console.log(newArr);
-
-
                 this.data.forEach((data) => {
-
                     if (data.gameId === moleid.data._id) {
-
-
-                        //   console.log(data.gameId);
-                        // console.log(data.score, data.date);
+                        molegames[i] = ({ score: data.score, date: data.date });
+                        i++;
                     }
                     else if (data.gameId === simonid.data._id) {
-                        //   console.log(data);
-                        //console.log(data.score, data.date);
-                        Sgame = Sgame.concat(data.score, data.date );
-                        
-
+                        simongames[j] = ({ score: data.score, date: data.date });
+                        j++;
                     }
-                    else if (data.gameId === matchid.data._id) {
-                        //   console.log(data.gameId);
-
-
-                    }
-
-
-
-                    //     console.log(data.score);
-                    //     console.log(data.date);
-                    //   console.log(this.state.game)
-
-
                 });
-
-                console.log("LOL");
-                console.log(Sgame);
-                console.log("LOL");
-
-
-
             })
             .catch((error) => {
                 console.log(error);
             })
 
+        //Get Matchgame sort by fastest totalTime
+        axios.get('record/' + this.props.auth.user.id)
+            .then(response => {
+                var newArr = __(response.data).orderBy('totalTime', 'asc').value();
+                this.data = newArr;
+                this.data.forEach((data) => {
 
+                    if (data.gameId === matchid.data._id) {
+                        matchgames[k] = ({ totalTime: data.totalTime, date: data.date });
+                        k++;
+                    }
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
+            console.log("simongames");
+            console.log(simongames);
+
+            console.log("molegames");
+            console.log(molegames);
+
+
+            console.log("matchgames");
+            console.log(matchgames);
+
+            //var scoreee = simongames[0]["score"].value();
+            var scoreee = parseInt(simongames[0].score)
+            console.log(scoreee);
         this.getChartData();
     }
 
@@ -178,7 +180,7 @@ class PersonalReport extends Component {
                                                 <br></br>
                                             </Col>
                                             <Col sm="1.2" style={{ marginRight: 20 }}>
-                                                <button type="button" className="start_button orange" onClick={() => window.print()}>Print Report</button>
+                                                <button type="button" className="start_button orange">Print Report</button>
                                             </Col>
                                         </Row>
                                         <Row>
