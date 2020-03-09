@@ -7,9 +7,10 @@ import Swal from 'sweetalert2'
 
 const Toast = Swal.mixin({
   toast: true,
-  position: 'top-end',
+  position: 'center',
+  padding:'50px',
   showConfirmButton: false,
-  timer: 3000,
+  timer: 1000,
   timerProgressBar: true,
   onOpen: (toast) => {
     toast.addEventListener('mouseenter', Swal.stopTimer)

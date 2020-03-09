@@ -19,6 +19,11 @@ export default {
         icon: 'icon-pie-chart',
       },
       {
+        name: 'Individual Report',
+        url: '/report/individual',
+        icon: 'icon-chart',
+      },
+      {
         divider: true,
       },
       {
