@@ -25,8 +25,6 @@ var year = new Date().getFullYear(); //Current Year
 class PersonalReport extends Component {
 
 
-
-
     constructor() {
 
         super();
@@ -61,10 +59,10 @@ class PersonalReport extends Component {
         molegames[0, 1] = 23333;
 
 
-        let moleid = await axios.get('/game/WhackAMole');
-        let simonid = await axios.get('/game/SimonSays');
-        let matchid = await axios.get('/game/CardMatch');
-
+        let moleid = await axios.get('/game/find/WhackAMole');
+        let simonid = await axios.get('/game/find/SimonSays');
+        let matchid = await axios.get('/game//find/CardMatch');
+       
         axios.get('users/' + this.props.auth.user.id)
             .then(response => {
                 this.setState({ users: response.data.name });
@@ -80,6 +78,8 @@ class PersonalReport extends Component {
                 var newArr = __(response.data).orderBy('score', 'desc').value();
                 this.data = newArr;
 
+                console.log(newArr);
+
 
                 this.data.forEach((data) => {
 
@@ -91,7 +91,7 @@ class PersonalReport extends Component {
                     }
                     else if (data.gameId === simonid.data._id) {
                         //   console.log(data);
-                        console.log(data.score, data.date);
+                        //console.log(data.score, data.date);
                     }
                     else if (data.gameId === matchid.data._id) {
                         //   console.log(data.gameId);
