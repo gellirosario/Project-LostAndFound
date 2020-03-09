@@ -16,6 +16,20 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import axios from "axios";
 import { editUser } from "../../actions/authActions";
+import Swal from 'sweetalert2'
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'center',
+  padding:'50px',
+  showConfirmButton: false,
+  timer: 1000,
+  timerProgressBar: true,
+  onOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
+})
 
 class Profile extends Component {
   constructor() {
@@ -31,7 +45,7 @@ class Profile extends Component {
       errors: {},
       success: false,
       tabledata: [],
-      games:{}
+      games: {}
     };
   }
 
@@ -69,17 +83,17 @@ class Profile extends Component {
   getGameId(gameName) {
     axios.get('/game/find/' + gameName).then(res => {
       let gameid = res.data._id.toString();
-      Object.assign(this.state.games, { [gameName] : gameid})
+      Object.assign(this.state.games, { [gameName]: gameid })
 
-      this.setState({ games : this.state.games });
+      this.setState({ games: this.state.games });
     })
   }
 
-  calculateAge(dateOfBirth){
+  calculateAge(dateOfBirth) {
     var today = new Date();
     var formattedDob = new Date(dateOfBirth);
     var diff = today.getTime() - formattedDob.getTime();
-    var age = Math.floor(diff/31557600000);
+    var age = Math.floor(diff / 31557600000);
 
     return age;
   }
@@ -87,7 +101,13 @@ class Profile extends Component {
   componentWillReceiveProps(nextProps) {
     console.log(nextProps)
 
-    if (this.props.success !== nextProps.success){
+    if (this.props.success !== nextProps.success) {
+
+      Toast.fire({
+        icon: 'success',
+        title: 'Profile successfully updated'
+      })
+
       this.setState({
         success: nextProps.success,
       })
@@ -101,6 +121,12 @@ class Profile extends Component {
     }
 
     if (this.props.errors !== nextProps.errors) {
+
+      Toast.fire({
+        icon: 'error',
+        title: 'Profile not updated'
+      })
+
       this.setState({
         errors: nextProps.errors,
       });
@@ -137,6 +163,7 @@ class Profile extends Component {
   render() {
 
     const { errors } = this.state;
+    let a = 0,b = 0,c = 0;
 
     return (
       <div className="animated fadeIn">
@@ -277,7 +304,7 @@ class Profile extends Component {
                             <h6
                               style={
                                 this.state.success &&
-                                Object.keys(this.state.errors).length === 0
+                                  Object.keys(this.state.errors).length === 0
                                   ? {}
                                   : { display: "none" }
                               }
@@ -291,38 +318,44 @@ class Profile extends Component {
                     </Row>
                     <Row>
                       <Col>
-                        <h4>History</h4>
-                        <br/>
+                        <br />
+                        <h3>History</h3>
+                        <hr />
+                        <br />
                         <h5>Whack A Mole</h5>
                         <table id="moleTable" class="history_table">
                           <tbody>
                             <tr class="history_table-tr">
+                              <th class="history_table-th">#</th>
                               <th class="history_table-th">Score</th>
                               <th class="history_table-th">Reaction Time (seconds)</th>
                               <th class="history_table-th">Date</th>
                             </tr>
                             {this.state.tabledata.map(item => {
-
                               if (item.gameId === this.state.games["WhackAMole"]) {
-                              let recordDate = new Date(item.date);
+                                let recordDate = new Date(item.date);
 
                                 return (
                                   <tr class="history_table-tr">
+                                    <td class="history_table-td">{a += 1}</td>
                                     <td class="history_table-td">{item.score}</td>
                                     <td class="history_table-td">{item.reactionTime}</td>
                                     <td class="history_table-td">{recordDate.toString()}</td>
                                   </tr>
                                 );
+
+
                               }
                               else return false;
                             })}
                           </tbody>
                         </table>
-                        <br/>
+                        <br />
                         <h5>Card Match</h5>
                         <table id="matchTable" class="history_table">
                           <tbody>
                             <tr class="history_table-tr">
+                              <th class="history_table-th">#</th>
                               <th class="history_table-th">Flips</th>
                               <th class="history_table-th">Total Time (seconds)</th>
                               <th class="history_table-th">Date</th>
@@ -330,11 +363,12 @@ class Profile extends Component {
                             {this.state.tabledata.map(item => {
 
                               if (item.gameId === this.state.games["CardMatch"]) {
-                              
+
                                 let recordDate = new Date(item.date);
 
                                 return (
                                   <tr class="history_table-tr">
+                                    <td class="history_table-td">{b+=1}</td>
                                     <td class="history_table-td">{item.flips}</td>
                                     <td class="history_table-td">{item.totalTime}</td>
                                     <td class="history_table-td">{recordDate.toString()}</td>
@@ -345,22 +379,23 @@ class Profile extends Component {
                             })}
                           </tbody>
                         </table>
-                        <br/>
-                        <h5>Simon Says</h5>                        
+                        <br />
+                        <h5>Simon Says</h5>
                         <table id="simonTable" class="history_table">
                           <tbody>
                             <tr class="history_table-tr">
+                              <th class="history_table-th">#</th>
                               <th class="history_table-th">Score</th>
                               <th class="history_table-th">Date</th>
                             </tr>
                             {this.state.tabledata.map(item => {
-
                               if (item.gameId === this.state.games["SimonSays"]) {
-                              
+
                                 let recordDate = new Date(item.date);
 
                                 return (
                                   <tr class="history_table-tr">
+                                    <td class="history_table-td">{c+=1}</td>
                                     <td class="history_table-td">{item.score}</td>
                                     <td class="history_table-td">{recordDate.toString()}</td>
                                   </tr>

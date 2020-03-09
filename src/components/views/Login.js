@@ -8,9 +8,10 @@ import Swal from 'sweetalert2'
 
 const Toast = Swal.mixin({
   toast: true,
-  position: 'top-end',
+  position: 'center',
+  padding: '50px',
   showConfirmButton: false,
-  timer: 3000,
+  timer: 1000,
   timerProgressBar: true,
   onOpen: (toast) => {
     toast.addEventListener('mouseenter', Swal.stopTimer)
@@ -89,12 +90,12 @@ class Login extends Component {
                             <i className="icon-user"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input 
-                        onChange={this.onChange}
-                        value={this.state.email}
-                        invalid={!!(errors.email)}
-                        id="email"
-                        type="text" placeholder="Email" autoComplete="Email" />
+                        <Input
+                          onChange={this.onChange}
+                          value={this.state.email}
+                          invalid={!!(errors.email)}
+                          id="email"
+                          type="text" placeholder="Email" autoComplete="Email" />
                         <FormFeedback>{errors.email}</FormFeedback>
                       </InputGroup>
                       <InputGroup className="mb-4">
@@ -103,14 +104,14 @@ class Login extends Component {
                             <i className="icon-lock"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input 
-                        onChange={this.onChange}
-                        value={this.state.password}
-                        invalid={!!(errors.password)}
-                        id="password"
-                        type="password" 
-                        placeholder="Password" 
-                        autoComplete="current-password" />
+                        <Input
+                          onChange={this.onChange}
+                          value={this.state.password}
+                          invalid={!!(errors.password)}
+                          id="password"
+                          type="password"
+                          placeholder="Password"
+                          autoComplete="current-password" />
                         <FormFeedback>{errors.password}</FormFeedback>
                       </InputGroup>
                       <Row>

@@ -25,7 +25,7 @@ class Input extends Component {
         return (
             <form onSubmit={this.handleSubmit} className="input-field">
                 <input className="message-input" type="text" onChange={this.handleChange} value={this.state.message} />
-                <input className="chat-button" style={{textTransform:'capitalize'}} type="submit" value="send" />
+                <input className="chat-button" style={{textTransform:'capitalize'}} type="submit" value="Send Message" />
             </form>
         )
     }
