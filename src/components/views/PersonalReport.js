@@ -22,20 +22,20 @@ var thisMonth = months[now.getMonth()];
 var year = new Date().getFullYear(); //Current Year
 let simongames = [
     {
-        score: "",
-        date: ""
+        score: {},
+        date: {}
     }
 ];
 let molegames = [
     {
-        score: "",
-        date: ""
+        score: {},
+        date: {}
     }
 ];
 let matchgames = [
     {
-        totalTime: "",
-        date: ""
+        totalTime: {},
+        date: {}
     }
 ];
 
@@ -53,7 +53,27 @@ class PersonalReport extends Component {
             // simongames:[[],[],
             //  molegames:[[],[]], 
             //  matchgames:[[],[]],
-            SimonSaysId: ""
+            SimonSaysId: "",
+
+            simongames: [],
+            //    {
+            //        score: "",
+            //        date: ""
+            //    }
+           // ],
+            molegames: [],
+             //   {
+             //       score: "",
+             //       date: ""
+             //   }
+           // ],
+            matchgames: [],
+             //   {
+            //        totalTime: "",
+           //         date: ""
+            //    }
+          //  ]
+
         }
     }
 
@@ -84,18 +104,25 @@ class PersonalReport extends Component {
                 this.data.forEach((data) => {
                     if (data.gameId === moleid.data._id) {
                         molegames[i] = ({ score: data.score, date: data.date });
+
                         i++;
+                        this.setState({molegames: molegames});
+                       
+
                     }
                     else if (data.gameId === simonid.data._id) {
                         simongames[j] = ({ score: data.score, date: data.date });
                         j++;
+                        this.setState({simongames: simongames});
                     }
                 });
+
+                console.log(molegames[0]);
             })
             .catch((error) => {
                 console.log(error);
             })
-
+           
         //Get Matchgame sort by fastest totalTime
         axios.get('record/' + this.props.auth.user.id)
             .then(response => {
@@ -104,7 +131,10 @@ class PersonalReport extends Component {
                 this.data.forEach((data) => {
 
                     if (data.gameId === matchid.data._id) {
-                        matchgames[k] = ({ totalTime: data.totalTime, date: data.date });
+                        
+                       matchgames[k] = { totalTime: data.totalTime, date: data.date };
+                       this.setState({ matchgames:  matchgames});
+                        console.log(matchgames[0]);
                         k++;
                     }
                 });
@@ -123,13 +153,17 @@ class PersonalReport extends Component {
             console.log("matchgames");
             console.log(matchgames);
 
-            //var scoreee = simongames[0]["score"].value();
-            var scoreee = parseInt(simongames[0].score)
-            console.log(scoreee);
+            console.log("LOL");
+           
+            console.log("LOL");
+            
+          
         this.getChartData();
     }
 
     getChartData() {
+
+        console.log(simongames[0]);
         // Ajax calls here
         this.setState({
             chartData: {
