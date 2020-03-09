@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from "react-redux";
 import moment from 'moment';
-import { Radar } from 'react-chartjs-2';
-import { Doughnut } from 'react-chartjs-2';
+import { Radar, Doughnut, Line } from 'react-chartjs-2';
 
 import {
     Card,
@@ -33,6 +32,17 @@ class PersonalReport extends Component {
             matchGames: [],
             doughnutChartData: {},
             radarChartData: {},
+            simonGames2: [],
+            moleGames2: [],
+            matchGames2: [],
+            totalSimonGames: [],
+            totalMatchGames: [],
+            totalMoleGames: [],
+            avgFlips: 0,
+            avgTotalTime: 0,
+            avgReactionTime: 0,
+            avgSimonScore: 0,
+            avgMoleScore: 0,
         }
     }
     onChange = option => {
@@ -52,6 +62,82 @@ class PersonalReport extends Component {
         let moleid = await axios.get('/game/find/WhackAMole');
         let simonid = await axios.get('/game/find/SimonSays');
         let matchid = await axios.get('/game//find/CardMatch');
+
+         // Get all game records
+         await axios.get('record/')
+         .then(response => {
+             var newArr = __(response.data).orderBy('score', 'desc').value();
+             this.data = newArr;
+
+             this.data.forEach((data) => {
+                 if (data.gameId === moleid.data._id) {
+                     let { totalMoleGames } = this.state;
+                     totalMoleGames.push({ id: moleid.data._id, score: data.score, reactionTime: data.reactionTime, date: data.date })
+                     this.setState({ totalMoleGames: totalMoleGames })
+                 }
+                 else if (data.gameId === simonid.data._id) {
+                     let { totalSimonGames } = this.state;
+                     totalSimonGames.push({ id: simonid.data._id, score: data.score, date: data.date })
+                     this.setState({ totalSimonGames: totalSimonGames })
+                 }
+                 else if (data.gameId === matchid.data._id) {
+                     let { totalMatchGames } = this.state;
+                     totalMatchGames.push({ id: matchid.data._id, flips: data.flips, totalTime: data.totalTime, date: data.date })
+                     this.setState({ totalMatchGames: totalMatchGames })
+                 }
+             });
+         })
+         .catch((error) => {
+             console.log(error);
+         })
+
+     let avgFlips = 0;
+     let avgTotalTime = 0;
+     let avgReactionTime = 0;
+     let avgSimonScore = 0;
+     let avgMoleScore = 0;
+
+     //Calculation for comparison (line graph)
+     if(this.state.totalMatchGames != null)
+     {
+         for (let i = 0; i < this.state.totalMatchGames.length; i++) {
+             avgFlips += this.state.totalMatchGames[i].flips;
+             avgTotalTime += this.state.totalMatchGames[i].totalTime;
+         }
+     }
+
+     if(this.state.totalMoleGames != null)
+     {
+         for (let i = 0; i < this.state.totalMoleGames.length; i++) {
+             avgReactionTime += this.state.totalMoleGames[i].reactionTime;
+             avgMoleScore += this.state.totalMoleGames[i].score;
+         }
+     }
+
+     if(this.state.totalSimonGames != null)
+     {
+         for (let i = 0; i < this.state.totalSimonGames.length; i++) {
+             avgSimonScore += this.state.totalSimonGames[i].score;
+         }
+     }
+console.log(this.state.totalMatchGames)
+
+     avgFlips /= this.state.totalMatchGames.length;
+     avgTotalTime /= this.state.totalMatchGames.length;
+     avgReactionTime /= this.state.totalMoleGames.length;
+     avgMoleScore /= this.state.totalMoleGames.length;
+     avgSimonScore /= this.state.totalSimonGames.length;
+
+     this.setState({
+         avgFlips:avgFlips,
+         avgTotalTime:avgTotalTime,
+         avgReactionTime:avgReactionTime,
+         avgSimonScore:avgSimonScore,
+         avgMoleScore:avgMoleScore,
+         totalMatchGames: [],
+         totalMoleGames: [],
+         totalSimonGames: [],
+     })
 
 
         //Get simongame & molegame sort by highest score first
@@ -107,7 +193,7 @@ class PersonalReport extends Component {
                     if (data.gameId === matchid.data._id) {
                         let { matchGames } = this.state;
 
-                        matchGames.push({ id: matchid.data._id, totalTime: data.totalTime, date: data.date });
+                        matchGames.push({ id: matchid.data._id, flips: data.flips, totalTime: data.totalTime, date: data.date });
                         this.setState({ matchGames: matchGames });
 
                     }
@@ -117,13 +203,17 @@ class PersonalReport extends Component {
                 console.log(error);
             })
 
-        await this.getChartData();
+         this.getChartData();
     }
 
 
 
 
     getChartData() {
+
+        this.state.matchGames2.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
+        this.state.moleGames2.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
+        this.state.simonGames2.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
 
 
         // Ajax calls here
@@ -157,40 +247,90 @@ class PersonalReport extends Component {
                     }
                 ]
             },
-    
-        
-        radarChartData: {
-            labels: ['Flips', 'Timing', 'Reaction Time', 'Mole Whacked', 'Simon Says Round'],
-            datasets: [
-                {
-                    label: 'First Game',
-                    backgroundColor: 'rgba(179,181,198,0.2)',
-                    borderColor: 'rgba(179,181,198,1)',
-                    pointBackgroundColor: 'rgba(179,181,198,1)',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgba(179,181,198,1)',
-                    data: [this.state.matchGames[0].flips, this.state.matchGames[0].totalTime, 
-                    this.state.moleGames[0].reactionTime, this.state.moleGames[0].score, this.state.simonGames[0].score]
-                },
-                {
-                    label: 'Latest Game',
-                    backgroundColor: 'rgba(255,99,132,0.2)',
-                    borderColor: 'rgba(255,99,132,1)',
-                    pointBackgroundColor: 'rgba(255,99,132,1)',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgba(255,99,132,1)',
-                    data: [this.state.matchGames[this.state.matchGames.length-1].flips, this.state.matchGames[this.state.matchGames.length-1].totalTime, 
-                    this.state.moleGames[this.state.matchGames.length-1].reactionTime, this.state.moleGames[this.state.matchGames.length-1].score, this.state.simonGames[this.state.matchGames.length-1].score]
-                }
-            ]
-        }
-        
-        
-        
-    });
-}
+
+
+            radarChartData: {
+                labels: ['Flips', 'Timing', 'Reaction Time', 'Mole Whacked', 'Simon Says Round'],
+                datasets: [
+                    {
+                        label: 'First Game',
+                        backgroundColor: 'rgba(179,181,198,0.2)',
+                        borderColor: 'rgba(179,181,198,1)',
+                        pointBackgroundColor: 'rgba(179,181,198,1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(179,181,198,1)',
+                        data: [this.state.matchGames[0].flips, this.state.matchGames[0].totalTime,
+                        this.state.moleGames[0].reactionTime, this.state.moleGames[0].score, this.state.simonGames[0].score]
+                    },
+                    {
+                        label: 'Latest Game',
+                        backgroundColor: 'rgba(255,99,132,0.2)',
+                        borderColor: 'rgba(255,99,132,1)',
+                        pointBackgroundColor: 'rgba(255,99,132,1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(255,99,132,1)',
+                        data: [this.state.matchGames[this.state.matchGames.length - 1].flips, this.state.matchGames[this.state.matchGames.length - 1].totalTime,
+                        this.state.moleGames[this.state.matchGames.length - 1].reactionTime, this.state.moleGames[this.state.matchGames.length - 1].score, this.state.simonGames[this.state.matchGames.length - 1].score]
+                    }
+                ]
+            },
+
+            lineData: {
+                labels: ['Flips', 'Timing', 'Reaction Time', 'Mole Whacked', 'Simon Says Round'],
+                datasets: [
+                    {
+                        label: 'My Data',
+                        fill: false,
+                        lineTension: 0.1,
+                        backgroundColor: 'rgba(75,192,192,0.4)',
+                        borderColor: 'rgba(75,192,192,1)',
+                        borderCapStyle: 'butt',
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: 'miter',
+                        pointBorderColor: 'rgba(75,192,192,1)',
+                        pointBackgroundColor: '#fff',
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+                        pointHoverBorderColor: 'rgba(220,220,220,1)',
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 1,
+                        pointHitRadius: 10,
+                        data: [this.state.matchGames[0].flips, this.state.matchGames[0].totalTime,
+                        this.state.moleGames[0].reactionTime, this.state.moleGames[0].score, this.state.simonGames[0].score]
+                    },
+                    {
+                        label: 'Average Data',
+                        fill: false,
+                        lineTension: 0.1,
+                        backgroundColor: 'rgba(255, 99, 132, 0.4)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderCapStyle: 'butt',
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: 'miter',
+                        pointBorderColor: 'rgba(255, 99, 132, 1)',
+                        pointBackgroundColor: '#fff',
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: 'rgba(255, 99, 132, 1)',
+                        pointHoverBorderColor: 'rgba(220,220,220,1)',
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 1,
+                        pointHitRadius: 10,
+                        data: [this.state.avgFlips, this.state.avgTotalTime,
+                        this.state.avgReactionTime, this.state.avgMoleScore, this.state.avgSimonScore]
+                    }
+                ]
+            }
+
+
+
+        });
+    }
 
     render() {
 
@@ -224,18 +364,27 @@ class PersonalReport extends Component {
                                                 <Radar data={this.state.radarChartData} />
                                             </Col>
                                         </Row>
+                                        <br />
+                                        <Row>
+                                            <Col sm="5">
+                                                <h4>User's Average</h4>
+                                                <hr />
+                                                <Line data={this.state.lineData} />
+                                            </Col>
+                                        </Row>
                                         <br></br>
                                         <Row>
                                             <Col>
                                                 <h4>Personal Best</h4>
                                                 <hr />
-                                                <h5>Memory (Card Game)</h5>
+                                                <h5>Match Game</h5>
                                                 <div>
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">#</th>
-                                                                <th scope="col">Time</th>
+                                                                <th scope="col">No. Of Flips</th>
+                                                                <th scope="col">Total Time</th>
                                                                 <th scope="col">Date</th>
                                                             </tr>
                                                         </thead>
@@ -245,8 +394,9 @@ class PersonalReport extends Component {
                                                                     return (
                                                                         <tr key={game.id}>
                                                                             <th scope="col">{index + 1}</th>
-                                                                            <td scope="col">{game.totalTime === "" ? "null" : game.totalTime+ "sec"}</td>
-                                                                            <td scope="col">{moment(game.date).format("DD-MMM-YYYY")}</td>
+                                                                            <td scope="col">{game.flips}</td>
+                                                                            <td scope="col">{game.totalTime}s</td>
+                                                                            <td scope="col">{moment(game.date).format("YYYY-MM-DD HH:MM:SS")}</td>
                                                                         </tr>
                                                                     );
                                                                 })}
@@ -254,13 +404,14 @@ class PersonalReport extends Component {
                                                     </table>
                                                 </div>
                                                 <br></br>
-                                                <h5>Reaction Time (Mole Game)</h5>
+                                                <h5>Mole Game</h5>
                                                 <div>
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">#</th>
                                                                 <th scope="col">Score</th>
+                                                                <th scope="col">Reaction Time</th>
                                                                 <th scope="col">Date</th>
                                                             </tr>
                                                         </thead>
@@ -274,8 +425,9 @@ class PersonalReport extends Component {
                                                                     return (
                                                                         <tr key={game.id}>
                                                                             <th scope="col">{index + 1}</th>
-                                                                            <td scope="col">{game.score === "" ? "null" : game.score}</td>
-                                                                            <td scope="col">{moment(game.date).format("DD-MMM-YYYY")}</td>
+                                                                            <td scope="col">{game.score}</td>
+                                                                            <td scope="col">{game.reactionTime}s</td>
+                                                                            <td scope="col">{moment(game.date).format("YYYY-MM-DD HH:MM:SS")}</td>
                                                                         </tr>
                                                                     );
                                                                 })}
@@ -283,7 +435,7 @@ class PersonalReport extends Component {
                                                     </table>
                                                 </div>
                                                 <br></br>
-                                                <h5>Perception (Simon Game)</h5>
+                                                <h5>Simon Game</h5>
                                                 <div>
                                                     <table class="table">
                                                         <thead>

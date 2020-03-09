@@ -404,7 +404,7 @@ console.log(this.state.totalMatchGames)
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {this.state.matchGames.map((game, index) => {
+                                                            {this.state.matchGames.slice(0, 3).map((game, index) => {
                                                                 return (
                                                                     <tr >
                                                                         <th scope="col">{index + 1}</th>
@@ -431,7 +431,7 @@ console.log(this.state.totalMatchGames)
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {this.state.moleGames.map((game, index) => {
+                                                            {this.state.moleGames.slice(0, 3).map((game, index) => {
                                                                 return (
                                                                     <tr >
                                                                         <th scope="col">{index + 1}</th>
@@ -456,7 +456,7 @@ console.log(this.state.totalMatchGames)
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {this.state.simonGames.map((game, index) => {
+                                                            {this.state.simonGames.slice(0, 3).map((game, index) => {
                                                                 return (
                                                                     <tr >
                                                                         <th scope="col">{index + 1}</th>
