@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from "react-redux";
 import moment from 'moment';
+import { Radar } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 
 import {
     Card,
@@ -29,13 +31,24 @@ class PersonalReport extends Component {
             simonGames: [],
             moleGames: [],
             matchGames: [],
+            doughnutChartData: {},
+            radarChartData: {},
         }
     }
+    onChange = option => {
 
+        axios.get('users/' + option.value)
+            .then(response => {
+                this.setState({ users: response.data.name });
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
+
+        this.getGameRecordData(option.value);
+    }
     async componentDidMount() {
-        let i = 0;
-        let j = 0;
-        let k = 0;
         let moleid = await axios.get('/game/find/WhackAMole');
         let simonid = await axios.get('/game/find/SimonSays');
         let matchid = await axios.get('/game//find/CardMatch');
@@ -59,7 +72,7 @@ class PersonalReport extends Component {
                         //moleGames = { id: moleid.data._id, score: data.score, date: data.date };
 
                         let { moleGames } = this.state;
-                        moleGames.push({ id: moleid.data._id, score: data.score, date: data.date })
+                        moleGames.push({ id: moleid.data._id, score: data.score, reactionTime: data.reactionTime, date: data.date })
                         this.setState({ moleGames: moleGames })
 
 
@@ -80,8 +93,12 @@ class PersonalReport extends Component {
                 console.log(error);
             })
 
+
+
+
+
         //Get Matchgame sort by fastest totalTime
-        axios.get('record/' + this.props.auth.user.id)
+        await axios.get('record/' + this.props.auth.user.id)
             .then(response => {
                 var newArr = __(response.data).orderBy('totalTime', 'asc').value();
                 this.data = newArr;
@@ -100,44 +117,26 @@ class PersonalReport extends Component {
                 console.log(error);
             })
 
-        //console.log("simongames");
-        //console.log(simongames);
-
-
-
-        console.log("here111111");
-        console.log(this.state.moleGames);
-
-        console.log(this.state.matchGames);
-        console.log(this.state.simonGames);
-
-
-
-        //console.log("matchgames");
-        //console.log(matchgames);
-
-        //var scoreee = simongames[0]["score"].value();
-
-
-
-
-        this.getChartData();
+        await this.getChartData();
     }
+
+
+
 
     getChartData() {
 
 
         // Ajax calls here
         this.setState({
-            chartData: {
+            doughnutChartData: {
                 labels: ['Card Match', 'Whack A Mole', 'Simon Says'],
                 datasets: [
                     {
                         label: 'No. of Plays',
                         data: [
-                            34,
-                            45,
-                            60,
+                            this.state.matchGames.length,
+                            this.state.moleGames.length,
+                            this.state.simonGames.length,
                         ],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.6)',
@@ -157,9 +156,41 @@ class PersonalReport extends Component {
                         ],
                     }
                 ]
-            }
-        });
-    }
+            },
+    
+        
+        radarChartData: {
+            labels: ['Flips', 'Timing', 'Reaction Time', 'Mole Whacked', 'Simon Says Round'],
+            datasets: [
+                {
+                    label: 'First Game',
+                    backgroundColor: 'rgba(179,181,198,0.2)',
+                    borderColor: 'rgba(179,181,198,1)',
+                    pointBackgroundColor: 'rgba(179,181,198,1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(179,181,198,1)',
+                    data: [this.state.matchGames[0].flips, this.state.matchGames[0].totalTime, 
+                    this.state.moleGames[0].reactionTime, this.state.moleGames[0].score, this.state.simonGames[0].score]
+                },
+                {
+                    label: 'Latest Game',
+                    backgroundColor: 'rgba(255,99,132,0.2)',
+                    borderColor: 'rgba(255,99,132,1)',
+                    pointBackgroundColor: 'rgba(255,99,132,1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(255,99,132,1)',
+                    data: [this.state.matchGames[this.state.matchGames.length-1].flips, this.state.matchGames[this.state.matchGames.length-1].totalTime, 
+                    this.state.moleGames[this.state.matchGames.length-1].reactionTime, this.state.moleGames[this.state.matchGames.length-1].score, this.state.simonGames[this.state.matchGames.length-1].score]
+                }
+            ]
+        }
+        
+        
+        
+    });
+}
 
     render() {
 
@@ -182,13 +213,15 @@ class PersonalReport extends Component {
                                             </Col>
                                         </Row>
                                         <Row>
-                                            <Col>
+                                            <Col sm='4'>
                                                 <h4>Brain Areas Exercised</h4>
                                                 <hr />
+                                                <Doughnut data={this.state.doughnutChartData} />
                                             </Col>
-                                            <Col>
-                                                <h4>Overview</h4>
+                                            <Col sm="6">
+                                                <h4>Improvements</h4>
                                                 <hr />
+                                                <Radar data={this.state.radarChartData} />
                                             </Col>
                                         </Row>
                                         <br></br>
