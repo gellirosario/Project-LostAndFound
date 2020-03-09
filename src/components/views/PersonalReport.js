@@ -168,7 +168,7 @@ class PersonalReport extends Component {
                                                 <br></br>
                                             </Col>
                                             <Col sm="1.2" style={{ marginRight: 20 }}>
-                                                <button type="button" className="start_button orange">Print Report</button>
+                                                <button type="button" className="start_button orange" onClick={() => window.print()}>Print Report</button>
                                             </Col>
                                         </Row>
                                         <Row>
