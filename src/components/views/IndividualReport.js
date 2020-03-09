@@ -11,6 +11,7 @@ import {
     Row,
 } from 'reactstrap';
 
+import { Radar } from 'react-chartjs-2';
 import { Doughnut } from 'react-chartjs-2';
 
 var __ = require('lodash');
@@ -26,6 +27,7 @@ class IndividualReport extends Component {
         super();
         this.state = {
             doughnutChartData: {},
+            radarChartData: {},
             users: "",
             userList: [],
             simonGames: [],
@@ -80,8 +82,8 @@ class IndividualReport extends Component {
                 console.log(error);
             })
 
-        
-        
+
+
         await this.getGameRecordData(this.state.userList[0].value);
     }
 
@@ -91,7 +93,7 @@ class IndividualReport extends Component {
             simonGames: [],
             moleGames: [],
             matchGames: [],
-            doughnutChartData:[]
+            doughnutChartData: []
         })
 
         await axios.get('record/' + id)
@@ -132,12 +134,12 @@ class IndividualReport extends Component {
             .catch((error) => {
                 console.log(error);
             })
-            console.log(this.state.matchGames.length);
+        console.log(this.state.matchGames.length);
         await this.getChartData();
     }
 
     getChartData() {
-        
+
         // Set Doughnut Data
         this.setState({
             doughnutChartData: {
@@ -168,6 +170,33 @@ class IndividualReport extends Component {
                         ],
                     }
                 ]
+            },
+            radarChartData: {
+                labels: ['Flips', 'Timing', 'Reaction Time', 'Mole Whacked', 'Simon Says Round'],
+                datasets: [
+                    {
+                        label: 'First Game',
+                        backgroundColor: 'rgba(179,181,198,0.2)',
+                        borderColor: 'rgba(179,181,198,1)',
+                        pointBackgroundColor: 'rgba(179,181,198,1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(179,181,198,1)',
+                        data: [this.state.matchGames[0].flips, this.state.matchGames[0].totalTime, 
+                        this.state.moleGames[0].reactionTime, this.state.moleGames[0].score, this.state.simonGames[0].score]
+                    },
+                    {
+                        label: 'Latest Game',
+                        backgroundColor: 'rgba(255,99,132,0.2)',
+                        borderColor: 'rgba(255,99,132,1)',
+                        pointBackgroundColor: 'rgba(255,99,132,1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(255,99,132,1)',
+                        data: [this.state.matchGames[this.state.matchGames.length-1].flips, this.state.matchGames[this.state.matchGames.length-1].totalTime, 
+                        this.state.moleGames[this.state.matchGames.length-1].reactionTime, this.state.moleGames[this.state.matchGames.length-1].score, this.state.simonGames[this.state.matchGames.length-1].score]
+                    }
+                ]
             }
         });
     }
@@ -190,19 +219,19 @@ class IndividualReport extends Component {
                                             </Col>
                                             <Col><Select options={this.state.userList} onChange={this.onChange}></Select></Col>
                                             <Col sm="1.2" style={{ marginRight: 20 }}>
-
                                                 <button type="button" className="start_button orange" onClick={() => window.print()}>Print Report</button>
                                             </Col>
                                         </Row>
                                         <Row>
-                                            <Col>
+                                            <Col sm="4">
                                                 <h4>Brain Areas Exercised</h4>
                                                 <hr />
                                                 <Doughnut data={this.state.doughnutChartData} />
                                             </Col>
-                                            <Col>
-                                                <h4>Overview</h4>
+                                            <Col sm="6">
+                                                <h4>Improvements</h4>
                                                 <hr />
+                                                <Radar data={this.state.radarChartData} />
                                             </Col>
                                         </Row>
                                         <br></br>
