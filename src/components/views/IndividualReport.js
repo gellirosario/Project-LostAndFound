@@ -180,7 +180,8 @@ console.log(this.state.totalMatchGames)
             matchGames: [],
             doughnutChartData: [],
             radarChartData: [],
-            mixData: []
+            mixData: [],
+            lineData:[],
         })
 
         await axios.get('record/' + id)
