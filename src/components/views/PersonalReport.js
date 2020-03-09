@@ -58,7 +58,8 @@ class PersonalReport extends Component {
         molegames[0, 0] = 99999;
         molegames[0, 1] = 23333;
 
-
+        var Sgame= {};
+        var person = {firstName:"John", lastName:"Doe", age:46};
         let moleid = await axios.get('/game/find/WhackAMole');
         let simonid = await axios.get('/game/find/SimonSays');
         let matchid = await axios.get('/game//find/CardMatch');
@@ -92,9 +93,14 @@ class PersonalReport extends Component {
                     else if (data.gameId === simonid.data._id) {
                         //   console.log(data);
                         //console.log(data.score, data.date);
+                        Sgame = Sgame.concat(data.score, data.date );
+                        
+
                     }
                     else if (data.gameId === matchid.data._id) {
                         //   console.log(data.gameId);
+
+
                     }
 
 
@@ -105,6 +111,10 @@ class PersonalReport extends Component {
 
 
                 });
+
+                console.log("LOL");
+                console.log(Sgame);
+                console.log("LOL");
 
 
 
