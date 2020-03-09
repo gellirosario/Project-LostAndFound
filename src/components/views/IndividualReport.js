@@ -11,8 +11,7 @@ import {
     Row,
 } from 'reactstrap';
 
-const DynamicDoughnut = React.lazy(() => import('../graphs/DynamicDoughnut'));
-//const BarGraph = React.lazy(() => import('../graphs/BarGraph'));
+import { Doughnut } from 'react-chartjs-2';
 
 var __ = require('lodash');
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -20,12 +19,13 @@ var now = new Date();
 var thisMonth = months[now.getMonth()];
 var year = new Date().getFullYear(); //Current Year
 
-let matchid = null,simonid = null,moleid = null; 
+let matchid = null, simonid = null, moleid = null;
+
 class IndividualReport extends Component {
     constructor() {
         super();
         this.state = {
-            chartData: {},
+            doughnutChartData: {},
             users: "",
             userList: [],
             simonGames: [],
@@ -35,7 +35,7 @@ class IndividualReport extends Component {
     }
 
     onChange = option => {
-        
+
         axios.get('users/' + option.value)
             .then(response => {
                 this.setState({ users: response.data.name });
@@ -44,8 +44,8 @@ class IndividualReport extends Component {
                 console.log(error);
             })
 
-        
-            this.getGameRecordData(option.value);
+
+        this.getGameRecordData(option.value);
     }
 
     async componentDidMount() {
@@ -61,7 +61,7 @@ class IndividualReport extends Component {
                 data.forEach((data) => {
                     if (data.userType === "User") {
                         let { userList } = this.state;
-                        userList.push({ label: data.email, value: data._id})
+                        userList.push({ label: data.email, value: data._id })
                         this.setState({ userList: userList })
                     }
                 });
@@ -72,7 +72,7 @@ class IndividualReport extends Component {
                 console.log(error);
             })
 
-            axios.get('users/' + this.state.userList[0].value)
+        await axios.get('users/' + this.state.userList[0].value)
             .then(response => {
                 this.setState({ users: response.data.name });
             })
@@ -81,19 +81,20 @@ class IndividualReport extends Component {
             })
 
         
-        this.getGameRecordData(this.state.userList[0].value);
-        this.getChartData();
+        
+        await this.getGameRecordData(this.state.userList[0].value);
     }
 
-    getGameRecordData(id) {
-        
+    async getGameRecordData(id) {
+
         this.setState({
             simonGames: [],
             moleGames: [],
-            matchGames: []
+            matchGames: [],
+            doughnutChartData:[]
         })
 
-        axios.get('record/' + id)
+        await axios.get('record/' + id)
             .then(response => {
                 var newArr = __(response.data).orderBy('score', 'desc').value();
                 this.data = newArr;
@@ -115,7 +116,7 @@ class IndividualReport extends Component {
             })
 
         //Get Matchgame sort by fastest totalTime
-        axios.get('record/' +id)
+        await axios.get('record/' + id)
             .then(response => {
                 var newArr = __(response.data).orderBy('totalTime', 'asc').value();
                 this.data = newArr;
@@ -123,7 +124,7 @@ class IndividualReport extends Component {
 
                     if (data.gameId === matchid.data._id) {
                         let { matchGames } = this.state;
-                        matchGames.push({ id: matchid.data._id,flips:data.flips, totalTime: data.totalTime, date: data.date })
+                        matchGames.push({ id: matchid.data._id, flips: data.flips, totalTime: data.totalTime, date: data.date })
                         this.setState({ matchGames: matchGames })
                     }
                 });
@@ -131,21 +132,23 @@ class IndividualReport extends Component {
             .catch((error) => {
                 console.log(error);
             })
+            console.log(this.state.matchGames.length);
+        await this.getChartData();
     }
 
     getChartData() {
-
-        // Ajax calls here
+        
+        // Set Doughnut Data
         this.setState({
-            chartData: {
-                labels: ['Card Match', 'Whack A Mole', 'Simon Says'],
+            doughnutChartData: {
+                labels: ['Memory', 'Reaction Time', 'Perception'],
                 datasets: [
                     {
                         label: 'No. of Plays',
                         data: [
-                            34,
-                            45,
-                            60,
+                            this.state.matchGames.length,
+                            this.state.moleGames.length,
+                            this.state.simonGames.length,
                         ],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.6)',
@@ -187,7 +190,7 @@ class IndividualReport extends Component {
                                             </Col>
                                             <Col><Select options={this.state.userList} onChange={this.onChange}></Select></Col>
                                             <Col sm="1.2" style={{ marginRight: 20 }}>
-                                            
+
                                                 <button type="button" className="start_button orange" onClick={() => window.print()}>Print Report</button>
                                             </Col>
                                         </Row>
@@ -195,7 +198,7 @@ class IndividualReport extends Component {
                                             <Col>
                                                 <h4>Brain Areas Exercised</h4>
                                                 <hr />
-                                                <DynamicDoughnut />
+                                                <Doughnut data={this.state.doughnutChartData} />
                                             </Col>
                                             <Col>
                                                 <h4>Overview</h4>
@@ -207,7 +210,7 @@ class IndividualReport extends Component {
                                             <Col>
                                                 <h4>Personal Best</h4>
                                                 <hr />
-                                                <h5>Memory (Match Game)</h5>
+                                                <h5>Match Game</h5>
                                                 <div>
                                                     <table class="table">
                                                         <thead>
@@ -221,7 +224,7 @@ class IndividualReport extends Component {
                                                         <tbody>
                                                             {this.state.matchGames.map((game, index) => {
                                                                 return (
-                                                                    <tr key={game.id}>
+                                                                    <tr >
                                                                         <th scope="col">{index + 1}</th>
                                                                         <td scope="col">{game.flips}</td>
                                                                         <td scope="col">{game.totalTime}s</td>
@@ -234,7 +237,7 @@ class IndividualReport extends Component {
                                                     </table>
                                                 </div>
                                                 <br></br>
-                                                <h5>Reaction Time (Mole Game)</h5>
+                                                <h5>Mole Game</h5>
                                                 <div>
                                                     <table class="table">
                                                         <thead>
@@ -248,7 +251,7 @@ class IndividualReport extends Component {
                                                         <tbody>
                                                             {this.state.moleGames.map((game, index) => {
                                                                 return (
-                                                                    <tr key={game.id}>
+                                                                    <tr >
                                                                         <th scope="col">{index + 1}</th>
                                                                         <td scope="col">{game.score}</td>
                                                                         <td scope="col">{game.reactionTime}s</td>
@@ -260,7 +263,7 @@ class IndividualReport extends Component {
                                                     </table>
                                                 </div>
                                                 <br></br>
-                                                <h5>Perception (Simon Says)</h5>
+                                                <h5>Simon Says</h5>
                                                 <div>
                                                     <table class="table">
                                                         <thead>
@@ -271,15 +274,15 @@ class IndividualReport extends Component {
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                                {this.state.simonGames.map((game, index) => {
-                                                                    return (
-                                                                        <tr key={game.id}>
-                                                                            <th scope="col">{index + 1}</th>
-                                                                            <td scope="col">{game.score}</td>
-                                                                            <td scope="col">{moment(game.date).format("YYYY-MM-DD HH:MM:SS")}</td>
-                                                                        </tr>
-                                                                    );
-                                                                })}
+                                                            {this.state.simonGames.map((game, index) => {
+                                                                return (
+                                                                    <tr >
+                                                                        <th scope="col">{index + 1}</th>
+                                                                        <td scope="col">{game.score}</td>
+                                                                        <td scope="col">{moment(game.date).format("YYYY-MM-DD HH:MM:SS")}</td>
+                                                                    </tr>
+                                                                );
+                                                            })}
                                                         </tbody>
                                                     </table>
                                                 </div>
