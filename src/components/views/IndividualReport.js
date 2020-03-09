@@ -180,7 +180,8 @@ console.log(this.state.totalMatchGames)
             matchGames: [],
             doughnutChartData: [],
             radarChartData: [],
-            mixData: []
+            mixData: [],
+            lineData:[],
         })
 
         await axios.get('record/' + id)
@@ -235,7 +236,7 @@ console.log(this.state.totalMatchGames)
         this.state.simonGames2.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
 
         // Set Doughnut Data
-        if (this.state.matchGames != null) {
+        if (this.state.matchGames != "" && this.state.moleGames != "" && this.state.simonGames != "") {
             this.setState({
                 doughnutChartData: {
                     labels: ['Memory', 'Reaction Time', 'Perception'],
