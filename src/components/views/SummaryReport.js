@@ -7,27 +7,28 @@ import {
     Row,
 } from 'reactstrap';
 import moment from 'moment';
-
-//import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import axios from 'axios';
-import { Doughnut, Line} from 'react-chartjs-2';
-// const DynamicDoughnut = React.lazy(() => import('../graphs/DynamicDoughnut'));
-// const BarGraph = React.lazy(() => import('../graphs/BarGraph'));
+import { Doughnut, Line } from 'react-chartjs-2';
 var __ = require('lodash');
+
+var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+var now = new Date();
+var thisMonth = months[now.getMonth()];
+var year = new Date().getFullYear(); //Current Year
 class SummaryReport extends Component {
     constructor() {
         super();
         this.state = {
             doughnutChartData: [],
-            simonGamesCount :0,
-            moleGamesCount :0,
-            matchGamesCount : 0,
-            simonAvgScore:0,
+            simonGamesCount: 0,
+            moleGamesCount: 0,
+            matchGamesCount: 0,
+            simonAvgScore: 0,
             moleAvgScore: 0,
-            matchAvgFlips:0,
-            avgTotalTime:0,
-            avgReactionTime:0,
+            matchAvgFlips: 0,
+            avgTotalTime: 0,
+            avgReactionTime: 0,
             simonGames: [],
             moleGames: [],
             matchGames: [],
@@ -35,102 +36,102 @@ class SummaryReport extends Component {
     }
 
     async componentWillMount() {
-        
+
         let moleid = axios.get('/game/find/WhackAMole');
         let simonid = axios.get('/game/find/SimonSays');
         let matchid = axios.get('/game/find/CardMatch');
         console.log(moleid.data)
 
-        await axios.get('summary/'+String((await moleid).data._id) + '/count')
-            .then(res =>{
-                this.setState({moleGamesCount: res.data})
+        await axios.get('summary/' + String((await moleid).data._id) + '/count')
+            .then(res => {
+                this.setState({ moleGamesCount: res.data })
                 console.log(this.state.moleGamesCount)
             })
-            .catch((error)=>{
+            .catch((error) => {
                 console.log(error)
             })
 
-        await   axios.get('summary/'+String((await simonid).data._id) + '/count')
-            .then(res =>{
-                this.setState({simonGamesCount: res.data})
+        await axios.get('summary/' + String((await simonid).data._id) + '/count')
+            .then(res => {
+                this.setState({ simonGamesCount: res.data })
                 console.log(this.state.simonGamesCount)
             })
-            .catch((error)=>{
+            .catch((error) => {
                 console.log(error)
             })
 
-        await axios.get('summary/'+String((await matchid).data._id) + '/count')
-            .then(res =>{
-                this.setState({matchGamesCount: (res.data)})
+        await axios.get('summary/' + String((await matchid).data._id) + '/count')
+            .then(res => {
+                this.setState({ matchGamesCount: (res.data) })
                 console.log(this.state.matchGamesCount)
             })
-            .catch((error)=>{
+            .catch((error) => {
                 console.log(error)
             })
-            
-        // match sort by flips
-        await axios.get('summary/'+ String((await matchid).data._id))
-        .then(res =>{
-            // var newArr = __(res.data).orderBy('score', 'desc').value();
-            // this.data = newArr;
-            var data = res.data;
-            const sum_flips = Object.values(data).reduce((acc, current) => acc + current.flips, 0);
-            const sum_totalTime = Object.values(data).reduce((acc, current) => acc + current.totalTime, 0);
-            const avg_flips = sum_flips / Object.values(data).length;
-            const avg_totalTime = sum_totalTime / Object.values(data).length;
 
-            this.setState({avgTotalTime:avg_totalTime});
-            this.setState({matchAvgFlips:avg_flips});
-            // console.log(data.slice(-3,).reverse())
-            this.setState({matchGames:data.slice(-3,).reverse()})
-            // console.log(this.state.matchGames)
-        })
-        .catch((error)=>{
-            console.log(error)
-        })
+        // match sort by flips
+        await axios.get('summary/' + String((await matchid).data._id))
+            .then(res => {
+                // var newArr = __(res.data).orderBy('score', 'desc').value();
+                // this.data = newArr;
+                var data = res.data;
+                const sum_flips = Object.values(data).reduce((acc, current) => acc + current.flips, 0);
+                const sum_totalTime = Object.values(data).reduce((acc, current) => acc + current.totalTime, 0);
+                const avg_flips = sum_flips / Object.values(data).length;
+                const avg_totalTime = sum_totalTime / Object.values(data).length;
+
+                this.setState({ avgTotalTime: avg_totalTime });
+                this.setState({ matchAvgFlips: avg_flips });
+                // console.log(data.slice(-3,).reverse())
+                this.setState({ matchGames: data.slice(-3).reverse() })
+                // console.log(this.state.matchGames)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
 
         //mole sort by score
-        await axios.get('summary/'+String((await moleid).data._id))
-        .then(res =>{
-            var data = res.data;
+        await axios.get('summary/' + String((await moleid).data._id))
+            .then(res => {
+                var data = res.data;
 
-            const sum_score = Object.values(data).reduce((acc, current) => acc + current.score, 0);
-            const sum_reactionTime = Object.values(data).reduce((acc, current) => acc + current.reactionTime, 0);
-            const avg_score = sum_score / Object.values(data).length;
-            const avg_reactionTime = sum_reactionTime / Object.values(data).length;
+                const sum_score = Object.values(data).reduce((acc, current) => acc + current.score, 0);
+                const sum_reactionTime = Object.values(data).reduce((acc, current) => acc + current.reactionTime, 0);
+                const avg_score = sum_score / Object.values(data).length;
+                const avg_reactionTime = sum_reactionTime / Object.values(data).length;
 
-            this.setState({moleAvgScore:avg_score});
-            this.setState({avgReactionTime:avg_reactionTime});
+                this.setState({ moleAvgScore: avg_score });
+                this.setState({ avgReactionTime: avg_reactionTime });
 
-            this.setState({moleGames:data.slice(-3,).reverse()})
-            console.log(this.state.moleGames)
-        })
-        .catch((error)=>{
-            console.log(error)
-        })
+                this.setState({ moleGames: data.slice(-3).reverse() })
+                console.log(this.state.moleGames)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
 
         // simon sort by score
-        await   axios.get('summary/'+String((await simonid).data._id))
-            .then(res =>{
+        await axios.get('summary/' + String((await simonid).data._id))
+            .then(res => {
                 var data = res.data;
                 const sum = Object.values(data).reduce((acc, current) => acc + current.score, 0);
                 const average = sum / Object.values(data).length;
-                this.setState({simonAvgScore:average})
+                this.setState({ simonAvgScore: average })
                 // console.log(data)
                 // console.log(average);
                 // console.log(data.slice(-3,).reverse())
-                this.setState({simonGames:data.slice(-3,).reverse()})
+                this.setState({ simonGames: data.slice(-3).reverse() })
                 // console.log(this.state.simonGames)
             })
-            .catch((error)=>{
+            .catch((error) => {
                 console.log(error)
             })
-    console.log(this.state.moleGamesCount)
-    await this.getChartData()
+        console.log(this.state.moleGamesCount)
+        await this.getChartData()
     }
 
     async getChartData() {
-        
+
         // Ajax calls here
         this.setState({
             doughnutChartData: {
@@ -191,10 +192,6 @@ class SummaryReport extends Component {
                 ]
             }
         });
-        // console.log(this.state.simonGamesCount)
-        // console.log(this.state.moleGamesCount)
-        // console.log(this.state.matchGamesCount)
-        // console.log(this.state.chartData)
     }
 
     render() {
@@ -209,27 +206,21 @@ class SummaryReport extends Component {
                                         <Row>
                                             <Col>
                                                 <CardTitle className="h3">Summary Report</CardTitle>
-                                                <div className="small text-muted">January 2020 - December 2020</div>
+                                                <div className="small text-muted">January {year} - {thisMonth} {year}</div>
                                                 <br></br>
                                             </Col>
-                                            <Col sm="1.2" style={{marginRight:20}}>
+                                            <Col sm="1.2" style={{ marginRight: 20 }}>
                                                 <button type="button" className="start_button orange" onClick={() => window.print()}>Print Report</button>
                                             </Col>
                                         </Row>
                                         <Row>
-                                            <Col>
+                                            <Col sm="5">
                                                 <h4>Total Game Plays</h4>
                                                 <hr />
-                                                <Doughnut data = {this.state.doughnutChartData}/>
+                                                <Doughnut data={this.state.doughnutChartData} />
                                             </Col>
-                                            <Col>
-                                                <h4>Overview</h4>
-                                                <hr />
-                                            </Col>
-                                        </Row>
-                                        <Row>
                                             <Col sm="5">
-                                                <h4>User's Average</h4>
+                                                <h4>Users' Average</h4>
                                                 <hr />
                                                 <Line data={this.state.lineData} />
                                             </Col>
@@ -330,8 +321,8 @@ class SummaryReport extends Component {
 
 const mapStateToProps = state => ({
     auth: state.auth
-  });
-  
-  export default connect(
+});
+
+export default connect(
     mapStateToProps
-  )(SummaryReport);
+)(SummaryReport);

@@ -39,11 +39,11 @@ class IndividualReport extends Component {
             totalSimonGames: [],
             totalMatchGames: [],
             totalMoleGames: [],
-            avgFlips:0,
-            avgTotalTime:0,
-            avgReactionTime:0,
-            avgSimonScore:0,
-            avgMoleScore:0,
+            avgFlips: 0,
+            avgTotalTime: 0,
+            avgReactionTime: 0,
+            avgSimonScore: 0,
+            avgMoleScore: 0,
         }
     }
 
@@ -129,29 +129,26 @@ class IndividualReport extends Component {
         let avgMoleScore = 0;
 
         //Calculation for comparison (line graph)
-        if(this.state.totalMatchGames != null)
-        {
+        if (this.state.totalMatchGames != null) {
             for (let i = 0; i < this.state.totalMatchGames.length; i++) {
                 avgFlips += this.state.totalMatchGames[i].flips;
                 avgTotalTime += this.state.totalMatchGames[i].totalTime;
             }
         }
 
-        if(this.state.totalMoleGames != null)
-        {
+        if (this.state.totalMoleGames != null) {
             for (let i = 0; i < this.state.totalMoleGames.length; i++) {
                 avgReactionTime += this.state.totalMoleGames[i].reactionTime;
                 avgMoleScore += this.state.totalMoleGames[i].score;
             }
         }
 
-        if(this.state.totalSimonGames != null)
-        {
+        if (this.state.totalSimonGames != null) {
             for (let i = 0; i < this.state.totalSimonGames.length; i++) {
                 avgSimonScore += this.state.totalSimonGames[i].score;
             }
         }
-console.log(this.state.totalMatchGames)
+        console.log(this.state.totalMatchGames)
 
         avgFlips /= this.state.totalMatchGames.length;
         avgTotalTime /= this.state.totalMatchGames.length;
@@ -160,11 +157,11 @@ console.log(this.state.totalMatchGames)
         avgSimonScore /= this.state.totalSimonGames.length;
 
         this.setState({
-            avgFlips:avgFlips,
-            avgTotalTime:avgTotalTime,
-            avgReactionTime:avgReactionTime,
-            avgSimonScore:avgSimonScore,
-            avgMoleScore:avgMoleScore,
+            avgFlips: avgFlips,
+            avgTotalTime: avgTotalTime,
+            avgReactionTime: avgReactionTime,
+            avgSimonScore: avgSimonScore,
+            avgMoleScore: avgMoleScore,
             totalMatchGames: [],
             totalMoleGames: [],
             totalSimonGames: [],
@@ -181,7 +178,10 @@ console.log(this.state.totalMatchGames)
             doughnutChartData: [],
             radarChartData: [],
             mixData: [],
-            lineData:[],
+            lineData: [],
+            matchGames2:[],
+            moleGames2:[],
+            simonGames2:[],
         })
 
         await axios.get('record/' + id)
@@ -206,7 +206,7 @@ console.log(this.state.totalMatchGames)
                     }
                 });
             })
-           
+
             .catch((error) => {
                 console.log(error);
             })
@@ -241,8 +241,7 @@ console.log(this.state.totalMatchGames)
         this.state.moleGames2.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
         this.state.simonGames2.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
 
-        // Set Doughnut Data
-        if (this.state.matchGames != "" && this.state.moleGames != "" && this.state.simonGames != "") {
+        // Set Chat Data
             this.setState({
                 doughnutChartData: {
                     labels: ['Memory', 'Reaction Time', 'Perception'],
@@ -250,7 +249,7 @@ console.log(this.state.totalMatchGames)
                         {
                             label: 'No. of Plays',
                             data: [
-                                9,7,8
+                                this.state.matchGames.length, this.state.moleGames.length, this.state.simonGames.length
                             ],
                             backgroundColor: [
                                 'rgba(255, 99, 132, 0.6)',
@@ -282,8 +281,11 @@ console.log(this.state.totalMatchGames)
                             pointBorderColor: '#fff',
                             pointHoverBackgroundColor: '#fff',
                             pointHoverBorderColor: 'rgba(179,181,198,1)',
-                            data: [this.state.matchGames2[0].flips, this.state.matchGames2[0].totalTime,
-                            this.state.moleGames2[0].reactionTime, this.state.moleGames2[0].score, this.state.simonGames2[0].score]
+                            data: [this.state.matchGames2!=""?this.state.matchGames2[0].flips:0, 
+                            this.state.matchGames2!=""?this.state.matchGames2[0].totalTime:0,
+                            this.state.moleGames2!=""?this.state.moleGames2[0].reactionTime:0, 
+                            this.state.moleGames2!=""?this.state.moleGames2[0].score:0, 
+                            this.state.simonGames2!=""?this.state.simonGames2[0].score:0]
                         },
                         {
                             label: 'Latest Game',
@@ -293,8 +295,11 @@ console.log(this.state.totalMatchGames)
                             pointBorderColor: '#fff',
                             pointHoverBackgroundColor: '#fff',
                             pointHoverBorderColor: 'rgba(255,99,132,1)',
-                            data: [this.state.matchGames2[this.state.matchGames2.length - 1].flips, this.state.matchGames2[this.state.matchGames2.length - 1].totalTime,
-                            this.state.moleGames2[this.state.moleGames2.length - 1].reactionTime, this.state.moleGames2[this.state.moleGames2.length - 1].score, this.state.simonGames2[this.state.simonGames2.length - 1].score]
+                            data: [this.state.matchGames2!=""?this.state.matchGames2[this.state.matchGames2.length - 1].flips:0, 
+                            this.state.matchGames2!=""?this.state.matchGames2[this.state.matchGames2.length - 1].totalTime:0,
+                            this.state.moleGames2!=""?this.state.moleGames2[this.state.moleGames2.length - 1].reactionTime:0, 
+                            this.state.moleGames2!=""?this.state.moleGames2[this.state.moleGames2.length - 1].score:0, 
+                            this.state.simonGames2!=""?this.state.simonGames2[this.state.simonGames2.length - 1].score:0]
                         }
                     ]
                 },
@@ -320,8 +325,11 @@ console.log(this.state.totalMatchGames)
                             pointHoverBorderWidth: 2,
                             pointRadius: 1,
                             pointHitRadius: 10,
-                            data: [this.state.matchGames[0].flips, this.state.matchGames[0].totalTime,
-                            this.state.moleGames[0].reactionTime, this.state.moleGames[0].score, this.state.simonGames[0].score]
+                            data: [this.state.matchGames!=""?this.state.matchGames[0].flips : 0, 
+                            this.state.matchGames!=""?this.state.matchGames[0].totalTime:0,
+                            this.state.moleGames!=""?this.state.moleGames[0].reactionTime:0, 
+                            this.state.moleGames!=""?this.state.moleGames[0].score:0, 
+                            this.state.simonGames!=""?this.state.simonGames[0].score:0]
                         },
                         {
                             label: 'Average Data',
@@ -342,13 +350,16 @@ console.log(this.state.totalMatchGames)
                             pointHoverBorderWidth: 2,
                             pointRadius: 1,
                             pointHitRadius: 10,
-                            data: [this.state.avgFlips, this.state.avgTotalTime,
-                            this.state.avgReactionTime, this.state.avgMoleScore, this.state.avgSimonScore]
+                            data: [this.state.avgFlips!= ""?this.state.avgFlips:0,
+                            this.state.avgTotalTime!= ""?this.state.avgTotalTime:0,
+                                this.state.avgReactionTime!= ""?this.state.avgReactionTime:0, 
+                                this.state.avgMoleScore!= ""?this.state.avgMoleScore:0, 
+                                this.state.avgSimonScore!= ""?this.state.avgSimonScore:0]
                         }
                     ]
                 }
             });
-        }
+        
     }
 
     render() {
@@ -367,7 +378,7 @@ console.log(this.state.totalMatchGames)
                                                 <div className="small text-muted">January {year} - {thisMonth} {year}</div>
                                                 <br></br>
                                             </Col>
-                                            <Col sm="3" style={{marginTop:'10px'}}><Select  options={this.state.userList} onChange={this.onChange}></Select></Col>
+                                            <Col sm="3" style={{ marginTop: '10px' }}><Select options={this.state.userList} onChange={this.onChange}></Select></Col>
                                             <Col sm="1.2" style={{ marginRight: 20 }}>
                                                 <button type="button" className="start_button orange" onClick={() => window.print()}>Print Report</button>
                                             </Col>

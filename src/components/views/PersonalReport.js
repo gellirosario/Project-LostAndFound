@@ -269,8 +269,11 @@ console.log(this.state.totalMatchGames)
                             pointBorderColor: '#fff',
                             pointHoverBackgroundColor: '#fff',
                             pointHoverBorderColor: 'rgba(179,181,198,1)',
-                            data: [this.state.matchGames2[0].flips, this.state.matchGames2[0].totalTime,
-                            this.state.moleGames2[0].reactionTime, this.state.moleGames2[0].score, this.state.simonGames2[0].score]
+                            data:  [this.state.matchGames2!=""?this.state.matchGames2[0].flips:0, 
+                            this.state.matchGames2!=""?this.state.matchGames2[0].totalTime:0,
+                            this.state.moleGames2!=""?this.state.moleGames2[0].reactionTime:0, 
+                            this.state.moleGames2!=""?this.state.moleGames2[0].score:0, 
+                            this.state.simonGames2!=""?this.state.simonGames2[0].score:0]
                     },
                     {
                         label: 'Latest Game',
@@ -280,8 +283,11 @@ console.log(this.state.totalMatchGames)
                         pointBorderColor: '#fff',
                         pointHoverBackgroundColor: '#fff',
                         pointHoverBorderColor: 'rgba(255,99,132,1)',
-                        data: [this.state.matchGames2[this.state.matchGames2.length - 1].flips, this.state.matchGames2[this.state.matchGames2.length - 1].totalTime,
-                        this.state.moleGames2[this.state.moleGames2.length - 1].reactionTime, this.state.moleGames2[this.state.moleGames2.length - 1].score, this.state.simonGames2[this.state.simonGames2.length - 1].score]
+                        data: [this.state.matchGames2!=""?this.state.matchGames2[this.state.matchGames2.length - 1].flips:0, 
+                        this.state.matchGames2!=""?this.state.matchGames2[this.state.matchGames2.length - 1].totalTime:0,
+                        this.state.moleGames2!=""?this.state.moleGames2[this.state.moleGames2.length - 1].reactionTime:0, 
+                        this.state.moleGames2!=""?this.state.moleGames2[this.state.moleGames2.length - 1].score:0, 
+                        this.state.simonGames2!=""?this.state.simonGames2[this.state.simonGames2.length - 1].score:0]
                     }
                 ]
             },
@@ -308,8 +314,11 @@ console.log(this.state.totalMatchGames)
                         pointHoverBorderWidth: 2,
                         pointRadius: 1,
                         pointHitRadius: 10,
-                        data: [this.state.matchGames[0].flips, this.state.matchGames[0].totalTime,
-                        this.state.moleGames[0].reactionTime, this.state.moleGames[0].score, this.state.simonGames[0].score]
+                        data: [this.state.matchGames!=""?this.state.matchGames[0].flips : 0, 
+                        this.state.matchGames!=""?this.state.matchGames[0].totalTime:0,
+                        this.state.moleGames!=""?this.state.moleGames[0].reactionTime:0, 
+                        this.state.moleGames!=""?this.state.moleGames[0].score:0, 
+                        this.state.simonGames!=""?this.state.simonGames[0].score:0]
                     },
                     {
                         label: 'Average Data',
@@ -330,8 +339,11 @@ console.log(this.state.totalMatchGames)
                         pointHoverBorderWidth: 2,
                         pointRadius: 1,
                         pointHitRadius: 10,
-                        data: [this.state.avgFlips, this.state.avgTotalTime,
-                        this.state.avgReactionTime, this.state.avgMoleScore, this.state.avgSimonScore]
+                        data: [this.state.avgFlips!= ""?this.state.avgFlips:0,
+                        this.state.avgTotalTime!= ""?this.state.avgTotalTime:0,
+                            this.state.avgReactionTime!= ""?this.state.avgReactionTime:0, 
+                            this.state.avgMoleScore!= ""?this.state.avgMoleScore:0, 
+                            this.state.avgSimonScore!= ""?this.state.avgSimonScore:0]
                     }
                 ]
             }
