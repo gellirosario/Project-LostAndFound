@@ -10,9 +10,21 @@ import {
     Col,
     Row,
 } from 'reactstrap';
-
+import Swal from 'sweetalert2'
 import { Radar, Doughnut, Line } from 'react-chartjs-2';
 
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'center',
+    padding: '50px',
+    showConfirmButton: false,
+    timer: 1000,
+    timerProgressBar: true,
+    onOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+})
 var __ = require('lodash');
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 var now = new Date();
@@ -62,6 +74,14 @@ class IndividualReport extends Component {
     }
 
     async componentDidMount() {
+
+        // Loading
+        Toast.fire({
+            icon: 'info',
+            title: 'Loading...'
+        })
+
+        // Get Game ID
         moleid = await axios.get('/game/find/WhackAMole');
         simonid = await axios.get('/game/find/SimonSays');
         matchid = await axios.get('/game//find/CardMatch');
@@ -179,9 +199,9 @@ class IndividualReport extends Component {
             radarChartData: [],
             mixData: [],
             lineData: [],
-            matchGames2:[],
-            moleGames2:[],
-            simonGames2:[],
+            matchGames2: [],
+            moleGames2: [],
+            simonGames2: [],
         })
 
         await axios.get('record/' + id)
@@ -242,124 +262,124 @@ class IndividualReport extends Component {
         this.state.simonGames2.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
 
         // Set Chat Data
-            this.setState({
-                doughnutChartData: {
-                    labels: ['Memory', 'Reaction Time', 'Perception'],
-                    datasets: [
-                        {
-                            label: 'No. of Plays',
-                            data: [
-                                this.state.matchGames.length, this.state.moleGames.length, this.state.simonGames.length
-                            ],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.6)',
-                                'rgba(54, 162, 235, 0.6)',
-                                'rgba(255, 206, 86, 0.6)',
-                            ],
-                            borderWidth: 1,
-                            hoverBackgroundColor: [
-                                'rgba(255, 99, 132, 0.3)',
-                                'rgba(54, 162, 235, 0.3)',
-                                'rgba(255, 206, 86, 0.3)',
-                            ],
-                            hoverBorderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                            ],
-                        }
-                    ]
-                },
-                radarChartData: {
-                    labels: ['Flips', 'Timing', 'Reaction Time', 'Mole Whacked', 'Simon Says Round'],
-                    datasets: [
-                        {
-                            label: 'First Game',
-                            backgroundColor: 'rgba(179,181,198,0.2)',
-                            borderColor: 'rgba(179,181,198,1)',
-                            pointBackgroundColor: 'rgba(179,181,198,1)',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgba(179,181,198,1)',
-                            data: [this.state.matchGames2!=""?this.state.matchGames2[0].flips:0, 
-                            this.state.matchGames2!=""?this.state.matchGames2[0].totalTime:0,
-                            this.state.moleGames2!=""?this.state.moleGames2[0].reactionTime:0, 
-                            this.state.moleGames2!=""?this.state.moleGames2[0].score:0, 
-                            this.state.simonGames2!=""?this.state.simonGames2[0].score:0]
-                        },
-                        {
-                            label: 'Latest Game',
-                            backgroundColor: 'rgba(255,99,132,0.2)',
-                            borderColor: 'rgba(255,99,132,1)',
-                            pointBackgroundColor: 'rgba(255,99,132,1)',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgba(255,99,132,1)',
-                            data: [this.state.matchGames2!=""?this.state.matchGames2[this.state.matchGames2.length - 1].flips:0, 
-                            this.state.matchGames2!=""?this.state.matchGames2[this.state.matchGames2.length - 1].totalTime:0,
-                            this.state.moleGames2!=""?this.state.moleGames2[this.state.moleGames2.length - 1].reactionTime:0, 
-                            this.state.moleGames2!=""?this.state.moleGames2[this.state.moleGames2.length - 1].score:0, 
-                            this.state.simonGames2!=""?this.state.simonGames2[this.state.simonGames2.length - 1].score:0]
-                        }
-                    ]
-                },
-                lineData: {
-                    labels: ['Flips', 'Timing', 'Reaction Time', 'Mole Whacked', 'Simon Says Round'],
-                    datasets: [
-                        {
-                            label: 'My Data',
-                            fill: false,
-                            lineTension: 0.1,
-                            backgroundColor: 'rgba(75,192,192,0.4)',
-                            borderColor: 'rgba(75,192,192,1)',
-                            borderCapStyle: 'butt',
-                            borderDash: [],
-                            borderDashOffset: 0.0,
-                            borderJoinStyle: 'miter',
-                            pointBorderColor: 'rgba(75,192,192,1)',
-                            pointBackgroundColor: '#fff',
-                            pointBorderWidth: 1,
-                            pointHoverRadius: 5,
-                            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-                            pointHoverBorderColor: 'rgba(220,220,220,1)',
-                            pointHoverBorderWidth: 2,
-                            pointRadius: 1,
-                            pointHitRadius: 10,
-                            data: [this.state.matchGames!=""?this.state.matchGames[0].flips : 0, 
-                            this.state.matchGames!=""?this.state.matchGames[0].totalTime:0,
-                            this.state.moleGames!=""?this.state.moleGames[0].reactionTime:0, 
-                            this.state.moleGames!=""?this.state.moleGames[0].score:0, 
-                            this.state.simonGames!=""?this.state.simonGames[0].score:0]
-                        },
-                        {
-                            label: 'Average Data',
-                            fill: false,
-                            lineTension: 0.1,
-                            backgroundColor: 'rgba(255, 99, 132, 0.4)',
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            borderCapStyle: 'butt',
-                            borderDash: [],
-                            borderDashOffset: 0.0,
-                            borderJoinStyle: 'miter',
-                            pointBorderColor: 'rgba(255, 99, 132, 1)',
-                            pointBackgroundColor: '#fff',
-                            pointBorderWidth: 1,
-                            pointHoverRadius: 5,
-                            pointHoverBackgroundColor: 'rgba(255, 99, 132, 1)',
-                            pointHoverBorderColor: 'rgba(220,220,220,1)',
-                            pointHoverBorderWidth: 2,
-                            pointRadius: 1,
-                            pointHitRadius: 10,
-                            data: [this.state.avgFlips!= ""?this.state.avgFlips:0,
-                            this.state.avgTotalTime!= ""?this.state.avgTotalTime:0,
-                                this.state.avgReactionTime!= ""?this.state.avgReactionTime:0, 
-                                this.state.avgMoleScore!= ""?this.state.avgMoleScore:0, 
-                                this.state.avgSimonScore!= ""?this.state.avgSimonScore:0]
-                        }
-                    ]
-                }
-            });
-        
+        this.setState({
+            doughnutChartData: {
+                labels: ['Memory', 'Reaction Time', 'Perception'],
+                datasets: [
+                    {
+                        label: 'No. of Plays',
+                        data: [
+                            this.state.matchGames.length, this.state.moleGames.length, this.state.simonGames.length
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)',
+                        ],
+                        borderWidth: 1,
+                        hoverBackgroundColor: [
+                            'rgba(255, 99, 132, 0.3)',
+                            'rgba(54, 162, 235, 0.3)',
+                            'rgba(255, 206, 86, 0.3)',
+                        ],
+                        hoverBorderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                        ],
+                    }
+                ]
+            },
+            radarChartData: {
+                labels: ['Flips', 'Timing', 'Reaction Time', 'Mole Whacked', 'Simon Says Round'],
+                datasets: [
+                    {
+                        label: 'First Game',
+                        backgroundColor: 'rgba(179,181,198,0.2)',
+                        borderColor: 'rgba(179,181,198,1)',
+                        pointBackgroundColor: 'rgba(179,181,198,1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(179,181,198,1)',
+                        data: [this.state.matchGames2 != "" ? this.state.matchGames2[0].flips : 0,
+                        this.state.matchGames2 != "" ? this.state.matchGames2[0].totalTime : 0,
+                        this.state.moleGames2 != "" ? this.state.moleGames2[0].reactionTime : 0,
+                        this.state.moleGames2 != "" ? this.state.moleGames2[0].score : 0,
+                        this.state.simonGames2 != "" ? this.state.simonGames2[0].score : 0]
+                    },
+                    {
+                        label: 'Latest Game',
+                        backgroundColor: 'rgba(255,99,132,0.2)',
+                        borderColor: 'rgba(255,99,132,1)',
+                        pointBackgroundColor: 'rgba(255,99,132,1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(255,99,132,1)',
+                        data: [this.state.matchGames2 != "" ? this.state.matchGames2[this.state.matchGames2.length - 1].flips : 0,
+                        this.state.matchGames2 != "" ? this.state.matchGames2[this.state.matchGames2.length - 1].totalTime : 0,
+                        this.state.moleGames2 != "" ? this.state.moleGames2[this.state.moleGames2.length - 1].reactionTime : 0,
+                        this.state.moleGames2 != "" ? this.state.moleGames2[this.state.moleGames2.length - 1].score : 0,
+                        this.state.simonGames2 != "" ? this.state.simonGames2[this.state.simonGames2.length - 1].score : 0]
+                    }
+                ]
+            },
+            lineData: {
+                labels: ['Flips', 'Timing', 'Reaction Time', 'Mole Whacked', 'Simon Says Round'],
+                datasets: [
+                    {
+                        label: 'My Data',
+                        fill: false,
+                        lineTension: 0.1,
+                        backgroundColor: 'rgba(75,192,192,0.4)',
+                        borderColor: 'rgba(75,192,192,1)',
+                        borderCapStyle: 'butt',
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: 'miter',
+                        pointBorderColor: 'rgba(75,192,192,1)',
+                        pointBackgroundColor: '#fff',
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+                        pointHoverBorderColor: 'rgba(220,220,220,1)',
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 1,
+                        pointHitRadius: 10,
+                        data: [this.state.matchGames != "" ? this.state.matchGames[0].flips : 0,
+                        this.state.matchGames != "" ? this.state.matchGames[0].totalTime : 0,
+                        this.state.moleGames != "" ? this.state.moleGames[0].reactionTime : 0,
+                        this.state.moleGames != "" ? this.state.moleGames[0].score : 0,
+                        this.state.simonGames != "" ? this.state.simonGames[0].score : 0]
+                    },
+                    {
+                        label: 'Average Data',
+                        fill: false,
+                        lineTension: 0.1,
+                        backgroundColor: 'rgba(255, 99, 132, 0.4)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderCapStyle: 'butt',
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: 'miter',
+                        pointBorderColor: 'rgba(255, 99, 132, 1)',
+                        pointBackgroundColor: '#fff',
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: 'rgba(255, 99, 132, 1)',
+                        pointHoverBorderColor: 'rgba(220,220,220,1)',
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 1,
+                        pointHitRadius: 10,
+                        data: [this.state.avgFlips != "" ? this.state.avgFlips : 0,
+                        this.state.avgTotalTime != "" ? this.state.avgTotalTime : 0,
+                        this.state.avgReactionTime != "" ? this.state.avgReactionTime : 0,
+                        this.state.avgMoleScore != "" ? this.state.avgMoleScore : 0,
+                        this.state.avgSimonScore != "" ? this.state.avgSimonScore : 0]
+                    }
+                ]
+            }
+        });
+
     }
 
     render() {

@@ -10,8 +10,22 @@ import moment from 'moment';
 import { connect } from "react-redux";
 import axios from 'axios';
 import { Doughnut, Line } from 'react-chartjs-2';
-var __ = require('lodash');
+import Swal from 'sweetalert2'
 
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'center',
+    padding: '50px',
+    showConfirmButton: false,
+    timer: 1000,
+    timerProgressBar: true,
+    onOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+})
+
+var __ = require('lodash');
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 var now = new Date();
 var thisMonth = months[now.getMonth()];
@@ -36,7 +50,13 @@ class SummaryReport extends Component {
     }
 
     async componentWillMount() {
+        // Loading
+        Toast.fire({
+            icon: 'info',
+            title: 'Loading...'
+        })
 
+        // Get Game ID
         let moleid = axios.get('/game/find/WhackAMole');
         let simonid = axios.get('/game/find/SimonSays');
         let matchid = axios.get('/game/find/CardMatch');

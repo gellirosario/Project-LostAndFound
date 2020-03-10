@@ -89,8 +89,8 @@ class ChatApp extends Component {
 
     getCommands() {
         Swal.fire({
-            icon: "icon",
-            title: "Bot Command",
+            icon: "info",
+            title: "Bot Commands",
             html:
                 "<p><b>[Translate]</b></br><b>Input:</b> @trbot translate 'message' to 'language'</br>" +
                 "<i><b>Example:</b> @trbot translate 'hello' to french</i></p>",

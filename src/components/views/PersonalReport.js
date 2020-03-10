@@ -3,7 +3,6 @@ import axios from 'axios';
 import { connect } from "react-redux";
 import moment from 'moment';
 import { Radar, Doughnut, Line } from 'react-chartjs-2';
-
 import {
     Card,
     CardBody,
@@ -11,9 +10,20 @@ import {
     Col,
     Row,
 } from 'reactstrap';
+import Swal from 'sweetalert2'
 
-
-
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'center',
+    padding: '50px',
+    showConfirmButton: false,
+    timer: 1000,
+    timerProgressBar: true,
+    onOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+})
 var __ = require('lodash');
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 var now = new Date();
@@ -59,6 +69,14 @@ class PersonalReport extends Component {
         this.getGameRecordData(option.value);
     }
     async componentDidMount() {
+
+        // Loading
+        Toast.fire({
+            icon: 'info',
+            title: 'Loading...'
+        })
+
+        // Get Game ID
         let moleid = await axios.get('/game/find/WhackAMole');
         let simonid = await axios.get('/game/find/SimonSays');
         let matchid = await axios.get('/game//find/CardMatch');
