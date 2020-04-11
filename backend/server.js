@@ -3,8 +3,10 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require("passport");
 const bodyParser = require("body-parser");
+/*
 const { Translate } = require("@google-cloud/translate").v2;
-const Chatkit = require("@pusher/chatkit-server");
+const Chatkit = require("@pusher/chatkit-server");*/
+
 require('dotenv').config();
 
 // Routes
@@ -57,7 +59,7 @@ app.use('/users', usersRouter);
 app.use('/record', gameRecordRouter);
 app.use('/game', gameRouter);
 app.use('/summary',summaryRouter);
-
+/*
 // Initialises chatkit client
 const chatkit = new Chatkit.default({
   instanceLocator: process.env.VUE_APP_CHATKIT_INSTANCE_LOCATOR,
@@ -146,7 +148,7 @@ function trbotSendMessage(roomId, message) {
     text: message
   });
 }
-
+*/
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`); // start server
 });
