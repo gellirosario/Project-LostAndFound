@@ -15,7 +15,7 @@
     "@types/react-select": "^3.0.10",
     "animejs": "^3.1.0",
     "auth0-js": "^9.12.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^4.4.1",
     "chart.js": "^2.9.3",
     "classnames": "^2.2.6",
